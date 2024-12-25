@@ -21,7 +21,7 @@ import p_img18_1 from './p_img18_1.png';
 import p_img19_1 from './p_img19_1.png';
 import p_img20_1 from './p_img20_1.png';
 import p_img21_1 from './p_img21_1.png';
-import p_img22_1 from './p_img22_1.png';
+import p_img22_2 from './p_img22_2.png';
 import p_img23_1 from './p_img23_1.png';
 import p_img24_1 from './p_img24_1.png';
 import p_img25_1 from './p_img25_1.png';
@@ -332,7 +332,7 @@ export const products = [
         name: "Apple iMac (27-inch, 8GB RAM, 1TB Storage) ",
         description: "iMac performance is at an all-time high with tenth-generation Intel Core processors, powerful AMD Radeon Pro 5000 series graphics, ultrafast SSD storage, Thunderbolt 3 (USB-C) connectivity.",
         price: 410,
-        image: [p_img22_1],
+        image: [p_img22_2],
         category: "TV",
         subCategory: "Pluse",
         colors: ["Black", "White", "Teal",],
