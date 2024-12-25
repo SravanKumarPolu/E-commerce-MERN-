@@ -35,6 +35,8 @@ import p_img2_3 from './p_img2_3.png'
 import p_img2_4 from './p_img2_4.png'
 import p_img3 from './p_img3.png'
 import p_img30_1 from './p_img30_1.png';
+import p_img31_1 from './p_img31_1.png'
+import p_img32_1 from './p_img32_1.png'
 import p_img4_1 from './p_img4_1.png';
 import p_img5_1 from './p_img5_1.png';
 import p_img6_1 from './p_img6_1.png';
