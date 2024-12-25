@@ -67,6 +67,9 @@ import p_img8_1 from './p_img8_1.png';
 import p_img8_2 from './p_img8_2.png';
 import p_img9_1 from './p_img9_1.png';
 import razorpay_logo from './razorpay_logo.png'
+import search_icon from './search.svg'
+import star_dull_icon from './star_dull_icon.png'
+import star_icon from './star_icon.png'
 import stripe_logo from './stripe_logo.png'
 
 // import contact_img from './contact_img.png'
@@ -106,30 +109,12 @@ import stripe_logo from './stripe_logo.png'
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import profile_icon from './profile_icon.png'
 // import quality_icon from './quality_icon.png'
 
-// import search_icon from './search_icon.png'
-// import star_dull_icon from './star_dull_icon.png'
-// import star_icon from './star_icon.png'
+
+
+
 
 // import support_img from './support_img.png'
 
@@ -141,9 +126,9 @@ export const assets = {
     // exchange_icon,
     // profile_icon,
     // quality_icon,
-    // search_icon,
-    // star_dull_icon,
-    // star_icon,
+    search_icon,
+    star_dull_icon,
+    star_icon,
     bin_icon,
     // support_img,
     // menu_icon,
@@ -151,7 +136,7 @@ export const assets = {
     // contact_img,
     razorpay_logo,
     stripe_logo,
-     cross_icon
+    cross_icon
 }
 
 export const products = [
@@ -160,7 +145,7 @@ export const products = [
         name: "apple watch series 10 ",
         description: "The thinnest Apple Watch ever, with our biggest display. With a new wide-angle Always-On OLED Retina display Footnote ",
         price: 400,
-        image: [p_img1, p_img1_2,p_img1_3],
+        image: [p_img1, p_img1_2, p_img1_3],
         category: "Watch ",
         subCategory: "pro",
         colors: ["Silver", " Gold", "Black ", "white"],
@@ -184,7 +169,7 @@ export const products = [
         name: "iPad Pro 11",
         description: "Apple Intelligence helps you write, express yourself, and get things done effortlessly while giving you peace of mind with groundbreaking privacy protections.",
         price: 620,
-        image: [p_img3_1,p_img3_2,p_img3_3],
+        image: [p_img3_1, p_img3_2, p_img3_3],
         category: "iPad",
         subCategory: " Pro ",
         colors: ["Silver", "Black ", "White"],
@@ -305,7 +290,7 @@ export const products = [
         name: "iPhone 15 Plus",
         description: ".A16 Bionic powers computational photography and smooth gaming performance with great efficiency for all-day battery life.",
         price: 920,
-        image:  [p_img13_1, p_img13_2, p_img13_3],
+        image: [p_img13_1, p_img13_2, p_img13_3],
         category: "iPhone",
         subCategory: "Plus",
         colors: ["White", "Teal", "Pink", "Ultramarine"],
