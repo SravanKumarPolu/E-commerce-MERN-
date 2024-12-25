@@ -19,6 +19,8 @@ import p_img16_1 from './p_img16_1.png';
 import p_img17_1 from './p_img17_1.png';
 import p_img18_1 from './p_img18_1.png';
 import p_img19_1 from './p_img19_1.png';
+import p_img1_2 from './p_img1_2.png'
+import p_img1_3 from './p_img1_3.png'
 import p_img20_1 from './p_img20_1.png';
 import p_img21_1 from './p_img21_1.png';
 import p_img22_2 from './p_img22_2.png';
@@ -79,7 +81,7 @@ export const products = [
         name: "apple watch series 10 ",
         description: "The thinnest Apple Watch ever, with our biggest display. With a new wide-angle Always-On OLED Retina display Footnote ",
         price: 400,
-        image: [p_img1],
+        image: [p_img1, p_img1_2,p_img1_3],
         category: "Watch ",
         subCategory: "pro",
         colors: ["Silver", " Gold", "Black ", "white"],
