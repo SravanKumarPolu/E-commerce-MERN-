@@ -3,7 +3,9 @@
 import bin_icon from './bin.svg'
 import cart_icon from './cart.svg'
 import cross_icon from './cross.svg'
+import dropdown_icon from './chevronLeft.svg'
 import logo from './logo.png'
+import menu_icon from './menu.svg'
 import p_img1 from './p_img1.png'
 import p_img10_1 from './p_img10_1.png';
 import p_img10_2 from './p_img10_2.png';
@@ -66,6 +68,7 @@ import p_img7_1 from './p_img7_1.png';
 import p_img8_1 from './p_img8_1.png';
 import p_img8_2 from './p_img8_2.png';
 import p_img9_1 from './p_img9_1.png';
+import profile_icon from './avatar.svg'
 import razorpay_logo from './razorpay_logo.png'
 import search_icon from './search.svg'
 import star_dull_icon from './star_dull_icon.png'
@@ -74,7 +77,7 @@ import stripe_logo from './stripe_logo.png'
 
 // import contact_img from './contact_img.png'
 
-// import dropdown_icon from './dropdown_icon.png'
+
 // import exchange_icon from './exchange_icon.png'
 // import hero_img from './hero_img.png'
 
@@ -101,7 +104,6 @@ import stripe_logo from './stripe_logo.png'
 
 
 
-// import menu_icon from './menu_icon.png'
 
 
 
@@ -109,7 +111,8 @@ import stripe_logo from './stripe_logo.png'
 
 
 
-// import profile_icon from './profile_icon.png'
+
+
 // import quality_icon from './quality_icon.png'
 
 
@@ -122,16 +125,16 @@ export const assets = {
     logo,
     // hero_img,
     cart_icon,
-    // dropdown_icon,
+    dropdown_icon,
     // exchange_icon,
-    // profile_icon,
+    profile_icon,
     // quality_icon,
     search_icon,
     star_dull_icon,
     star_icon,
     bin_icon,
     // support_img,
-    // menu_icon,
+    menu_icon,
     // about_img,
     // contact_img,
     razorpay_logo,
