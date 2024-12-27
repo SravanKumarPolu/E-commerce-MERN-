@@ -22,7 +22,7 @@ function App() {
     <>
       <div className="px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 max-w-screen-xl mx-auto">
         <NavBar />
-        <h1>E-commerce(MERN)</h1>
+
         <SearchBar />
         <Routes>
           <Route path='/' element={<Home />} />
