@@ -1,3 +1,4 @@
+import NewsletterBox from "../components/NewsLetterBox";
 import Title from "../components/Title";
 import { assets } from "../assets/assets";
 
@@ -46,6 +47,7 @@ const About = () => {
           <p>From personalized support in-store to seamless online experiences, Apple’s customer service is always ready to help you get the most out of your device.</p>
         </div>
       </div>
+      <NewsletterBox />
     </div>
   );
 };
