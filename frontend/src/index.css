@@ -1,3 +1,9 @@
+/* 1.Montserrat (headlines) + Open Sans (body)
+2. Poppins (headlines) + Roboto (body)
+3. Playfair Display (headlines) + Lora (body)
+4. Oswald (headlines) + Inter (body)
+5. Raleway (headlines) + Noto Sans (body) */
+
 
 @tailwind base;
 @tailwind components;

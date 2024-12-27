@@ -4,7 +4,12 @@ import bin_icon from './bin.svg'
 import cart_icon from './cart.svg'
 import cross_icon from './cross.svg'
 import dropdown_icon from './chevronLeft.svg'
-import logo from './logo.png'
+import hero_img from './hero.png'
+import hero_img1 from './hero_1.png'
+import hero_img2 from './hero_2.png'
+import hero_img3 from './hero_3.png'
+import hero_img4 from './hero_4.png'
+import logo from './logo.svg'
 import menu_icon from './menu.svg'
 import p_img1 from './p_img1.png'
 import p_img10_1 from './p_img10_1.png';
@@ -79,35 +84,6 @@ import stripe_logo from './stripe_logo.png'
 
 
 // import exchange_icon from './exchange_icon.png'
-// import hero_img from './hero_img.png'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -123,7 +99,11 @@ import stripe_logo from './stripe_logo.png'
 
 export const assets = {
     logo,
-    // hero_img,
+    hero_img,
+    hero_img1,
+    hero_img3,
+    hero_img2,
+    hero_img4,
     cart_icon,
     dropdown_icon,
     // exchange_icon,
