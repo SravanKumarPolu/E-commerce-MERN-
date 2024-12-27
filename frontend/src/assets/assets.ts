@@ -1,6 +1,7 @@
 import about_img from './about.png'
 import bin_icon from './bin.svg'
 import cart_icon from './cart.svg'
+import contact_img from './contact.png'
 import cross_icon from './cross.svg'
 import dropdown_icon from './chevronLeft.svg'
 import hero_img from './hero.png'
@@ -79,9 +80,6 @@ import star_dull_icon from './star_dull_icon.png'
 import star_icon from './star_icon.png'
 import stripe_logo from './stripe_logo.png'
 
-// import contact_img from './contact_img.png'
-
-
 // import exchange_icon from './exchange_icon.png'
 
 
@@ -115,7 +113,7 @@ export const assets = {
     // support_img,
     menu_icon,
     about_img,
-    // contact_img,
+    contact_img,
     razorpay_logo,
     stripe_logo,
     cross_icon

@@ -47,7 +47,10 @@ const About = () => {
           <p>From personalized support in-store to seamless online experiences, Apple’s customer service is always ready to help you get the most out of your device.</p>
         </div>
       </div>
+      <div className="bg-gray-100 py-4">
       <NewsletterBox />
+      </div>
+
     </div>
   );
 };

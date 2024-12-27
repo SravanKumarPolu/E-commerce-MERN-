@@ -16,7 +16,7 @@ const NavBar = () => {
           to='/'
           role="tab"
           className={({ isActive }) =>
-            `tab flex-col items-center gap-1 ${isActive ? 'tab-active' : ''}`
+            `tab flex-col items-center gap-1 ${isActive ? 'tab-active ' : ''}`
           }
         >
           <p>Home</p>
