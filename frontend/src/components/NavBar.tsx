@@ -11,47 +11,48 @@ const NavBar = () => {
         <img src={assets.logo} className="w-10" alt="Logo" />
       </Link>
 
-      <div role="tablist" className="tabs tabs-lifted hidden sm:flex  text-sm text-gray-700">
+      <div role="tablist" className="tabs tabs-lifted hidden sm:flex text-sm text-gray-900">
         <NavLink
-          to='/'
+          to="/"
           role="tab"
           className={({ isActive }) =>
-            `tab flex-col items-center gap-1 ${isActive ? 'tab-active ' : ''}`
+            `tab tab-lifted flex-col items-center gap-1 ${isActive ? 'tab-active text-gray-600' : ''}`
           }
         >
           <p>Home</p>
         </NavLink>
 
         <NavLink
-          to='/about'
+          to="/about"
           role="tab"
           className={({ isActive }) =>
-            `tab flex-col items-center gap-1 ${isActive ? 'tab-active' : ''}`
+            `tab tab-lifted flex-col items-center gap-1 ${isActive ? 'tab-active text-gray-600' : ''}`
           }
         >
           <p>About</p>
         </NavLink>
 
         <NavLink
-          to='/collection'
+          to="/collection"
           role="tab"
           className={({ isActive }) =>
-            `tab flex-col items-center gap-1 ${isActive ? 'tab-active' : ''}`
+            `tab tab-lifted flex-col items-center gap-1 ${isActive ? 'tab-active text-gray-600' : ''}`
           }
         >
           <p>Collection</p>
         </NavLink>
 
         <NavLink
-          to='/contact'
+          to="/contact"
           role="tab"
           className={({ isActive }) =>
-            `tab flex-col items-center gap-1 ${isActive ? 'tab-active' : ''}`
+            `tab tab-lifted flex-col items-center gap-1 ${isActive ? 'tab-active text-gray-600' : ''}`
           }
         >
           <p>Contact</p>
         </NavLink>
       </div>
+
       <div className='flex item-center gap-6'>
         <img src={assets.search_icon} className="w-6 cursor-pointer " alt="Search" />
         <div className='group relative'>

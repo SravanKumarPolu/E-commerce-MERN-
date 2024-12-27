@@ -8,9 +8,9 @@ const Contact = () => {
       <div className="text-2xl ml-1 text-center pt-12 border-t border-gray-200">
         <Title text1="CONTACT" text2="US" />
       </div>
-      <div className="my-16 flex flex-col gap-12 md:flex-row items-center justify-center px-6 lg:px-20">
+      <div className="my-16 flex  flex-col gap-12 md:flex-row items-center justify-center px-6 lg:px-20">
         <img
-          className="w-full max-w-[400px] md:max-w-[500px] rounded-lg shadow-lg"
+          className="w-full bg-base-100 max-w-[400px] md:max-w-[500px] rounded-lg shadow-lg"
           src={assets.contact_img}
           alt="Contact Illustration"
         />
