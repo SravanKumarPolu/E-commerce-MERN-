@@ -1,5 +1,4 @@
-// import about_img from './about_img.png'
-
+import about_img from './about.png'
 import bin_icon from './bin.svg'
 import cart_icon from './cart.svg'
 import cross_icon from './cross.svg'
@@ -115,7 +114,7 @@ export const assets = {
     bin_icon,
     // support_img,
     menu_icon,
-    // about_img,
+    about_img,
     // contact_img,
     razorpay_logo,
     stripe_logo,
