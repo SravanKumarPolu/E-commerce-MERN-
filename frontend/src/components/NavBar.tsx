@@ -4,9 +4,10 @@ import { assets } from '../assets/assets'
 import { useState } from 'react'
 
 const NavBar = () => {
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false);
+
   return (
-    <div className='font-outfit flex items-center justify-between py-5 font-medium'>
+    <div className='font-outfit flex items-center justify-between py-5 font-medium '>
       <Link to='/'>
         <img src={assets.logo} className="w-10" alt="Logo" />
       </Link>
@@ -16,7 +17,7 @@ const NavBar = () => {
           to="/"
           role="tab"
           className={({ isActive }) =>
-            `tab tab-lifted flex-col items-center gap-1 ${isActive ? 'tab-active text-gray-600' : ''}`
+            `tab  flex-col items-center gap-1 ${isActive ? 'tab-active bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-yellow-500' : ''}`
           }
         >
           <p>Home</p>
@@ -26,7 +27,7 @@ const NavBar = () => {
           to="/about"
           role="tab"
           className={({ isActive }) =>
-            `tab tab-lifted flex-col items-center gap-1 ${isActive ? 'tab-active text-gray-600' : ''}`
+            `tab  flex-col items-center gap-1 ${isActive ? 'tab-active bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-yellow-500' : ''}`
           }
         >
           <p>About</p>
@@ -36,7 +37,7 @@ const NavBar = () => {
           to="/collection"
           role="tab"
           className={({ isActive }) =>
-            `tab tab-lifted flex-col items-center gap-1 ${isActive ? 'tab-active text-gray-600' : ''}`
+            `tab  flex-col items-center gap-1 ${isActive ? 'tab-active bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-yellow-500' : ''}`
           }
         >
           <p>Collection</p>
@@ -46,7 +47,7 @@ const NavBar = () => {
           to="/contact"
           role="tab"
           className={({ isActive }) =>
-            `tab tab-lifted flex-col items-center gap-1 ${isActive ? 'tab-active text-gray-600' : ''}`
+            `tab  flex-col items-center gap-1 ${isActive ? 'tab-active bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-yellow-500' : ''}`
           }
         >
           <p>Contact</p>

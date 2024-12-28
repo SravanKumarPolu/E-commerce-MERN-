@@ -4,6 +4,11 @@ import cart_icon from './cart.svg'
 import contact_img from './contact.png'
 import cross_icon from './cross.svg'
 import dropdown_icon from './chevronLeft.svg'
+import hero_1 from './hero_1.mp4'
+import hero_2 from './hero_2.mp4'
+import hero_3 from './hero_3.mp4'
+import hero_4 from './hero_4.mp4'
+import hero_5 from './hero_5.mp4'
 import hero_img from './hero.png'
 import hero_img1 from './hero_1.png'
 import hero_img2 from './hero_2.png'
@@ -101,6 +106,11 @@ export const assets = {
     hero_img3,
     hero_img2,
     hero_img4,
+    hero_1,
+    hero_2,
+    hero_3,
+    hero_4,
+    hero_5,
     cart_icon,
     dropdown_icon,
     // exchange_icon,

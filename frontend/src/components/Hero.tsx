@@ -1,6 +1,9 @@
 import { assets } from "../assets/assets"
 
 const Hero = () => {
+
+
+
   return (
     <div className="flex flex-col sm:flex-row items-center border border-gray-300 rounded-lg shadow-lg overflow-hidden">
 
@@ -21,7 +24,7 @@ const Hero = () => {
           </h1>
 
           {/* CTA Section */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center flex-col sm:flex-row gap-4">
             <button className=" font-workSans px-6 py-2 bg-gray-800 text-white rounded-lg shadow-md hover:bg-gray-700 transition duration-300">
               Shop Now
             </button>
@@ -34,12 +37,17 @@ const Hero = () => {
 
       {/* Hero right side */}
       <div className="w-full sm:w-1/2">
-        <img
-          src={assets.hero_img}
-          alt="Hero"
+
+        <video
+          src={assets.hero_3}
           className="w-full h-full object-cover"
-        />
+          autoPlay
+          loop
+          muted
+          playsInline
+        ></video>
       </div>
+
     </div>
   )
 }
