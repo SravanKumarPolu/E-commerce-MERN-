@@ -3,7 +3,6 @@ import { assets } from "../assets/assets"
 const Hero = () => {
 
 
-
   return (
     <div className="flex flex-col sm:flex-row items-center border border-gray-300 rounded-lg shadow-lg overflow-hidden">
 
@@ -34,12 +33,10 @@ const Hero = () => {
           </div>
         </div>
       </div>
-
       {/* Hero right side */}
       <div className="w-full sm:w-1/2">
-
         <video
-          src={assets.hero_3}
+          src={assets.hero_1}
           className="w-full h-full object-cover"
           autoPlay
           loop
@@ -47,7 +44,6 @@ const Hero = () => {
           playsInline
         ></video>
       </div>
-
     </div>
   )
 }
