@@ -125,7 +125,8 @@ export const assets = {
     about_img,
     contact_img,
     razorpay_logo,
-    stripe_logo,
+    stripe_logo, 
+
     cross_icon
 }
 
@@ -330,7 +331,7 @@ export const products = [
         price: 150,
         image: [p_img17_1, p_img17_2],
         category: "Watch",
-        subCategory: "Pulse",
+        subCategory: "Puls",
         colors: ["Black", "White", "Teal", "Pink", "Ultramarine"],
         date: 1716629945448,
         bestseller: false
@@ -353,11 +354,11 @@ export const products = [
         description: "USB-C charging and up to 30 hours of listening time using the case. Footnote ¹⁴ And Find My to help you locate your AirPods 4",
         price: 260,
         image: [p_img19_1, p_img19_2],
-        category: "Kids",
+        category: "Airpods",
         subCategory: "Plus",
         colors: ["White", "Teal",],
         date: 1716632145448,
-        bestseller: false
+        bestseller: true
     },
     {
         _id: "aaaat",
