@@ -220,7 +220,7 @@ export const products = [
         name: "iPhone 16 plus",
         description: "15.5 cm (6.1″) aerospace-grade aluminium design footnote 1 with durable, latest-generation Ceramic Shield front, Action button and USB-C",
         price: 900,
-        image: [p_img8_1, p_img8_2],
+        image: [p_img8_2, p_img8_1],
         category: "iPhone",
         subCategory: "Plus",
         colors: [" Gold", "Black ", "White", "Teal", "Pink"],
