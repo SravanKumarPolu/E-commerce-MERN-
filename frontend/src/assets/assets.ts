@@ -291,7 +291,7 @@ export const products = [
     },
     {
         _id: "aaaao",
-        name: "Apple MacBook Ultra 13.3",
+        name: " MacBook Ultra 13.3",
         description: "Apple MacBook Ultra 13.3 - Intel Core i5 - 8GB RAM - 256GB SSD Silver",
         price: 1140,
         image: [p_img15_1],
@@ -320,7 +320,7 @@ export const products = [
         price: 150,
         image: [p_img17_1, p_img17_2],
         category: "Watch",
-        subCategory: "Puls",
+        subCategory: "Plus",
         colors: ["Black", "White", "Teal", "Pink", "Ultramarine"],
         date: 1716629945448,
         bestseller: false
@@ -363,7 +363,7 @@ export const products = [
     },
     {
         _id: "aaaau",
-        name: "	2024 Apple iMac with Retina 5K Display",
+        name: "	2024 Apple iMac ",
         description: "iMac performance is at an all-time high with tenth-generation Intel Core processors, powerful AMD Radeon Pro 5000 series graphics, ultrafast SSD storage, Thunderbolt 3 (USB-C) connectivity",
         price: 470,
         image: [p_img21_1],
@@ -375,12 +375,12 @@ export const products = [
     },
     {
         _id: "aaaav",
-        name: "Apple iMac (27-inch, 8GB RAM, 1TB Storage) ",
+        name: "Apple iMac  ",
         description: "iMac performance is at an all-time high with tenth-generation Intel Core processors, powerful AMD Radeon Pro 5000 series graphics, ultrafast SSD storage, Thunderbolt 3 (USB-C) connectivity.",
         price: 410,
         image: [p_img22_2],
         category: "TV",
-        subCategory: "Pluse",
+        subCategory: "Plus",
         colors: ["Black", "White", "Teal",],
         date: 1716635445448,
         bestseller: false
