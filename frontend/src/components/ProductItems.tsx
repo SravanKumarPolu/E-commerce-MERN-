@@ -32,7 +32,7 @@ const ProductItems: React.FC<ProductItemsProps> = ({ id, image, name, price }) =
           />
         </figure>
         <div className="card-body p-4 text-center">
-          <h3 className="text-md font-semibold group-hover:text-primary">{name}</h3>
+          <h3 className="text-md font-semibold group-hover:text-accent">{name}</h3>
           <p className="text-sm text-gray-500 font-medium">{currency}{price}</p>
       </div>
       </div>

@@ -4,6 +4,7 @@ import cart_icon from './cart.svg'
 import contact_img from './contact.png'
 import cross_icon from './cross.svg'
 import dropdown_icon from './chevronLeft.svg'
+import exchange_icon from './exchange_icon.png'
 import hero_1 from './hero_1.mp4'
 import hero_2 from './hero_2.mp4'
 import hero_3 from './hero_3.mp4'
@@ -79,25 +80,13 @@ import p_img8_1 from './p_img8_1.png';
 import p_img8_2 from './p_img8_2.png';
 import p_img9_1 from './p_img9_1.png';
 import profile_icon from './avatar.svg'
+import quality_icon from './quality_icon.png'
 import razorpay_logo from './razorpay_logo.png'
 import search_icon from './search.svg'
 import star_dull_icon from './star_dull_icon.png'
 import star_icon from './star_icon.png'
 import stripe_logo from './stripe_logo.png'
-
-// import exchange_icon from './exchange_icon.png'
-
-
-
-
-
-// import quality_icon from './quality_icon.png'
-
-
-
-
-
-// import support_img from './support_img.png'
+import support_img from './support_img.png'
 
 export const assets = {
     logo,
@@ -113,14 +102,14 @@ export const assets = {
     hero_5,
     cart_icon,
     dropdown_icon,
-    // exchange_icon,
+    exchange_icon,
     profile_icon,
-    // quality_icon,
+    quality_icon,
     search_icon,
     star_dull_icon,
     star_icon,
     bin_icon,
-    // support_img,
+    support_img,
     menu_icon,
     about_img,
     contact_img,
@@ -133,7 +122,7 @@ export const assets = {
 export const products = [
     {
         _id: "aaaaa",
-        name: "apple watch series 10 ",
+        name: "Apple watch series 10 ",
         description: "The thinnest Apple Watch ever, with our biggest display. With a new wide-angle Always-On OLED Retina display Footnote ",
         price: 400,
         image: [p_img1, p_img1_2, p_img1_3],

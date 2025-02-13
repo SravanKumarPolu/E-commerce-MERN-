@@ -52,7 +52,7 @@ const BestSeller: React.FC = () => {
 
             {/* Product Details */}
             <div className="card-body p-4 text-center">
-              <h3 className="text-md font-semibold text-gray-700 group-hover:text-primary">{item.name}</h3>
+              <h3 className="text-md font-semibold text-gray-700 group-hover:text-accent">{item.name}</h3>
               <p className="text-sm text-gray-500 font-medium">{currency}{item.price}</p>
             </div>
           </div>
