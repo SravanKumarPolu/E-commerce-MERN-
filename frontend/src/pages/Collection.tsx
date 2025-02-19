@@ -6,7 +6,7 @@ import { assets } from "../assets/assets"
 import { useShopContext } from "../context/ShopContext";
 
 const Collection = () => {
-  const { products } = useShopContext();
+  const { products, search, showSearch } = useShopContext();
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [sortType, setSortType] = useState<string>('relavent');
 
@@ -33,6 +33,9 @@ const Collection = () => {
 
   const applyFilter = () => {
     let productsCopy = products.slice()
+    if (showSearch && search) {
+      productsCopy = productsCopy.filter(item => item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+    }
     if (category.length > 0) {
       productsCopy = productsCopy.filter(item => category.includes(item.category))
     }
@@ -43,7 +46,7 @@ const Collection = () => {
   }
   useEffect(() => {
     applyFilter();
-  }, [category, subCategory])
+  }, [category, , search, showSearch, subCategory])
 
   const sortProduct = () => {
     const fpCopy = filterProducts.slice();
