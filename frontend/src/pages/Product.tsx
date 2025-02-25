@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import RelatedProducts from "../components/RelatedProducts";
 import { ShopContext } from "../context/ShopContext";
 import { assets } from "../assets/assets";
+import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 
 interface Product {
@@ -13,7 +14,7 @@ interface Product {
   image: string[];
   category: string;
   subCategory: string;
-  color: string[];
+  colors: string[];
   date: number;
   bestseller: boolean;
   rating?: number;
@@ -21,10 +22,12 @@ interface Product {
 
 const Product: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
-  const { products, addToCart } = useContext(ShopContext) ?? {};
+  const { products, addToCart } = useContext(ShopContext) ?? { products: [], addToCart: () => { } };
+
   const [productData, setProductData] = useState<Product | null>(null);
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
+
 
   useEffect(() => {
     if (products && productId) {
@@ -143,12 +146,21 @@ const Product: React.FC = () => {
           {/* Add to Cart Button */}
           <div className="mt-6">
             <button
-              onClick={() => addToCart && addToCart(productData._id, selectedColor)}
-              className="w-full sm:w-auto bg-blue-600 text-white text-lg font-medium py-3 px-6 rounded-lg shadow hover:bg-blue-700 transition duration-300"
-              disabled={!selectedColor}
+              onClick={(e) => {
+                e.preventDefault(); // Ensure default behavior doesn't interrupt
+                if (!selectedColor) {
+                  toast.error("Please select a color");
+                  return;
+                }
+                addToCart(productData._id, selectedColor);
+              }}
+              className={`w-full sm:w-auto bg-blue-600 text-white text-lg font-medium py-3 px-6 
+rounded-lg shadow hover:bg-blue-700 transition duration-300`}
             >
-              {selectedColor ? "Add to Cart" : "Select a Size First"}
+              {selectedColor ? "Add to Cart" : "Select a Color First"}
             </button>
+
+
           </div>
           <hr className="mt-8 sm:w-4/5" />
           <div className="text-sm text-gray-500 mt-5 flex flex-col gap-1">
