@@ -28,3 +28,12 @@ A responsive, feature-rich E-Commerce Website built using React, TypeScript, and
 - 🎨 Modern UI/UX: Sleek design using DaisyUI and custom Tailwind components.
 
 - 🚀 Fast Performance: Optimized loading times and smooth transitions with Framer Motion.
+## 🙌 Acknowledgments
+
+- React for the robust framework.
+
+- Tailwind CSS for rapid UI development.
+
+- Framer Motion for smooth animations.
+
+- DaisyUI for beautiful component styling.
