@@ -9,6 +9,7 @@ interface ShopContextValue {
   currency: string;
   delivery_fee: number;
   search: string;
+  getCartAmount: () => number;
   addToCart: (itemId: string, size: string) => void;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
   showSearch: boolean;
@@ -16,6 +17,7 @@ interface ShopContextValue {
   setShowSearch: React.Dispatch<React.SetStateAction<boolean>>;
   cartItems: Record<string, Record<string, number>>;
   setCartItems: React.Dispatch<React.SetStateAction<Record<string, Record<string, number>>>>;
+  updateQuantity: (itemId: string, color: string, quantity: number) => void;
 }
 
 // Create the context with a default value to avoid `undefined` issues
@@ -72,16 +74,42 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
     }
     return totalCount;
   };
+  const updateQuantity = async (itemId: string, color: string, quantity: number) => {
+    const cartData = structuredClone(cartItems);
+    if (cartData[itemId] && cartData[itemId][color] !== undefined) {
+      cartData[itemId][color] = quantity;
+    }
+    setCartItems(cartData);
+  };
+  const getCartAmount = (): number => {
+    let totalAmount = 0;
+    for (const items in cartItems) {
+      const itemInfo = products.find((product) => product._id === items);
+      if (itemInfo) {
+        for (const color in cartItems[items])
+          try {
+            if (cartItems[items][color] > 0) {
+              totalAmount += itemInfo.price * cartItems[items][color]
+            }
+          }
+          catch (error) {
+            console.error('Error calculating cart amount:', error);
+          }
+      }
+    }
+    return totalAmount;
+  }
   const value: ShopContextValue = {
     products,
     currency,
     delivery_fee,
     search,
     setSearch,
-    getCartCount,
+    getCartCount, updateQuantity,
     showSearch,
     addToCart,
     cartItems,
+    getCartAmount,
     setCartItems,
     setShowSearch,
   };

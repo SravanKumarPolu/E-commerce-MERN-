@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 
+import CartTotal from "../components/CartTotal";
 import Title from "../components/Title";
 import { assets } from "../assets/assets";
 import { useShopContext } from "../context/ShopContext";
 
+interface CartItem {
+  _id: string;
+  color: string;
+  quantity: number;
+}
 const Cart: React.FC = () => {
-  const { products, currency, cartItems } = useShopContext();
-  const [cartData, setCartData] = useState([]);
+  const { products, currency, cartItems, updateQuantity } = useShopContext();
+  const [cartData, setCartData] = useState<CartItem[]>([]);
 
   useEffect(() => {
     const tempData = [];
@@ -84,6 +90,19 @@ const Cart: React.FC = () => {
             </div>
           );
         })}
+      </div>
+      <div className='flex justify-end my-20'>
+        <div className='w-full sm:w-[450px]'>
+          <CartTotal />
+          {/* Checkout Button */}
+          <div className="mt-10 text-end">
+            <button
+
+              className="px-6 py-3 bg-gray-900 text-white font-semibold text-lg rounded-lg shadow-md hover:bg-blue-700 focus:ring focus:ring-blue-300 transition duration-200">
+              Proceed to Checkout
+            </button>
+          </div>
+        </div>
       </div>
 
     </div>
