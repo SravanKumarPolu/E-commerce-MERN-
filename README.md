@@ -10,3 +10,21 @@ A responsive, feature-rich E-Commerce Website built using React, TypeScript, and
 2. State Management: React Context API / Redux (if applicable)
 
 3. Deployment: Netlify
+
+## ✨ Features
+
+- 🛍️ Product Listing: Browse a range of products with detailed information.
+
+- 🔎 Product Search & Filter: Quickly find products using search and filter options.
+
+- 🗂️ Category Management: Navigate products through various categories.
+
+- 🛒 Shopping Cart: Add, remove, and manage products in the cart.
+
+- 💳 Checkout Process: Smooth and responsive checkout flow.
+
+- 📱 Responsive Design: Optimized for desktops, tablets, and mobiles.
+
+- 🎨 Modern UI/UX: Sleek design using DaisyUI and custom Tailwind components.
+
+- 🚀 Fast Performance: Optimized loading times and smooth transitions with Framer Motion.
