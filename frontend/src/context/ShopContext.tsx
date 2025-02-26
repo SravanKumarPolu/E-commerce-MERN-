@@ -14,7 +14,8 @@ interface ShopContextValue {
   showSearch: boolean;
   getCartCount: () => number;
   setShowSearch: React.Dispatch<React.SetStateAction<boolean>>;
-
+  cartItems: Record<string, Record<string, number>>;
+  setCartItems: React.Dispatch<React.SetStateAction<Record<string, Record<string, number>>>>;
 }
 
 // Create the context with a default value to avoid `undefined` issues
@@ -80,6 +81,8 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
     getCartCount,
     showSearch,
     addToCart,
+    cartItems,
+    setCartItems,
     setShowSearch,
   };
 
