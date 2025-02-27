@@ -98,7 +98,7 @@ const Cart: React.FC = () => {
           <div className="mt-10 text-end">
             <button
               onClick={() => navigate('/place-order')}
-              className="px-6 py-3 bg-gray-900 text-white font-semibold text-lg rounded-lg shadow-md hover:bg-gray-700 focus:ring focus:ring-blue-300 transition duration-200">
+              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold text-lg rounded-lg shadow-lg hover:from-indigo-600 hover:to-blue-600 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-300">
               Proceed to Checkout
             </button>
           </div>
