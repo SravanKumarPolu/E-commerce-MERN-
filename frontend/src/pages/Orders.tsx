@@ -1,13 +1,6 @@
 import Title from "../components/Title";
 import { useShopContext } from "../context/ShopContext";
 
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image: string[];
-}
-
 const Orders: React.FC = () => {
   const { products, currency } = useShopContext();
 
