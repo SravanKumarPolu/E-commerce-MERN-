@@ -6,7 +6,7 @@ import { useState } from "react";
 
 const PlaceOrder = () => {
   const [method, setMethod] = useState('cod');
-  const [formData, setFormData] = useState({
+  const [formData,] = useState({
     firstName: "",
     lastName: '',
     email: '',
