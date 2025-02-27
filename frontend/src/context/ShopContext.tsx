@@ -2,6 +2,7 @@ import React, { ReactNode, createContext, useContext, useState } from "react";
 
 import { products } from "../assets/assets";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 // Define the shape of the context
 interface ShopContextValue {
@@ -10,6 +11,7 @@ interface ShopContextValue {
   delivery_fee: number;
   search: string;
   getCartAmount: () => number;
+  navigate: ReturnType<typeof useNavigate>;
   addToCart: (itemId: string, size: string) => void;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
   showSearch: boolean;
@@ -33,6 +35,7 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
   const [search, setSearch] = useState<string>('');
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<Record<string, Record<string, number>>>({});
+  const navigate = useNavigate();
   const addToCart = (itemId: string, color: string) => {
     if (!color) {
       toast.error("Select Product Color");
@@ -112,6 +115,7 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
     getCartAmount,
     setCartItems,
     setShowSearch,
+    navigate,
   };
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;

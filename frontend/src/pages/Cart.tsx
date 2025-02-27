@@ -11,7 +11,7 @@ interface CartItem {
   quantity: number;
 }
 const Cart: React.FC = () => {
-  const { products, currency, cartItems, updateQuantity } = useShopContext();
+  const { products, currency, cartItems, updateQuantity, navigate } = useShopContext();
   const [cartData, setCartData] = useState<CartItem[]>([]);
 
   useEffect(() => {
@@ -97,8 +97,8 @@ const Cart: React.FC = () => {
           {/* Checkout Button */}
           <div className="mt-10 text-end">
             <button
-
-              className="px-6 py-3 bg-gray-900 text-white font-semibold text-lg rounded-lg shadow-md hover:bg-blue-700 focus:ring focus:ring-blue-300 transition duration-200">
+              onClick={() => navigate('/place-order')}
+              className="px-6 py-3 bg-gray-900 text-white font-semibold text-lg rounded-lg shadow-md hover:bg-gray-700 focus:ring focus:ring-blue-300 transition duration-200">
               Proceed to Checkout
             </button>
           </div>
