@@ -1,5 +1,6 @@
 import 'dotenv/config'
 
+import connectCloudinary from './config/cloudinary.js';
 import connectDB from './config/mongodb.js';
 import cors from 'cors'
 import express from 'express'
@@ -8,6 +9,7 @@ import express from 'express'
 const app = express();
 const port = process.env.PORT || 4000
 connectDB()
+connectCloudinary();
 
 //middleware
 app.use(express.json());
