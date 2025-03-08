@@ -4,6 +4,7 @@ import connectCloudinary from './config/cloudinary.js';
 import connectDB from './config/mongodb.js';
 import cors from 'cors'
 import express from 'express'
+import userRouter from './routes/userRoute.js';
 
 //App config
 const app = express();
@@ -15,7 +16,9 @@ connectCloudinary();
 app.use(express.json());
 app.use(cors("*"))
 
+
 //api endpoints
+app.use('/api/user',userRouter)
 app.get('/', (req, res) => {
   res.send("API Working")
 })
