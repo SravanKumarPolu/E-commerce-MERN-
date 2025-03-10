@@ -7,3 +7,4 @@ productRouter.post('/add',addProduct)
 productRouter.post('/single',singleProduct)
 productRouter.post('/remove',removeProduct)
 productRouter.post('/list',listProduct)
+export default productRouter;
