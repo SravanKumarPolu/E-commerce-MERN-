@@ -1,4 +1,4 @@
-import { loginAdmin, loginUser, registerUser } from '../controllers/useController.js';
+import { loginAdmin, loginUser, registerUser } from '../controllers/userController.js';
 
 import express from 'express'
 
