@@ -42,7 +42,7 @@ try {
 }
 }
 
-
+//route for admin login
 const adminLogin=async(req,res)=>{
 
 }
