@@ -1,14 +1,14 @@
 
-const addProduct=async(res,req)=>{
+const addProduct=async(req,res)=>{
 
 }
-const singleProduct=async(res,req)=>{
+const singleProduct=async(req,res)=>{
 
 }
-const removeProduct=async(res,req)=>{
+const removeProduct=async(req,res)=>{
 
 }
-const listProduct=async(res,req)=>{
+const listProduct=async(req,res)=>{
   
 }
 
