@@ -5,5 +5,6 @@ const storge=multer.diskStorage({
     callback(null,file.originalname)
   }
 })
-const upload=muler({storge});
+const upload=multer({storge});
 export default upload
+
