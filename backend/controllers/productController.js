@@ -42,18 +42,20 @@ const singleProduct=async(req,res)=>{
 const removeProduct=async(req,res)=>{
 
 }
-const listProduct=async(req,res)=>{
+//function for list product
+const listProducts = async (req, res) => {
   try {
-    const product=await productModel.find({})
-    res.json({ success: true, message: "Product list" })
-  } catch (error) {
-    console.log(error)
-  res.json({success:false,message:error.message})
-  }
-  
+    const products = await productModel.find({});
+    res.json({ success: true, products })
 
-  
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message })
+
+  }
+
+
 }
 
 
-export { addProduct, singleProduct, removeProduct, listProduct }
+export { addProduct, singleProduct, removeProduct, listProducts }
