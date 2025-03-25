@@ -1,15 +1,32 @@
+import axios from "axios";
+import { backendUrl } from "../App";
 import { toast } from "react-toastify";
 import { useState } from "react";
+interface LoginProps {
+  setToken: React.Dispatch<React.SetStateAction<string>>;
+}
 
-const Login = () => {
+const Login: React.FC<LoginProps> = ({ setToken }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const onSubmitHandler = async (e) => {
+  const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
       console.log(email, password)
+      const response = await axios.post(backendUrl + "/api/user/admin", { email, password });
+      console.log(response);
+      if (response.data.success) {
+        setToken(response.data.token);
+      } else {
+        toast.error(response.data.message);
+      }
     } catch (error) {
-      toast.error(error.message);
+      console.log(error)
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Something went wrong!");
+      }
     }
   }
   return (
