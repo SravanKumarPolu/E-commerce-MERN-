@@ -1,17 +1,39 @@
+import { Route, Routes } from "react-router-dom";
+
+import Add from "./pages/add";
+import List from "./pages/list";
+import Login from "./components/Login";
 import Navbar from "./components/Navbar";
-import { Outlet } from "react-router-dom";
+import Orders from "./pages/orders";
 import Sidebar from "./components/Sidebar";
+import { useState } from "react";
 
 function App() {
+  const [token, setToken] = useState('')
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <Navbar />
-      <div className="flex">
-        <Sidebar />
-        <main className="flex-1 p-6">
-          <Outlet />
-        </main>
-      </div>
+    <div className="min-h-screen bg-gray-50 text-gray-700">
+      {token === '' ? (<Login />) : (<>
+        {/* Sticky Navbar */}
+        <Navbar />
+
+        {/* Main layout */}
+        <div className="flex">
+          {/* Sidebar */}
+          <Sidebar />
+
+          {/* Content */}
+          <main className="flex-1 px-6 py-8 md:ml-0">
+            <div className="max-w-5xl mx-auto">
+              <Routes>
+                <Route path="/add" element={<Add />} />
+                <Route path="/list" element={<List />} />
+                <Route path="/orders" element={<Orders />} />
+              </Routes>
+            </div>
+          </main>
+        </div>
+      </>)}
+
     </div>
   );
 }
