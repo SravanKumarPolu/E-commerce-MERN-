@@ -8,7 +8,8 @@ import Orders from "./pages/orders";
 import Sidebar from "./components/Sidebar";
 import { useState } from "react";
 
-function App() {
+export const backendUrl: string = import.meta.env.VITE_BACKEND_URL;
+const App = () => {
   const [token, setToken] = useState('')
   return (
     <div className="min-h-screen bg-gray-50 text-gray-700">
