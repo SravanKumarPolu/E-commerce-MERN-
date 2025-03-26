@@ -4,7 +4,7 @@ interface OrdersProps {
 
 
 
-const Orders: React.FC<OrdersProps> = ({ token }) => {
+const Orders: React.FC<OrdersProps> = () => {
   return (
     <div>orders</div>
   )

@@ -4,7 +4,7 @@ interface ListProps {
 
 
 
-const List: React.FC<ListProps> = ({ token }) => {
+const List: React.FC<ListProps> = () => {
   return (
     <div>list</div>
   )
