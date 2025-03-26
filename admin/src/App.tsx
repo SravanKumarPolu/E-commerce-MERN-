@@ -20,7 +20,7 @@ const App = () => {
       <ToastContainer />
       {token === '' ? (<Login setToken={setToken} />) : (<>
         {/* Sticky Navbar */}
-        <Navbar />
+        <Navbar setToken={setToken} />
 
         {/* Main layout */}
         <div className="flex">
@@ -31,9 +31,9 @@ const App = () => {
           <main className="flex-1 px-6 py-8 md:ml-0">
             <div className="max-w-5xl mx-auto">
               <Routes>
-                <Route path="/add" element={<Add />} />
-                <Route path="/list" element={<List />} />
-                <Route path="/orders" element={<Orders />} />
+                <Route path="/add" element={<Add token={token} />} />
+                <Route path="/list" element={<List token={token} />} />
+                <Route path="/orders" element={<Orders token={token} />} />
               </Routes>
             </div>
           </main>
