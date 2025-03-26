@@ -1,9 +1,13 @@
-import React from 'react'
+interface OrdersProps {
+  token: string;
+}
 
-function orders() {
+
+
+const Orders: React.FC<OrdersProps> = ({ token }) => {
   return (
     <div>orders</div>
   )
 }
 
-export default orders
+export default Orders

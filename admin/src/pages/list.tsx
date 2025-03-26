@@ -1,9 +1,13 @@
-import React from 'react'
+interface ListProps {
+  token: string;
+}
 
-function list() {
+
+
+const List: React.FC<ListProps> = ({ token }) => {
   return (
     <div>list</div>
   )
 }
 
-export default list
+export default List

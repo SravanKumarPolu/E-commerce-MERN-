@@ -1,7 +1,9 @@
 import React from 'react'
 import { assets } from '../assets/assets'
-
-function add() {
+interface AddProps {
+  token: string;
+}
+const Add: React.FC<AddProps> = ({ token }) => {
   return (
     <>
       <form className='flex flex-col w-full items-start gap3'>
@@ -90,4 +92,4 @@ function add() {
   )
 }
 
-export default add
+export default Add

@@ -12,6 +12,7 @@ import { ToastContainer } from "react-toastify";
 export const backendUrl: string = import.meta.env.VITE_BACKEND_URL;
 const App = () => {
   const [token, setToken] = useState<string>(localStorage.getItem("token") || "");
+
   useEffect(() => {
     localStorage.setItem("token", token);
   }, [token]);
