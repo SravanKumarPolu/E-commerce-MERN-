@@ -23,18 +23,18 @@ const Add: React.FC<AddProps> = () => {
           <p className='mb-2'>Upload Image</p>
           <div className='flex gap-2'>
             <label htmlFor='image1' >
-              <img className='w-20' src={!image1 ? assets.upload_area : URL.createObjectURL(image1)} alt='' />
+              <img className='w-20 cursor-pointer' src={!image1 ? assets.upload_area : URL.createObjectURL(image1)} alt='' />
               <input onChange={(e) => setImage1(e.target.files[0])} type='file' id='image1' hidden />
             </label>
-            <label htmlFor='image2' >
+            <label htmlFor='image2 cursor-pointer' >
               <img className='w-20' src={!image2 ? assets.upload_area : URL.createObjectURL(image2)} alt='' />
               <input onChange={(e) => setImage2(e.target.files[0])} type='file' id='image2' hidden />
             </label>
-            <label htmlFor='image3' >
+            <label htmlFor='image3 cursor-pointer' >
               <img className='w-20' src={!image3 ? assets.upload_area : URL.createObjectURL(image3)} alt='' />
               <input onChange={(e) => setImage3(e.target.files[0])} type='file' id='image3' hidden />
             </label>
-            <label htmlFor='image4' >
+            <label htmlFor='image4 cursor-pointer' >
               <img className='w-20' src={!image4 ? assets.upload_area : URL.createObjectURL(image4)} alt='' />
               <input onChange={(e) => setImage4(e.target.files[0])} type='file' id='image4' hidden />
             </label>
@@ -106,7 +106,7 @@ const Add: React.FC<AddProps> = () => {
         </div>
 
         <div className=" flex gap-2 mt-2">
-          <input type="checkbox" id="bestseller" />
+          <input onChange={() => setBestseller(prev => !prev)} checked={bestseller} type="checkbox" id="bestseller" />
           <label className="cursor-pointer" htmlFor="bestseller"> Add to bestseller</label>
         </div>
         <button type="submit" className="w-28 py-3 mt-4 cursor-pointer bg-black text-white">ADD</button>
