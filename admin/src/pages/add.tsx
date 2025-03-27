@@ -4,10 +4,10 @@ interface AddProps {
   token: string;
 }
 const Add: React.FC<AddProps> = () => {
-  const [image1, setImage1] = useState(false)
-  const [image2, setImage2] = useState(false);
-  const [image3, setImage3] = useState(false);
-  const [image4, setImage4] = useState(false);
+  const [image1, setImage1] = useState<File | null>(null);
+  const [image2, setImage2] = useState<File | null>(null);
+  const [image3, setImage3] = useState<File | null>(null);
+  const [image4, setImage4] = useState<File | null>(null);
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
@@ -24,19 +24,19 @@ const Add: React.FC<AddProps> = () => {
           <div className='flex gap-2'>
             <label htmlFor='image1' >
               <img className='w-20 cursor-pointer' src={!image1 ? assets.upload_area : URL.createObjectURL(image1)} alt='' />
-              <input onChange={(e) => setImage1(e.target.files[0])} type='file' id='image1' hidden />
+              <input onChange={(e) => setImage1(e.target.files?.[0] || null)} type='file' id='image1' hidden />
             </label>
             <label htmlFor='image2 cursor-pointer' >
               <img className='w-20' src={!image2 ? assets.upload_area : URL.createObjectURL(image2)} alt='' />
-              <input onChange={(e) => setImage2(e.target.files[0])} type='file' id='image2' hidden />
+              <input onChange={(e) => setImage2(e.target.files?.[0] || null)} type='file' id='image2' hidden />
             </label>
             <label htmlFor='image3 cursor-pointer' >
               <img className='w-20' src={!image3 ? assets.upload_area : URL.createObjectURL(image3)} alt='' />
-              <input onChange={(e) => setImage3(e.target.files[0])} type='file' id='image3' hidden />
+              <input onChange={(e) => setImage3(e.target.files?.[0] || null)} type='file' id='image3' hidden />
             </label>
             <label htmlFor='image4 cursor-pointer' >
               <img className='w-20' src={!image4 ? assets.upload_area : URL.createObjectURL(image4)} alt='' />
-              <input onChange={(e) => setImage4(e.target.files[0])} type='file' id='image4' hidden />
+              <input onChange={(e) => setImage4(e.target.files?.[0] || null)} type='file' id='image4' hidden />
             </label>
           </div>
         </div>
