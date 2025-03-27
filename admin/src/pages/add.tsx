@@ -1,4 +1,5 @@
 import { assets } from '../assets/assets'
+import { useState } from 'react';
 interface AddProps {
   token: string;
 }
@@ -72,22 +73,33 @@ const Add: React.FC<AddProps> = () => {
           </div>
           <div className="">
             <p className='mb-2'>Product Price</p>
-            <input className='w-full px-3 py-2 sm:w-[120px]' type="Number" placeholder='100' />
+            <input onChange={(e) => setPrice(e.target.value)} className='w-full px-3 py-2 sm:w-[120px]' type="Number" placeholder='100' />
           </div>
         </div>
         <div>
           <p className='mb-2'> Product Color</p>
           <div className="flex gap-3">
-            <div><p className='bg-slate-200 px-3 py-2 cursor-pointer' >Black</p></div>
-            <div><p className='bg-slate-200 px-3 py-2 cursor-pointer'>Black Titanium</p></div>
-            <div><p className='bg-slate-200 px-3 py-2 cursor-pointer'>Desert Titanium</p></div>
-            <div><p className='bg-slate-200 px-3 py-2 cursor-pointer'>Gold</p></div>
-            <div><p className='bg-slate-200 px-3 py-2 cursor-pointer'>Pink</p></div>
-            <div><p className='bg-slate-200 px-3 py-2 cursor-pointer'>Silver</p></div>
-            <div><p className='bg-slate-200 px-3 py-2 cursor-pointer'>Teal</p></div>
-            <div><p className='bg-slate-200 px-3 py-2 cursor-pointer'>Ultramarine</p></div>
-            <div><p className='bg-slate-200 px-3 py-2 cursor-pointer'>White</p></div>
-            <div><p className='bg-slate-200 px-3 py-2 cursor-pointer'>Yellow</p></div>
+            <div onClick={() => setColor(prev => prev.includes("Black") ? prev.filter(item => item !== "Black") : [...prev, "Black"])}>
+              <p className={`shadow-md ${color.includes("Black") ? "bg-slate-300" : "bg-slate-100"} px-3 py-1 cursor-pointer`} >Black</p></div>
+            <div onClick={() => setColor(prev => prev.includes("Black Titanium") ? prev.filter(item => item !== "Black Titanium") : [...prev, "Black Titanium"])}>
+              <p className={`shadow-md ${color.includes("Black Titanium") ? "bg-slate-300" : "bg-slate-100"} px-3 py-1 cursor-pointer`}>Black Titanium</p></div>
+            <div onClick={() => setColor(prev => prev.includes("Desert Titanium") ? prev.filter(item => item !== "Desert Titanium") : [...prev, "Desert Titanium"])}>
+              <p className={`shadow-md ${color.includes("Desert Titanium") ? "bg-slate-300" : "bg-slate-100"} px-3 py-1 cursor-pointer`}>Desert Titanium</p></div>
+            <div onClick={() => setColor(prev => prev.includes("Gold") ? prev.filter(item => item !== "Gold") : [...prev, "Gold"])}>
+              <p className={`shadow-md ${color.includes("Gold") ? "bg-slate-300" : "bg-slate-100"} px-3 py-1 cursor-pointer`}>Gold</p></div>
+            <div onClick={() => setColor(prev => prev.includes("Pink") ? prev.filter(item => item !== "Pink") : [...prev, "Pink"])}>
+              <p className={`shadow-md ${color.includes("Pink") ? "bg-slate-300" : "bg-slate-100"} px-3 py-1 cursor-pointer`}>Pink</p></div>
+            <div onClick={() => setColor(prev => prev.includes("Silver") ? prev.filter(item => item !== "Silver") : [...prev, "Silver"])}>
+              <p className={`shadow-md ${color.includes("Silver") ? "bg-slate-300" : "bg-slate-100"} px-3 py-1 cursor-pointer`}
+              >Silver</p></div>
+            <div onClick={() => setColor(prev => prev.includes("Teal") ? prev.filter(item => item !== "Teal") : [...prev, "Teal"])}>
+              <p className={`shadow-md ${color.includes("Teal") ? "bg-slate-300" : "bg-slate-100"} px-3 py-1 cursor-pointer`}>Teal</p></div>
+            <div onClick={() => setColor(prev => prev.includes("Ultramarine") ? prev.filter(item => item !== "Ultramarine") : [...prev, "Ultramarine"])}>
+              <p className={`shadow-md ${color.includes("Ultramarine") ? "bg-slate-300" : "bg-slate-100"} px-3 py-1 cursor-pointer`}>Ultramarine</p></div>
+            <div onClick={() => setColor(prev => prev.includes("White") ? prev.filter(item => item !== "White") : [...prev, "White"])}>
+              <p className={`shadow-md ${color.includes("White") ? "bg-slate-300" : "bg-slate-100"} px-3 py-1 cursor-pointer`}>White</p></div>
+            <div onClick={() => setColor(prev => prev.includes("Yellow") ? prev.filter(item => item !== "Yellow") : [...prev, "Yellow"])}>
+              <p className={`shadow-md ${color.includes("Yellow") ? "bg-slate-300" : "bg-slate-100"} px-3 py-1 cursor-pointer`}>Yellow</p></div>
 
 
           </div>
