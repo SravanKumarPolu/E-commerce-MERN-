@@ -10,9 +10,9 @@ const Add: React.FC<AddProps> = () => {
   const [image4, setImage4] = useState<File | null>(null);
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [price, setPrice] = useState('')
-  const [category, setCategory] = useState("iPhone")
-  const [subCategory, setSubCategory] = useState("Pro")
+  const [, setPrice] = useState('')
+  const [, setCategory] = useState("iPhone")
+  const [, setSubCategory] = useState("Pro")
   const [bestseller, setBestseller] = useState(false)
   const [color, setColor] = useState<string[]>([]);
 
