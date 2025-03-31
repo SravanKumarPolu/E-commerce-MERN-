@@ -1,37 +1,41 @@
 import { assets } from '../assets/assets';
 import { useState } from 'react';
 
-interface AddProps {
-  token: string;
-}
-
-const Add: React.FC<AddProps> = () => {
+const Add = () => {
   const [image1, setImage1] = useState<File | null>(null);
   const [image2, setImage2] = useState<File | null>(null);
   const [image3, setImage3] = useState<File | null>(null);
   const [image4, setImage4] = useState<File | null>(null);
+
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [setPrice] = useState('');
-  const [category, setCategory] = useState("iPhone");
-  const [subCategory, setSubCategory] = useState("Pro");
+
+  const [category, setCategory] = useState('iPhone');
+  const [subCategory, setSubCategory] = useState('Pro');
   const [bestseller, setBestseller] = useState(false);
   const [color, setColor] = useState<string[]>([]);
 
   const colorOptions = ["Black", "Black Titanium", "Desert Titanium", "Gold", "Pink", "Silver", "Teal", "Ultramarine", "White", "Yellow"];
 
   return (
-    <form className="w-full max-w-4xl mx-auto mt-8 space-y-6">
-      {/* Upload */}
+    <form className="max-w-5xl w-full mx-auto mt-10 px-4 sm:px-6 lg:px-8 space-y-8 text-gray-700">
+      {/* Title */}
+      <h2 className="text-2xl font-bold mb-2">Add New Product</h2>
+
+      {/* Image Upload */}
       <div>
-        <label className="font-semibold text-lg mb-2 block">Upload Images</label>
-        <div className="flex gap-3">
+        <label className="block mb-2 font-medium">Upload Images</label>
+        <div className="flex flex-wrap gap-4">
           {[image1, image2, image3, image4].map((img, i) => (
-            <label key={i} htmlFor={`image${i + 1}`} className="cursor-pointer">
+            <label
+              key={i}
+              htmlFor={`image${i + 1}`}
+              className="relative w-24 h-24 border-2 border-dashed rounded-lg cursor-pointer flex items-center justify-center overflow-hidden hover:shadow-md transition"
+            >
               <img
                 src={img ? URL.createObjectURL(img) : assets.upload_area}
-                className="w-24 h-24 object-cover border rounded-md"
-                alt="upload"
+                alt={`upload ${i + 1}`}
+                className="w-full h-full object-cover"
               />
               <input
                 type="file"
@@ -50,42 +54,38 @@ const Add: React.FC<AddProps> = () => {
         </div>
       </div>
 
-      {/* Inputs */}
-      <div className="form-control w-full">
-        <label className="label">
-          <span className="label-text">Product Name</span>
-        </label>
+      {/* Name */}
+      <div>
+        <label className="block mb-1 font-medium">Product Name</label>
         <input
           type="text"
-          placeholder="Enter product name"
-          className="input input-bordered w-full"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          placeholder="Type product name"
+          className="w-full max-w-lg border border-gray-300 px-4 py-2 rounded-md focus:outline-none hover:shadow-md focus:shadow-md"
         />
       </div>
 
-      <div className="form-control w-full">
-        <label className="label">
-          <span className="label-text">Product Description</span>
-        </label>
+      {/* Description */}
+      <div>
+        <label className="block mb-1 font-medium">Product Description</label>
         <input
           type="text"
-          placeholder="Description"
-          className="input input-bordered w-full"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          placeholder="Write product description"
+          className="w-full max-w-lg border border-gray-300 px-4 py-2 rounded-md focus:outline-none  hover:shadow-md focus:shadow-md"
         />
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="form-control w-full">
-          <label className="label">
-            <span className="label-text">Category</span>
-          </label>
+      {/* Category, SubCategory, Price */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <label className="block mb-1 font-medium">Category</label>
           <select
-            className="select select-bordered"
-            onChange={(e) => setCategory(e.target.value)}
             value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full border border-gray-300 px-3 py-2 rounded-md focus:outline-none  hover:shadow-md focus:shadow-md"
           >
             <option>Watch</option>
             <option>iPad</option>
@@ -95,74 +95,72 @@ const Add: React.FC<AddProps> = () => {
             <option>TV</option>
           </select>
         </div>
-
-        <div className="form-control w-full">
-          <label className="label">
-            <span className="label-text">Sub Category</span>
-          </label>
+        <div>
+          <label className="block mb-1 font-medium">Sub Category</label>
           <select
-            className="select select-bordered"
-            onChange={(e) => setSubCategory(e.target.value)}
             value={subCategory}
+            onChange={(e) => setSubCategory(e.target.value)}
+            className="w-full border border-gray-300 px-3 py-2 rounded-md focus:outline-none  hover:shadow-md focus:shadow-md"
           >
             <option>Plus</option>
             <option>Pro</option>
             <option>Ultra</option>
           </select>
         </div>
-
-        <div className="form-control w-full">
-          <label className="label">
-            <span className="label-text">Price</span>
-          </label>
+        <div>
+          <label className="block mb-1 font-medium">Price</label>
           <input
             type="number"
-            className="input input-bordered"
             placeholder="100"
-            onChange={(e) => setPrice(e.target.value)}
+
+            className="w-full border border-gray-300 px-3 py-2 rounded-md focus:outline-none  hover:shadow-md focus:shadow-md"
           />
         </div>
       </div>
 
       {/* Color Selection */}
       <div>
-        <label className="block font-semibold mb-2">Select Colors</label>
-        <div className="flex flex-wrap gap-3">
+        <label className="block mb-2 font-medium">Colors</label>
+        <div className="flex flex-wrap gap-2">
           {colorOptions.map((col) => (
-            <div
+            <button
               key={col}
+              type="button"
               onClick={() =>
                 setColor((prev) =>
                   prev.includes(col) ? prev.filter((c) => c !== col) : [...prev, col]
                 )
               }
+              className={`px-3 py-1 rounded-md border text-sm ${color.includes(col)
+                ? 'bg-gray-800 text-white border-gray-800 focus:outline-none  hover:shadow-md focus:shadow-md'
+                : 'bg-gray-100 text-gray-700 border-gray-300'
+                } transition`}
             >
-              <p
-                className={`badge px-4 py-2 cursor-pointer ${color.includes(col) ? "badge-primary" : "badge-ghost"
-                  }`}
-              >
-                {col}
-              </p>
-            </div>
+              {col}
+            </button>
           ))}
         </div>
       </div>
 
-      {/* Bestseller */}
-      <div className="form-control">
-        <label className="label cursor-pointer flex gap-3">
-          <input
-            type="checkbox"
-            className="checkbox"
-            checked={bestseller}
-            onChange={() => setBestseller((prev) => !prev)}
-          />
-          <span className="label-text">Add to bestseller</span>
+      {/* Bestseller Checkbox */}
+      <div className="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          id="bestseller"
+          checked={bestseller}
+          onChange={() => setBestseller((prev) => !prev)}
+          className="accent-black"
+        />
+        <label htmlFor="bestseller" className="text-sm cursor-pointer">
+          Add to Bestseller
         </label>
       </div>
 
-      {/* Submit */}
-      <button type="submit" className="btn btn-neutral w-32">
+      {/* Submit Button */}
+      <button
+        type="submit"
+        className="bg-black text-white px-6 py-3 rounded-md hover:bg-gray-900 transition w-32 focus:outline-none  hover:shadow-md focus:shadow-md"
+      >
         ADD
       </button>
     </form>
