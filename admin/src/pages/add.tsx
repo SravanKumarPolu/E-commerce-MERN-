@@ -1,6 +1,7 @@
 import { assets } from '../assets/assets';
 import axios from 'axios';
 import { backendUrl } from '../App';
+import { toast } from 'react-toastify';
 import { useState } from 'react';
 
 interface AddProps {
@@ -38,9 +39,25 @@ const Add: React.FC<AddProps> = ({ token }) => {
       if (image4) formData.append('image4', image4);
       const response = await axios.post(backendUrl + "/api/product/add", formData, { headers: { token }, })
       console.log(response)
+      if (response.data.success) {
+        toast.success(response.data.message)
+        setName('')
+        setDescription('')
+        setPrice('')
+        setImage1(null)  // Use null instead of false
+        setImage2(null)  // Use null instead of false
+        setImage3(null)  // Use null instead of false
+        setImage4(null)
+      } else {
+        toast.error(response.data.message)
+      }
     } catch (error) {
       console.log(error)
-
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Something went wrong!");
+      }
     }
   }
   return (
