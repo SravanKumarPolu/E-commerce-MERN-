@@ -16,7 +16,7 @@ interface Product {
   image: string[];
 }
 
-const List: React.FC<ListProps> = () => {
+const List: React.FC<ListProps> = ({ token }) => {
   const [list, setList] = useState<Product[]>([]);
   const fetchList = async () => {
     try {
@@ -33,6 +33,29 @@ const List: React.FC<ListProps> = () => {
         toast.error(error.message);
       } else {
         toast.error("Something went wrong!");
+      }
+    }
+  };
+  const removeProduct = async (id: string) => {
+    try {
+      const response = await axios.post(
+        backendUrl + "/api/product/remove",
+        { id },
+        { headers: { token } }
+      );
+
+      if (response.data.success) {
+        toast.success(response.data.message); // Show the success message returned from the backend
+        // Success message
+        fetchList(); // Refresh the list
+      } else {
+        toast.error(response.data.message); // Error message from server
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred");
       }
     }
   };
@@ -64,7 +87,12 @@ const List: React.FC<ListProps> = () => {
             <p>
               {currency} {item.price}
             </p>
-
+            <p
+              onClick={() => removeProduct(item._id)} // OnClick calls the removeProduct function
+              className="text-right md:text-center cursor-pointer text-lg"
+            >
+              X
+            </p>
 
           </div>
         ))}
