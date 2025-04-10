@@ -1,6 +1,7 @@
 import { backendUrl, currency } from "../App";
 import { useEffect, useState } from "react";
 
+import DeleteIcon from "../assets/DeleteIcon";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -89,9 +90,9 @@ const List: React.FC<ListProps> = ({ token }) => {
             </p>
             <p
               onClick={() => removeProduct(item._id)} // OnClick calls the removeProduct function
-              className="text-right md:text-center cursor-pointer text-lg"
+              className="text-right md:text-center cursor-pointer  text-lg"
             >
-              X
+              <DeleteIcon />
             </p>
 
           </div>
