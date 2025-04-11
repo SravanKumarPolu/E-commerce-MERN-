@@ -1,9 +1,8 @@
-import { backendUrl, currency } from "../App";
 import { useEffect, useState } from "react";
-
-import DeleteIcon from "../assets/DeleteIcon";
 import axios from "axios";
 import { toast } from "react-toastify";
+import DeleteIcon from "../assets/DeleteIcon";
+import { backendUrl, currency } from "../App";
 
 interface ListProps {
   token: string;
@@ -19,88 +18,94 @@ interface Product {
 
 const List: React.FC<ListProps> = ({ token }) => {
   const [list, setList] = useState<Product[]>([]);
+
   const fetchList = async () => {
     try {
-      const response = await axios.get(backendUrl + '/api/product/list');
-
+      const response = await axios.get(`${backendUrl}/api/product/list`);
       if (response.data.success) {
         setList(response.data.products);
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.log(error);
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("Something went wrong!");
-      }
+      if (error instanceof Error) toast.error(error.message);
+      else toast.error("Something went wrong!");
     }
   };
+
   const removeProduct = async (id: string) => {
     try {
       const response = await axios.post(
-        backendUrl + "/api/product/remove",
+        `${backendUrl}/api/product/remove`,
         { id },
         { headers: { token } }
       );
-
       if (response.data.success) {
-        toast.success(response.data.message); // Show the success message returned from the backend
-        // Success message
-        fetchList(); // Refresh the list
+        toast.success(response.data.message);
+        fetchList();
       } else {
-        toast.error(response.data.message); // Error message from server
+        toast.error(response.data.message);
       }
     } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("An unexpected error occurred");
-      }
+      if (error instanceof Error) toast.error(error.message);
+      else toast.error("Unexpected error occurred");
     }
   };
 
   useEffect(() => {
     fetchList();
   }, []);
+
   return (
-    <>
-      <p className="mb-2">All Products List</p>
-      <div className="flex flex-col gap-2">
-    
-        {/* List table Title */}
-        <div className="hidden md:grid grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center py-1 px-2 border bg-gray-100 text-sm">
-          <b>Image</b>
-          <b>Name</b>
-          <b>Category</b>
-          <b>Price</b>
-          <b className="text-center">Action</b>
-        </div>
-        {/* Product List */}
-        {list.map((item, index) => (
-          <div
-            className="hidden md:grid grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center py-1 px-2 border text-sm"
-            key={index}
+  // Keep the same logic from above, only replace the table render part:
+
+<div className="mt-6">
+  <h2 className="text-xl font-semibold mb-4">All Products List</h2>
+
+  <div className="overflow-x-auto rounded-md border border-gray-200 shadow">
+    <table className="min-w-full text-sm text-left">
+      <thead className="bg-gray-100 text-gray-600 uppercase tracking-wider">
+        <tr>
+          <th className="px-4 py-2">Image</th>
+          <th className="px-4 py-2">Name</th>
+          <th className="px-4 py-2">Category</th>
+          <th className="px-4 py-2">Price</th>
+          <th className="px-4 py-2 text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {list.map((item) => (
+          <tr
+            key={item._id}
+            className="border-t hover:bg-gray-50 transition duration-150"
           >
-            <img className="w-12" src={item.image[0]} alt={item.name} />
-            <p>{item.name}</p>
-            <p>{item.category}</p>
-            <p>
+            <td className="px-4 py-2">
+              <img src={item.image[0]} alt={item.name} className="w-12 h-12 object-cover rounded" />
+            </td>
+            <td className="px-4 py-2">{item.name}</td>
+            <td className="px-4 py-2">{item.category}</td>
+            <td className="px-4 py-2">
               {currency} {item.price}
-            </p>
-            <p
-              onClick={() => removeProduct(item._id)} // OnClick calls the removeProduct function
-              className="text-right md:text-center text-red-500 cursor-pointer  text-lg"
-            >
-              <DeleteIcon />
-            </p>
-
-          </div>
+            </td>
+            <td className="px-4 py-2 text-center">
+              <button
+                onClick={() => removeProduct(item._id)}
+                className="text-red-600 hover:text-red-800"
+              >
+                <DeleteIcon className="w-5 h-5" />
+              </button>
+            </td>
+          </tr>
         ))}
-      </div>
-    </>
-  )
-}
+      </tbody>
+    </table>
+    {list.length === 0 && (
+      <p className="text-center py-4 text-gray-500">No products found.</p>
+    )}
+  </div>
+</div>
 
-export default List
+  );
+};
+
+export default List;
