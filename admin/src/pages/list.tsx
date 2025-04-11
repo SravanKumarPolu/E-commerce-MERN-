@@ -68,6 +68,7 @@ const List: React.FC<ListProps> = ({ token }) => {
     <>
       <p className="mb-2">All Products List</p>
       <div className="flex flex-col gap-2">
+    
         {/* List table Title */}
         <div className="hidden md:grid grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center py-1 px-2 border bg-gray-100 text-sm">
           <b>Image</b>
@@ -90,7 +91,7 @@ const List: React.FC<ListProps> = ({ token }) => {
             </p>
             <p
               onClick={() => removeProduct(item._id)} // OnClick calls the removeProduct function
-              className="text-right md:text-center cursor-pointer  text-lg"
+              className="text-right md:text-center text-red-500 cursor-pointer  text-lg"
             >
               <DeleteIcon />
             </p>
