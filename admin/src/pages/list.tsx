@@ -1,8 +1,8 @@
+import { backendUrl, currency } from "../App";
 import { useEffect, useState } from "react";
+import DeleteIcon from "../assets/DeleteIcon";
 import axios from "axios";
 import { toast } from "react-toastify";
-import DeleteIcon from "../assets/DeleteIcon";
-import { backendUrl, currency } from "../App";
 
 interface ListProps {
   token: string;
@@ -27,9 +27,8 @@ const List: React.FC<ListProps> = ({ token }) => {
       } else {
         toast.error(response.data.message);
       }
-    } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
-      else toast.error("Something went wrong!");
+    } catch (error: any) {
+      toast.error(error?.message || "Something went wrong!");
     }
   };
 
@@ -46,9 +45,8 @@ const List: React.FC<ListProps> = ({ token }) => {
       } else {
         toast.error(response.data.message);
       }
-    } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
-      else toast.error("Unexpected error occurred");
+    } catch (error: any) {
+      toast.error(error?.message || "An unexpected error occurred");
     }
   };
 
@@ -57,54 +55,63 @@ const List: React.FC<ListProps> = ({ token }) => {
   }, []);
 
   return (
-  // Keep the same logic from above, only replace the table render part:
+    <div className="w-full">
+      <h2 className="text-xl font-semibold mb-4">All Products List</h2>
 
-<div className="mt-6">
-  <h2 className="text-xl font-semibold mb-4">All Products List</h2>
+      {/* Desktop Layout */}
+      <div className="hidden md:grid grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center py-3 px-4 bg-gray-100 border rounded-md text-sm font-semibold text-gray-600">
+        <span>Image</span>
+        <span>Name</span>
+        <span>Category</span>
+        <span>Price</span>
+        <span className="text-center">Action</span>
+      </div>
 
-  <div className="overflow-x-auto rounded-md border border-gray-200 shadow">
-    <table className="min-w-full text-sm text-left">
-      <thead className="bg-gray-100 text-gray-600 uppercase tracking-wider">
-        <tr>
-          <th className="px-4 py-2">Image</th>
-          <th className="px-4 py-2">Name</th>
-          <th className="px-4 py-2">Category</th>
-          <th className="px-4 py-2">Price</th>
-          <th className="px-4 py-2 text-center">Action</th>
-        </tr>
-      </thead>
-      <tbody>
+      <div className="flex flex-col gap-2 mt-2">
         {list.map((item) => (
-          <tr
+          <div
             key={item._id}
-            className="border-t hover:bg-gray-50 transition duration-150"
+            className="grid grid-cols-1 md:grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center border rounded-md p-3 md:p-2 text-sm gap-y-2 md:gap-0 hover:shadow-md transition"
           >
-            <td className="px-4 py-2">
-              <img src={item.image[0]} alt={item.name} className="w-12 h-12 object-cover rounded" />
-            </td>
-            <td className="px-4 py-2">{item.name}</td>
-            <td className="px-4 py-2">{item.category}</td>
-            <td className="px-4 py-2">
-              {currency} {item.price}
-            </td>
-            <td className="px-4 py-2 text-center">
+            {/* Mobile Label */}
+            <div className="md:hidden flex items-center gap-4">
+              <img src={item.image[0]} alt={item.name} className="w-16 h-16 object-cover rounded-md" />
+              <div>
+                <p className="font-medium">{item.name}</p>
+                <p className="text-xs text-gray-500">{item.category}</p>
+                <p className="text-sm font-semibold mt-1">
+                  {currency} {item.price}
+                </p>
+              </div>
               <button
                 onClick={() => removeProduct(item._id)}
-                className="text-red-600 hover:text-red-800"
+                className="ml-auto text-red-500 hover:text-red-600 transition"
+                aria-label="Delete product"
               >
-                <DeleteIcon className="w-5 h-5" />
+                <DeleteIcon />
               </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-    {list.length === 0 && (
-      <p className="text-center py-4 text-gray-500">No products found.</p>
-    )}
-  </div>
-</div>
+            </div>
 
+            {/* Desktop Layout */}
+            <img src={item.image[0]} alt={item.name} className="hidden md:block w-14 h-14 object-cover rounded" />
+            <p className="hidden md:block">{item.name}</p>
+            <p className="hidden md:block">{item.category}</p>
+            <p className="hidden md:block">
+              {currency} {item.price}
+            </p>
+            <div className="hidden md:flex justify-center">
+              <button
+                onClick={() => removeProduct(item._id)}
+                className="text-red-500 hover:text-red-600 cursor-pointer transition text-lg"
+                aria-label="Delete product"
+              >
+                <DeleteIcon />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 
