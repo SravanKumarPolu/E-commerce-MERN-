@@ -5,6 +5,9 @@ A responsive, feature-rich E-Commerce Website built using React, TypeScript, and
 
 ## 🛠️ Tech Stack
 
+
+Deployment: Netlify (Client), Render (Server)
+
 1. Frontend: React.js, TypeScript, Tailwind CSS, Framer Motion
 
 2. State Management: React Context API / Redux (if applicable)
