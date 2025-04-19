@@ -37,7 +37,7 @@ const Footer = () => {
               <FaPhoneAlt className="text-gray-500" /> +00-000-000
             </li>
             <li className="flex justify-center md:justify-start items-center gap-2 text-sm">
-              <FaEnvelope className="text-gray-500" /> contact@buyme.com
+              <FaEnvelope className="text-gray-500" /> contact@e-commerce.com
             </li>
           </ul>
         </div>
