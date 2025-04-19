@@ -37,7 +37,7 @@ const Footer = () => {
               <FaPhoneAlt className="text-gray-500" /> +00-000-000
             </li>
             <li className="flex justify-center md:justify-start items-center gap-2 text-sm">
-              <FaEnvelope className="text-gray-500" /> contact@e-commerce.com
+              <FaEnvelope className="text-gray-500" /> contact@Apple-Store.com
             </li>
           </ul>
         </div>
@@ -46,7 +46,7 @@ const Footer = () => {
 
       <div className="border-t border-gray-300 py-4">
         <p className="text-center text-gray-600 text-sm font-workSans">
-          &copy; {new Date().getFullYear()} BuyMe You — All Rights Reserved
+          &copy; {new Date().getFullYear()} Apple Store You — All Rights Reserved
         </p>
       </div>
     </footer>
