@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 const Hero = () => {
   return (
-    <div className="flex flex-col sm:flex-row items-center border border-gray-200 rounded-2xl shadow-xl overflow-hidden bg-white font-openSans">
+    <div className="flex  flex-col sm:flex-row items-center border border-gray-200 rounded-2xl shadow-xl overflow-hidden bg-white font-openSans ">
       
       {/* Left Section */}
       <motion.div
