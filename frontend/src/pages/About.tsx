@@ -4,7 +4,7 @@ import { assets } from "../assets/assets";
 
 const About = () => {
   return (
-    <div className="text-2xl text-center pt-8 border-t">
+    <div className="text-2xl text-center">
       {/* About Us Title */}
       <div className="text-3xl text-center pt-8 border-t font-raleway text-gray-900">
         <Title text1={'ABOUT'} text2={'US'} />
@@ -12,7 +12,11 @@ const About = () => {
 
       {/* About Content */}
       <div className="my-12 flex flex-col md:flex-row gap-16 md:gap-24">
-        <img className="w-full md:max-w-[450px] rounded-lg shadow-lg mx-auto md:mx-0" src={assets.about_img} alt="About Apple" />
+      <img
+            src={assets.about_img}
+            alt="About Apple Store"
+            className="w-full md:max-w-sm rounded-xl shadow-lg"
+          />
         <div className="flex flex-col justify-center gap-6 md:w-2/3 text-gray-600 font-notoSans">
           <p className="leading-relaxed text-lg">
             At the Apple Store, we invite you to explore our latest range of products, from iPhones to Macs, designed to fit your lifestyle. Whether you're upgrading your current device or discovering new innovations, we have everything you need. Follow us for the latest updates, tech tips, and exclusive offers. Experience the future of technology today with Apple.
@@ -47,7 +51,7 @@ const About = () => {
           <p>From personalized support in-store to seamless online experiences, Apple’s customer service is always ready to help you get the most out of your device.</p>
         </div>
       </div>
-      <div className="bg-gray-100 py-4">
+      <div className="py-4">
       <NewsletterBox />
       </div>
 
