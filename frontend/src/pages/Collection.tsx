@@ -67,120 +67,65 @@ const Collection = () => {
   }, [sortType])
   return (
     <div className="flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t">
-      {/* Filter Options */}
-      <div className="w-full sm:w-64 bg-base-200 p-4 rounded-lg shadow-md">
-        <p
-          onClick={() => setShowFilter(!showFilter)}
-          className="my-2 text-xl flex items-center cursor-pointer gap-2"
-        >
-          Filter
-          <img
-            src={assets.dropdown_icon}
-            className={`h-3 sm:hidden ${showFilter ? "rotate-10" : ""}`}
-            alt=""
-          />
-        </p>
-        <div className={`${showFilter ? "block" : "hidden"} sm:block mt-4 space-y-4`}>
-          {/* Category filter */}
-          <div className="border p-3  rounded-lg  bg-white shadow-sm">
-            <p className="font-medium text-sm my-1">Categories</p>
-            <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
-              <p className="flex gap-1">
-                <input
-                  className="w-3"
-                  type="checkbox"
-                  value="Watch"
-                  onChange={toggleCategory}
-                />
-                Watch
-              </p>
-              <p className="flex gap-1">
-                <input
-                  className="w-3"
-                  type="checkbox"
-                  value="iPad"
-                  onChange={toggleCategory}
-                />
-                iPad
-              </p>
-              <p className="flex gap-1">
-                <input
-                  className="w-3"
-                  type="checkbox"
-                  value="iPhone"
-                  onChange={toggleCategory}
-                />
-                iPhone
-              </p>
-              <p className="flex gap-1">
-                <input
-                  className="w-3"
-                  type="checkbox"
-                  value="Laptop"
-                  onChange={toggleCategory}
-                />
-                Laptop
-              </p>
-              <p className="flex gap-1">
-                <input
-                  className="w-3"
-                  type="checkbox"
-                  value="Airpods"
-                  onChange={toggleCategory}
-                />
-                Airpods
-              </p>
-              <p className="flex gap-1">
-                <input
-                  className="w-3"
-                  type="checkbox"
-                  value="TV"
-                  onChange={toggleCategory}
-                />
-                TV
-              </p>
-            </div>
+    <div className="w-full sm:w-72 bg-base-200 p-4 rounded-2xl shadow-md">
+  <div className="collapse sm:collapse-open bg-base-100 rounded-lg">
+    <input
+      type="checkbox"
+      className="sm:hidden"
+      checked={showFilter}
+      onChange={() => setShowFilter(!showFilter)}
+    />
+    <div className="collapse-title text-lg font-semibold cursor-pointer flex items-center justify-between">
+      Filter Options
+      <img
+        src={assets.dropdown_icon}
+        className={`h-3 transition-transform duration-200 ${
+          showFilter ? "rotate-180" : ""
+        } sm:hidden`}
+        alt="Toggle"
+      />
+    </div>
 
-          </div>
-
-          {/* SubCategory */}
-          <div className="border p-3 rounded-lg bg-white shadow-sm">
-            <p className="font-medium text-sm my-1">Type</p>
-            <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
-
-              <p className="flex gap-1">
-                <input
-                  className="w-3"
-                  type="checkbox"
-                  value="Plus"
-                  onChange={toggleSubCategory}
-                />
-                Plus
-              </p>
-              <p className="flex gap-1">
-                <input
-                  className="w-3"
-                  type="checkbox"
-                  value="Pro"
-                  onChange={toggleSubCategory}
-                />
-                Pro
-              </p>
-              <p className="flex gap-1">
-                <input
-                  className="w-3"
-                  type="checkbox"
-                  value="Ultra"
-                  onChange={toggleSubCategory}
-
-                />
-                Ultra
-              </p>
-            </div>
-          </div>
+    <div className="collapse-content space-y-6 mt-2">
+      {/* Category Filter */}
+      <div className="bg-base-100 border border-base-300 rounded-lg p-4 shadow-sm">
+        <h3 className="text-sm font-medium mb-2">Categories</h3>
+        <div className="form-control space-y-2">
+          {["Watch", "iPad", "iPhone", "Laptop", "Airpods", "TV"].map((item) => (
+            <label key={item} className="label cursor-pointer justify-start gap-2">
+              <input
+                type="checkbox"
+                value={item}
+                onChange={toggleCategory}
+                className="checkbox checkbox-sm checkbox-primary"
+              />
+              <span className="label-text text-sm">{item}</span>
+            </label>
+          ))}
         </div>
-
       </div>
+
+      {/* Type Filter */}
+      <div className="bg-base-100 border border-base-300 rounded-lg p-4 shadow-sm">
+        <h3 className="text-sm font-medium mb-2">Type</h3>
+        <div className="form-control space-y-2">
+          {["Plus", "Pro", "Ultra"].map((type) => (
+            <label key={type} className="label cursor-pointer justify-start gap-2">
+              <input
+                type="checkbox"
+                value={type}
+                onChange={toggleSubCategory}
+                className="checkbox checkbox-sm checkbox-secondary"
+              />
+              <span className="label-text text-sm">{type}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
       {/* Right Side */}
       <div className="flex-1">
