@@ -3,20 +3,40 @@ import { ShopContext } from '../context/ShopContext';
 import Title from './Title';
 import { motion } from 'framer-motion';
 import ProductItems from './ProductItems';
+interface Product {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  image: string[]; // <-- this is an array
+  category: string;
+  subCategory: string;
+  colors: string[];
+  date: number;
+  bestseller: boolean;
+}
 
 const BestSeller: React.FC = () => {
   const context = useContext(ShopContext);
 
-  if (!context || !context.products) {
+  if (!context) {
+    return null;
+  }
+  
+  const { products } = context;
+  
+  if (!products || products.length === 0) {
     return (
       <section className="py-12 text-center text-gray-500">
-        No best sellers available at the moment.
+        Loading best sellers...
       </section>
     );
   }
+  
 
-  const { products } = context;
-  const [bestSeller, setBestSeller] = useState<typeof products>([]);
+  const [bestSeller, setBestSeller] = useState<Product[]>([]);
+
+
 
   useEffect(() => {
     if (products.length > 0) {
@@ -25,14 +45,16 @@ const BestSeller: React.FC = () => {
   }, [products]);
 
   return (
-    <section className="py-4">
+    <section className="px-4 sm:px-6 md:px-8 lg:px-12
+">
       {/* Section Title */}
-      <div className="text-center mb-10">
-        <Title text1="Best" text2="Seller" />
-        <p className="w-3/4 mx-auto text-sm sm:text-base text-gray-500 mt-2">
-          Discover our top-selling products loved by customers worldwide.
-        </p>
-      </div>
+      <header className="text-center mb-10">
+  <Title text1="Best" text2="Seller" />
+  <p className="w-3/4 mx-auto text-sm sm:text-base text-gray-500 mt-2">
+    Discover our top-selling products loved by customers worldwide.
+  </p>
+</header>
+
 
       {/* Product Grid */}
       <div className=" grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 px-4">
