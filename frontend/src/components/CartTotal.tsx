@@ -1,35 +1,43 @@
 import Title from "./Title";
-import { useShopContext } from "../context/ShopContext"
+import { useShopContext } from "../context/ShopContext";
 
 const CartTotal = () => {
   const { currency, delivery_fee, getCartAmount } = useShopContext();
+
+  const subtotal = getCartAmount();
+  const shipping = subtotal === 0 ? 0 : delivery_fee;
+  const total = subtotal + shipping;
+
   return (
-    <div className='w-full '>
-      <div className='text-xl'>
-        <Title text1={'CART'} text2={'TOTAL'} />
-      </div>
-      <div className='flex flex-col gap-2 mt-2 text-sm'>
-        <div className='flex justify-between'>
-          <p>SubTotal</p>
-          <p>{currency}{getCartAmount()}.00</p>
-        </div>
-        <hr />
-        <div className='flex justify-between'>
-          <p> Shipping fee</p>
-          <p>{currency} {delivery_fee}.00</p>
-        </div>
-        <hr />
-        <div className='flex justify-between'>
-          <b>Total</b>
-          <b>
-            {currency}{getCartAmount() === 0 ? 0 : getCartAmount() + delivery_fee}.00
-          </b>
-        </div>
-
+    <section className="w-full bg-white shadow-md rounded-2xl p-6 md:p-8">
+      {/* Title */}
+      <div className="mb-4">
+        <Title text1="Cart" text2="Summary" />
+        <p className="text-sm text-neutral-500 mt-1">
+          Review your items and proceed to checkout.
+        </p>
       </div>
 
-    </div>
-  )
-}
+      {/* Price Details */}
+      <div className="space-y-4 text-base text-neutral-700">
+        <div className="flex justify-between">
+          <span className="text-neutral-500">Subtotal</span>
+          <span>{currency}{subtotal.toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-neutral-500">Shipping Fee</span>
+          <span>{currency}{shipping.toFixed(2)}</span>
+        </div>
+        <hr className="border-neutral-200" />
+        <div className="flex justify-between font-semibold text-lg text-green-500">
+          <span>Total</span>
+          <span>{currency}{total.toFixed(2)}</span>
+        </div>
+      </div>
 
-export default CartTotal
+
+    </section>
+  );
+};
+
+export default CartTotal;
