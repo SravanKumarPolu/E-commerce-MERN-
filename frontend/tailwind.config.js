@@ -12,7 +12,7 @@ export default {
         montserrat: ['Montserrat', 'sans-serif'], // For headlines
         openSans: ['Open Sans', 'sans-serif'],    // For body text
         workSans: ['Work Sans', 'sans-serif'],    // For Button font
-
+        sans: ['Work Sans', 'sans-serif'],
         poppins: ['Poppins', 'sans-serif'],       // For headlines
         roboto: ['Roboto', 'sans-serif'],         // For body text
         barlow: ['Barlow', 'sans-serif'],         // for Button font
@@ -29,7 +29,7 @@ export default {
         notoSans: ['Noto Sans', 'sans-serif'],    // For body text
         workSans: ['Work Sans', 'sans-serif'],    // For Button font
 
-
+    
 
 
 

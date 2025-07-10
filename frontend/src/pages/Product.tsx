@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-
 import RelatedProducts from "../components/RelatedProducts";
 import { ShopContext } from "../context/ShopContext";
 import { assets } from "../assets/assets";
@@ -27,7 +26,7 @@ const Product: React.FC = () => {
   const [productData, setProductData] = useState<Product | null>(null);
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
-
+  const [activeTab, setActiveTab] = useState<"desc" | "reviews">("desc");
 
   useEffect(() => {
     if (products && productId) {
@@ -35,6 +34,7 @@ const Product: React.FC = () => {
       if (product) {
         setProductData(product);
         setSelectedImage(product.image[0]);
+        setSelectedColor("");
       }
     }
   }, [products, productId]);
@@ -47,9 +47,10 @@ const Product: React.FC = () => {
     setSelectedColor(color);
   };
 
+  const productRating = productData.rating ?? 4;
 
   return productData ? (
-    <div className="border-t-2 pt-10 transition-opacity ease-in duration-500">
+    <main className="border-t-2 pt-10 transition-opacity ease-in duration-500">
       <div className="flex flex-col sm:flex-row gap-8">
         {/* Image Section */}
         <div className="flex-1 flex flex-col sm:flex-row gap-6">
@@ -92,8 +93,8 @@ const Product: React.FC = () => {
               {[...Array(5)].map((_, index) => (
                 <img
                   key={index}
-                  src={assets.star_icon}
-                  alt={`Star ${index}`}
+                  src={index < productRating ? assets.star_icon : assets.star_dull_icon}
+                  alt={`Star ${index + 1}`}
                   className="w-3.5"
                 />
               ))}
@@ -112,7 +113,7 @@ const Product: React.FC = () => {
             {productData.category} / {productData.subCategory}
           </p>
 
-          {/* Size Selection */}
+          {/* Color Selection */}
           <div className="mb-6">
             <label className="text-sm font-medium text-gray-800 mb-2 block">
               Select Color:
@@ -124,9 +125,13 @@ const Product: React.FC = () => {
                     key={color}
                     onClick={() => handleSizeChange(color)}
                     className={`px-4 py-2 border rounded-lg ${selectedColor === color
-                        ? "bg-blue-600 text-white"
-                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                       }`}
+                    role="radio"
+                    aria-checked={selectedColor === color}
+                    tabIndex={0}
+                    aria-label={`Select ${color} color`}
                   >
                     {color}
                   </button>
@@ -137,7 +142,6 @@ const Product: React.FC = () => {
             </div>
           </div>
 
-
           <p className="text-sm text-gray-600">
             <span className="font-medium text-gray-800">Date Added:</span>{" "}
             {new Date(productData.date).toLocaleDateString()}
@@ -147,21 +151,25 @@ const Product: React.FC = () => {
           <div className="mt-6">
             <button
               onClick={(e) => {
-                e.preventDefault(); // Ensure default behavior doesn't interrupt
+                e.preventDefault();
                 if (!selectedColor) {
                   toast.error("Please select a color");
                   return;
                 }
                 addToCart(productData._id, selectedColor);
               }}
-              className={`w-full sm:w-auto bg-blue-600 text-white text-lg font-medium py-3 px-6 
-rounded-lg shadow hover:bg-blue-700 transition duration-300`}
+              disabled={!selectedColor}
+              className={`w-full sm:w-auto text-white text-lg font-medium py-3 px-6 
+                rounded-lg shadow transition duration-300 
+                ${!selectedColor
+                  ? "bg-blue-600 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"}`}
+              aria-label="Add product to cart"
             >
               {selectedColor ? "Add to Cart" : "Select a Color First"}
             </button>
-
-
           </div>
+
           <hr className="mt-8 sm:w-4/5" />
           <div className="text-sm text-gray-500 mt-5 flex flex-col gap-1">
             <p>100% Original product.</p>
@@ -174,13 +182,26 @@ rounded-lg shadow hover:bg-blue-700 transition duration-300`}
       {/* Description and Reviews */}
       <div className="mt-20">
         <div className="flex">
-          <b className="border px-5 py-3 text-sm">Description</b>
-          <p className="border px-5 py-3 text-sm">Reviews(111)</p>
+          <button
+            className={`border px-5 py-3 text-sm ${activeTab === "desc" ? "bg-gray-100 font-medium" : ""}`}
+            onClick={() => setActiveTab("desc")}
+          >
+            Description
+          </button>
+          <button
+            className={`border px-5 py-3 text-sm ${activeTab === "reviews" ? "bg-gray-100 font-medium" : ""}`}
+            onClick={() => setActiveTab("reviews")}
+          >
+            Reviews(111)
+          </button>
+        </div>
+        <div className="mt-5 text-sm text-gray-700">
+          {activeTab === "desc" ? productData.description : <p>No reviews yet.</p>}
         </div>
       </div>
 
       <RelatedProducts category={productData.category} subCategory={productData.subCategory} />
-    </div>
+    </main>
   ) : <div className="opacity-0"></div>;
 };
 
