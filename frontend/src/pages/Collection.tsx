@@ -66,7 +66,7 @@ const Collection = () => {
     sortProduct();
   }, [sortType])
   return (
-    <div className="flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t">
+    <div className="flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 ">
     <div className="w-full sm:w-72 bg-base-200 p-4 rounded-2xl shadow-md">
   <div className="collapse sm:collapse-open bg-base-100 rounded-lg">
     <input
