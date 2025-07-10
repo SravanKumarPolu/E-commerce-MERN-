@@ -4,7 +4,18 @@ import Title from './Title';
 import ProductItems from './ProductItems';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-
+interface Product {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  image: string[]; // <-- this is an array
+  category: string;
+  subCategory: string;
+  colors: string[];
+  date: number;
+  bestseller: boolean;
+}
 const LatestCollection: React.FC = () => {
   const context = useContext(ShopContext);
   const navigate = useNavigate();
