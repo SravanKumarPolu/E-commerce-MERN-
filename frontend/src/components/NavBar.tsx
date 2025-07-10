@@ -16,20 +16,21 @@ const NavBar = () => {
 
   return (
     <>
-      <div className="font-outfit flex items-center justify-between py-5 font-medium relative z-50 px-4">
+          <header className="sticky  top-0 z-50 bg-white border-b border-gray-100 shadow-sm px-4 sm:px-6 lg:px-10">
+<div className="flex items-center justify-between h-16">
         {/* Logo */}
         <Link to="/" aria-label="Go to homepage">
           <img src={assets.logo} className="w-10" alt="Logo" />
         </Link>
 
         {/* Desktop Tabs */}
-        <div role="tablist" className="tabs tabs-lifted hidden sm:flex text-sm text-gray-900">
-        <div role="tablist" className="tabs tabs-lifted hidden sm:flex text-sm text-gray-900">
+
+        <div role="tablist" className="tabs tabs-lifted hidden sm:flex text-sm text-black font-semibold">
         <NavLink
           to="/"
           role="tab"
           className={({ isActive }) =>
-            `tab  flex-col items-center gap-1 ${isActive ? 'tab-active bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-yellow-500' : ''}`
+            `tab  flex-col items-center gap-1 ${isActive ? 'tab-active bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-yellow-500' : 'text-black font-semibold'}`
           }
         >
           <p>Home</p>
@@ -41,7 +42,7 @@ const NavBar = () => {
           to="/collection"
           role="tab"
           className={({ isActive }) =>
-            `tab  flex-col items-center gap-1 ${isActive ? 'tab-active bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-yellow-500' : ''}`
+            `tab  flex-col items-center gap-1 ${isActive ? 'tab-active bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-yellow-500' : 'text-black font-semibold'}`
           }
         >
           <p>Collection</p>
@@ -50,7 +51,7 @@ const NavBar = () => {
           to="/about"
           role="tab"
           className={({ isActive }) =>
-            `tab  flex-col items-center gap-1 ${isActive ? 'tab-active bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-yellow-500' : ''}`
+            `tab  flex-col items-center gap-1 ${isActive ? 'tab-active bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-yellow-500' : 'text-black font-semibold'}`
           }
         >
           <p>About</p>
@@ -59,13 +60,13 @@ const NavBar = () => {
           to="/contact"
           role="tab"
           className={({ isActive }) =>
-            `tab  flex-col items-center gap-1 ${isActive ? 'tab-active bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-yellow-500' : ''}`
+            `tab  flex-col items-center gap-1 ${isActive ? 'tab-active bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-yellow-500' : 'text-black font-semibold'}`
           }
         >
           <p>Contact</p>
         </NavLink>
         </div>
-        </div>
+     
 
         {/* Right Icons */}
         <div className="flex items-center gap-6">
@@ -155,6 +156,7 @@ const NavBar = () => {
           ))}
         </div>
       </div>
+      </header>
     </>
   );
 };
