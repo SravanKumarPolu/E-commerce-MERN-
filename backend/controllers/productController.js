@@ -14,9 +14,7 @@ try {
       return result.secure_url
     })
   )
-console.log(name, description, price, category, subCategory, color, bestseller )
-console.log(imagesUrl)
-const productData = {
+  const productData = {
   name,
   description,
   price: Number(price),
@@ -27,13 +25,11 @@ const productData = {
   image: imagesUrl,
   date: Date.now()
 };
-console.log(productData )
   const product= new productModel(productData );
   await product.save();
 
 res.json({ success: true, message: "Product Added" })
 } catch (error) {
-  console.log(error);
   res.json({ success: false, message: error.message })
 }
 }
@@ -44,7 +40,6 @@ try {
   await productModel.findByIdAndDelete(req.body.id)
   res.json({ success: true, message: "Product successfully removed" })
 } catch (error) {
-  console.log(error);
   res.json({ success: false, message: error.message })
 }
 }
@@ -55,7 +50,6 @@ const listProducts = async (req, res) => {
     res.json({ success: true, products })
 
   } catch (error) {
-    console.log(error);
     res.json({ success: false, message: error.message })
 
   }
@@ -70,7 +64,6 @@ const singleProduct=async(req,res)=>{
     const product = await productModel.findById(productId)
     res.json({ success: true, product })
   } catch (error) {
-    console.log(error);
     res.json({ success: false, message: error.message })
   }
   }

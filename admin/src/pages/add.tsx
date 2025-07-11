@@ -38,26 +38,20 @@ const Add: React.FC<AddProps> = ({ token }) => {
       if (image3) formData.append('image3', image3);
       if (image4) formData.append('image4', image4);
       const response = await axios.post(backendUrl + "/api/product/add", formData, { headers: { token }, })
-      console.log(response)
       if (response.data.success) {
-        toast.success(response.data.message)
-        setName('')
-        setDescription('')
-        setPrice('')
-        setImage1(null)  // Use null instead of false
-        setImage2(null)  // Use null instead of false
-        setImage3(null)  // Use null instead of false
-        setImage4(null)
+        toast.success(response.data.message);
+        setName('');
+        setDescription('');
+        setImage1(null);
+        setImage2(null);
+        setImage3(null);
+        setImage4(null);
+        setPrice('');
       } else {
-        toast.error(response.data.message)
+        toast.error(response.data.message);
       }
     } catch (error) {
-      console.log(error)
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("Something went wrong!");
-      }
+      toast.error('Error adding product');
     }
   }
   return (

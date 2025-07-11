@@ -1,4 +1,8 @@
 import { FormEvent, useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { backendUrl } from "../config";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const [currentState, setCurrentState] = useState<string>("Login");
@@ -9,19 +13,40 @@ const Login = () => {
     password: "",
   });
 
+  const { setToken } = useAuth();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const onSubmitHandler = async (event: FormEvent) => {
+  const onSubmitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
-    console.log("Form Submitted:", formData);
-    // Simulate API call delay
-    setTimeout(() => {
+    
+    try {
+      if (currentState === 'Sign Up') {
+        const response = await axios.post(backendUrl + '/api/user/register', formData);
+        if (response.data.success) {
+          setToken(response.data.token);
+          localStorage.setItem('token', response.data.token);
+        } else {
+          toast.error(response.data.message);
+        }
+      } else {
+        const response = await axios.post(backendUrl + '/api/user/login', formData);
+        if (response.data.success) {
+          setToken(response.data.token);
+          localStorage.setItem('token', response.data.token);
+        } else {
+          toast.error(response.data.message);
+        }
+      }
+    } catch (error) {
+      toast.error('An error occurred');
+    } finally {
       setLoading(false);
       alert(`Successfully ${currentState === "Login" ? "signed in" : "registered"}`);
-    }, 1500);
+    }
   };
 
   return (

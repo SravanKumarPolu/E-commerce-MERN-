@@ -9,26 +9,19 @@ interface LoginProps {
 const Login: React.FC<LoginProps> = ({ setToken }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmitHandler = async (e: React.FormEvent) => {
     try {
       e.preventDefault();
-      console.log(email, password)
-      const response = await axios.post(backendUrl + "/api/user/admin", { email, password });
-      console.log(response);
+      const response = await axios.post(backendUrl + '/api/user/admin', { email, password });
       if (response.data.success) {
         setToken(response.data.token);
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.log(error)
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("Something went wrong!");
-      }
+      toast.error('Login failed');
     }
-  }
+  };
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100 px-4">
       <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
