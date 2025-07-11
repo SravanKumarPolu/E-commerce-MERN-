@@ -21,7 +21,7 @@ const SearchBar = () => {
       setSearch(inputValue);
     }, 300);
     return () => clearTimeout(timer);
-  }, [inputValue]);
+  }, [inputValue, setSearch]);
 
   // Keyboard shortcut: Ctrl + / or Cmd + /
   useEffect(() => {

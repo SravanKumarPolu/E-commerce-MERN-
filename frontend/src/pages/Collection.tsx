@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 import ProductItems from "../components/ProductItems";
 import Title from "../components/Title";
@@ -31,7 +31,7 @@ const Collection = () => {
     }
   }
 
-  const applyFilter = () => {
+  const applyFilter = useCallback(() => {
     let productsCopy = products.slice()
     if (showSearch && search) {
       productsCopy = productsCopy.filter(item => item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
@@ -43,12 +43,13 @@ const Collection = () => {
       productsCopy = productsCopy.filter(item => subCategory.includes(item.subCategory))
     }
     setFilterProducts(productsCopy)
-  }
+  }, [products, search, showSearch, category, subCategory]);
+
   useEffect(() => {
     applyFilter();
-  }, [category, search, showSearch, subCategory])
+  }, [applyFilter]);
 
-  const sortProduct = () => {
+  const sortProduct = useCallback(() => {
     const fpCopy = filterProducts.slice();
     switch (sortType) {
       case 'low-high':
@@ -61,10 +62,12 @@ const Collection = () => {
         applyFilter();
         break;
     }
-  }
+  }, [filterProducts, sortType, applyFilter]);
+
   useEffect(() => {
     sortProduct();
-  }, [sortType])
+  }, [sortProduct]);
+
   return (
     <div className="flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 ">
     <div className="w-full sm:w-72 bg-base-200 p-4 rounded-2xl shadow-md">

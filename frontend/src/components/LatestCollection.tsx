@@ -4,6 +4,7 @@ import Title from './Title';
 import ProductItems from './ProductItems';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+
 interface Product {
   _id: string;
   name: string;
@@ -16,10 +17,20 @@ interface Product {
   date: number;
   bestseller: boolean;
 }
+
 const LatestCollection: React.FC = () => {
+  // Move all hooks to the top level
   const context = useContext(ShopContext);
   const navigate = useNavigate();
+  const [latestProducts, setLatestProducts] = useState<Product[]>([]);
 
+  useEffect(() => {
+    if (context && context.products && context.products.length > 0) {
+      setLatestProducts(context.products.slice(0, 10));
+    }
+  }, [context]);
+
+  // Handle conditional rendering after hooks
   if (!context) {
     return (
       <section className="py-16 px-4 text-center text-gray-500">
@@ -27,15 +38,6 @@ const LatestCollection: React.FC = () => {
       </section>
     );
   }
-
-  const { products } = context;
-  const [latestProducts, setLatestProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    if (products.length > 0) {
-      setLatestProducts(products.slice(0, 10));
-    }
-  }, [products]);
 
   return (
     <section className="py-16 px-4 sm:px-6 lg:px-8">
