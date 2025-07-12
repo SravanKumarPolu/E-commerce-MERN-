@@ -13,23 +13,80 @@ import {
 import express from 'express';
 import adminAuth from '../middleware/adminAuth.js';
 import userAuth from '../middleware/userAuth.js';
+import {
+  validateOrderPlacement,
+  validatePaymentVerification,
+  validateOrderStatusUpdate,
+  handleValidationErrors,
+  sanitizeInput,
+  commonValidations
+} from '../middleware/validation.js';
 
 const orderRouter = express.Router();
 
+// Apply input sanitization to all routes
+orderRouter.use(sanitizeInput);
+
 // Admin features
 orderRouter.post('/list', adminAuth, allOrders);
-orderRouter.post('/status', adminAuth, updateStatus);
+
+orderRouter.post('/status', 
+  adminAuth,
+  validateOrderStatusUpdate,
+  handleValidationErrors,
+  updateStatus
+);
 
 // Payment features
-orderRouter.post('/place', userAuth, placeOrder);
-orderRouter.post('/stripe', userAuth, placeOrderStripe);
-orderRouter.post('/razorpay', userAuth, placeOrderRazorpay);
-orderRouter.post('/paytm', userAuth, placeOrderPatym);
-orderRouter.post('/gpay', userAuth, placeOrderGPay);
+orderRouter.post('/place', 
+  userAuth,
+  validateOrderPlacement,
+  handleValidationErrors,
+  placeOrder
+);
+
+orderRouter.post('/stripe', 
+  userAuth,
+  validateOrderPlacement,
+  handleValidationErrors,
+  placeOrderStripe
+);
+
+orderRouter.post('/razorpay', 
+  userAuth,
+  validateOrderPlacement,
+  handleValidationErrors,
+  placeOrderRazorpay
+);
+
+orderRouter.post('/paytm', 
+  userAuth,
+  validateOrderPlacement,
+  handleValidationErrors,
+  placeOrderPatym
+);
+
+orderRouter.post('/gpay', 
+  userAuth,
+  validateOrderPlacement,
+  handleValidationErrors,
+  placeOrderGPay
+);
 
 // Verification
-orderRouter.post('/verifyStripe', userAuth, verifyStripe);
-orderRouter.post('/verifyRazorpay', userAuth, verifyRazorpay);
+orderRouter.post('/verifyStripe', 
+  userAuth,
+  validatePaymentVerification,
+  handleValidationErrors,
+  verifyStripe
+);
+
+orderRouter.post('/verifyRazorpay', 
+  userAuth,
+  validatePaymentVerification,
+  handleValidationErrors,
+  verifyRazorpay
+);
 
 // User features
 orderRouter.post('/userorders', userAuth, userOrders);

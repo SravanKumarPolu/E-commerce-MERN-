@@ -2,7 +2,7 @@
 
 ## Overview
 
-This E-commerce MERN application now includes a comprehensive authentication system with modern security features including JWT tokens, email verification, password reset, rate limiting, and more.
+This E-commerce MERN application now includes a comprehensive authentication system with modern security features including JWT tokens, email verification, password reset, rate limiting, **input validation middleware**, and more.
 
 ## 🔐 Security Features
 
@@ -15,7 +15,8 @@ This E-commerce MERN application now includes a comprehensive authentication sys
 - **Password Reset**: Secure token-based password reset
 - **Strong Password Requirements**: Minimum 8 characters with uppercase, lowercase, and numbers
 - **Role-based Access Control**: User and admin roles
-- **Input Validation**: Comprehensive validation for all user inputs
+- **Input Validation**: Comprehensive validation for all user inputs using express-validator
+- **Input Sanitization**: XSS prevention with automatic input sanitization
 
 ### Frontend Security
 - **Automatic Token Refresh**: Seamless token renewal without user intervention
@@ -47,6 +48,47 @@ This E-commerce MERN application now includes a comprehensive authentication sys
 - ✅ Email format validation
 - ✅ JWT token expiration handling
 - ✅ Refresh token rotation
+- ✅ **Input validation middleware** for all endpoints
+- ✅ **XSS prevention** with input sanitization
+- ✅ **MongoDB injection protection**
+- ✅ **Comprehensive error handling**
+
+## 🛡️ Input Validation Features
+
+### Validation Rules
+- **Email Validation**: RFC-compliant email format validation with normalization
+- **Password Strength**: Enforced complexity requirements (8+ chars, uppercase, lowercase, numbers)
+- **Input Length Limits**: Prevents buffer overflow attacks
+- **Type Validation**: Ensures correct data types (string, number, boolean, array)
+- **Range Validation**: Numeric values within acceptable ranges
+- **MongoDB ObjectId**: Validation for database identifiers
+- **Custom Validators**: Business-specific validation rules
+
+### Input Sanitization
+- **XSS Prevention**: All string inputs are sanitized using `validator.escape()`
+- **SQL Injection Protection**: MongoDB ObjectId validation prevents injection
+- **Data Trimming**: Automatic whitespace removal
+- **HTML Escaping**: Prevents script injection attacks
+
+### Validation Error Format
+```json
+{
+  "success": false,
+  "message": "Validation failed",
+  "errors": [
+    {
+      "field": "email",
+      "message": "Please provide a valid email address",
+      "value": "invalid-email"
+    },
+    {
+      "field": "password",
+      "message": "Password must be at least 8 characters long",
+      "value": "123"
+    }
+  ]
+}
+```
 
 ## 📋 API Endpoints
 
@@ -64,6 +106,11 @@ Content-Type: application/json
 }
 ```
 
+**Validation Rules:**
+- `name`: 2-50 characters, letters and spaces only
+- `email`: Valid email format, normalized, max 255 characters
+- `password`: 8-128 characters, must contain uppercase, lowercase, and number
+
 #### User Login
 ```
 POST /api/user/login
@@ -74,6 +121,10 @@ Content-Type: application/json
   "password": "SecurePass123"
 }
 ```
+
+**Validation Rules:**
+- `email`: Valid email format, normalized
+- `password`: Required, non-empty
 
 #### Admin Login
 ```
@@ -86,6 +137,10 @@ Content-Type: application/json
 }
 ```
 
+**Validation Rules:**
+- `email`: Valid email format, normalized
+- `password`: Required, non-empty
+
 #### Refresh Token
 ```
 POST /api/user/refresh-token
@@ -95,6 +150,9 @@ Content-Type: application/json
   "refreshToken": "your_refresh_token_here"
 }
 ```
+
+**Validation Rules:**
+- `refreshToken`: Valid JWT format
 
 #### Email Verification
 ```
@@ -106,6 +164,9 @@ Content-Type: application/json
 }
 ```
 
+**Validation Rules:**
+- `token`: 32-64 character hexadecimal string
+
 #### Request Password Reset
 ```
 POST /api/user/request-password-reset
@@ -115,6 +176,9 @@ Content-Type: application/json
   "email": "john@example.com"
 }
 ```
+
+**Validation Rules:**
+- `email`: Valid email format, normalized
 
 #### Reset Password
 ```
@@ -126,6 +190,10 @@ Content-Type: application/json
   "newPassword": "NewSecurePass123"
 }
 ```
+
+**Validation Rules:**
+- `token`: 32-64 character hexadecimal string
+- `newPassword`: 8-128 characters, strong password requirements
 
 ### Protected Endpoints (Authentication Required)
 
@@ -147,6 +215,10 @@ Content-Type: application/json
 }
 ```
 
+**Validation Rules:**
+- `name`: 2-50 characters, letters and spaces only
+- `email`: Valid email format, normalized, max 255 characters
+
 #### Change Password
 ```
 POST /api/user/change-password
@@ -159,6 +231,10 @@ Content-Type: application/json
 }
 ```
 
+**Validation Rules:**
+- `currentPassword`: Required, non-empty
+- `newPassword`: 8-128 characters, strong password requirements, must be different from current
+
 #### Logout
 ```
 POST /api/user/logout
@@ -169,6 +245,9 @@ Content-Type: application/json
   "refreshToken": "your_refresh_token_here" // optional
 }
 ```
+
+**Validation Rules:**
+- `refreshToken`: Optional, valid JWT format if provided
 
 #### Resend Verification Email
 ```
@@ -286,6 +365,13 @@ const handleRegister = async (name: string, email: string, password: string) => 
 - **Registration**: 5 attempts per 15 minutes per IP
 - **Password reset**: 3 attempts per 15 minutes per IP
 
+### Input Validation
+- **All inputs validated** before processing
+- **Automatic sanitization** to prevent XSS
+- **Type checking** for all data types
+- **Length limits** on all string inputs
+- **Format validation** for emails, phone numbers, etc.
+
 ### Token Management
 - **Access tokens**: 15 minutes expiration
 - **Refresh tokens**: 7 days expiration
@@ -339,6 +425,11 @@ const handleRegister = async (name: string, email: string, password: string) => 
 - **Cause**: Too many failed login attempts
 - **Solution**: Wait 10 minutes or contact support
 
+#### "Validation failed" errors
+- **Cause**: Input data doesn't meet validation requirements
+- **Solution**: Check error details and correct the input format
+- **Example**: Email format, password strength, required fields
+
 #### Email verification not working
 - **Check**: Console logs in development mode
 - **Check**: Email configuration in production
@@ -358,6 +449,7 @@ Enable debug logging by setting `NODE_ENV=development` in backend.
 2. Update bcrypt salt rounds if needed
 3. Review and update rate limiting rules
 4. Monitor for failed login attempts
+5. Update validation rules as needed
 
 ### Database Maintenance
 1. Clean up expired tokens periodically
@@ -372,12 +464,14 @@ Enable debug logging by setting `NODE_ENV=development` in backend.
 - Password reset requests
 - Email verification rates
 - Token refresh patterns
+- Validation failures
 
 ### Recommended Monitoring Tools
 - MongoDB Atlas monitoring
 - Application logs
 - Rate limiting statistics
 - Email delivery reports
+- Validation error tracking
 
 ## 🆘 Support
 
@@ -385,12 +479,20 @@ Enable debug logging by setting `NODE_ENV=development` in backend.
 - Forgot password? Use the "Reset Password" link
 - Email not verified? Check spam folder or resend verification
 - Account locked? Wait 10 minutes and try again
+- Invalid input? Check the error message for specific requirements
 
 ### For Developers
 - Check console logs for detailed error messages
 - Review environment variables
 - Test with different email providers
 - Monitor rate limiting logs
+- Check validation error details
+
+## 📚 Additional Resources
+
+- **[VALIDATION_GUIDE.md](./VALIDATION_GUIDE.md)**: Comprehensive input validation documentation
+- **[Authentication API Testing](./AUTHENTICATION_GUIDE.md#testing)**: Testing authentication endpoints
+- **[Security Best Practices](./AUTHENTICATION_GUIDE.md#security-best-practices)**: Security implementation guidelines
 
 ---
 
@@ -400,4 +502,7 @@ Enable debug logging by setting `NODE_ENV=development` in backend.
 - JWT tokens are signed with separate secrets for access and refresh
 - Email verification is required for full account access
 - Rate limiting is IP-based and configurable
-- All sensitive operations are logged for security monitoring 
+- All sensitive operations are logged for security monitoring
+- **Input validation is applied to all API endpoints automatically**
+- **XSS prevention is built-in with input sanitization**
+- **MongoDB injection protection is enforced through ObjectId validation** 
