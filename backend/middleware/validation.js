@@ -276,6 +276,26 @@ export const secureValidators = {
   }
 };
 
+// General input sanitization middleware (export this)
+export const sanitizeInput = (req, res, next) => {
+  // Sanitize request body
+  if (req.body && typeof req.body === 'object') {
+    req.body = sanitizeObject(req.body);
+  }
+
+  // Sanitize query parameters
+  if (req.query && typeof req.query === 'object') {
+    req.query = sanitizeObject(req.query);
+  }
+
+  // Sanitize URL parameters
+  if (req.params && typeof req.params === 'object') {
+    req.params = sanitizeObject(req.params);
+  }
+
+  next();
+};
+
 // Product validation with enhanced security
 export const validateProduct = [
   body('name')
@@ -368,6 +388,115 @@ export const validateProduct = [
     .isBoolean()
     .withMessage('Bestseller must be a boolean value')
     .toBoolean(),
+
+  advancedValidationHandler
+];
+
+// Product add validation (for admin adding products)
+export const validateProductAdd = [
+  body('name')
+    .trim()
+    .isLength({ min: 1, max: 200 })
+    .withMessage('Product name must be between 1 and 200 characters')
+    .custom((value) => {
+      // Check for XSS attempts
+      const xssPatterns = [
+        /<script/i,
+        /javascript:/i,
+        /on\w+\s*=/i,
+        /<iframe/i,
+        /<object/i,
+        /<embed/i
+      ];
+      
+      const hasXSS = xssPatterns.some(pattern => pattern.test(value));
+      if (hasXSS) {
+        throw new Error('Product name contains potentially dangerous content');
+      }
+      return true;
+    }),
+
+  body('description')
+    .trim()
+    .isLength({ min: 1, max: 2000 })
+    .withMessage('Product description must be between 1 and 2000 characters')
+    .custom((value) => {
+      // Allow basic HTML but sanitize dangerous content
+      const dangerousPatterns = [
+        /<script/i,
+        /javascript:/i,
+        /on\w+\s*=/i,
+        /<iframe/i,
+        /<object/i,
+        /<embed/i,
+        /<form/i
+      ];
+      
+      const isDangerous = dangerousPatterns.some(pattern => pattern.test(value));
+      if (isDangerous) {
+        throw new Error('Product description contains potentially dangerous content');
+      }
+      return true;
+    }),
+
+  body('price')
+    .isFloat({ min: 0, max: 999999.99 })
+    .withMessage('Price must be between 0 and 999999.99')
+    .toFloat(),
+
+  body('category')
+    .trim()
+    .isLength({ min: 1, max: 50 })
+    .withMessage('Category must be between 1 and 50 characters')
+    .matches(/^[a-zA-Z\s\-]+$/)
+    .withMessage('Category contains invalid characters'),
+
+  body('subCategory')
+    .trim()
+    .isLength({ min: 1, max: 50 })
+    .withMessage('Sub-category must be between 1 and 50 characters')
+    .matches(/^[a-zA-Z\s\-]+$/)
+    .withMessage('Sub-category contains invalid characters'),
+
+  body('sizes')
+    .isArray({ max: 20 })
+    .withMessage('Sizes must be an array with maximum 20 items')
+    .custom((sizes) => {
+      if (sizes.some(size => typeof size !== 'string' || size.length > 10)) {
+        throw new Error('Each size must be a string with maximum 10 characters');
+      }
+      return true;
+    }),
+
+  body('bestseller')
+    .optional()
+    .isBoolean()
+    .withMessage('Bestseller must be a boolean value')
+    .toBoolean(),
+
+  advancedValidationHandler
+];
+
+// Product remove validation
+export const validateProductRemove = [
+  body('id')
+    .isMongoId()
+    .withMessage('Invalid product ID format')
+    .customSanitizer((value) => {
+      return validator.escape(value);
+    }),
+
+  advancedValidationHandler
+];
+
+// Product single validation
+export const validateProductSingle = [
+  body('productId')
+    .isMongoId()
+    .withMessage('Invalid product ID format')
+    .customSanitizer((value) => {
+      return validator.escape(value);
+    }),
 
   advancedValidationHandler
 ];
@@ -504,5 +633,113 @@ export const validateFileUpload = [
 
     return true;
   }),
+  advancedValidationHandler
+]; 
+
+// Aliases for user validation functions (to match route imports)
+export const validateRegistration = validateUserRegistration;
+export const validateLogin = validateUserLogin;
+
+// Additional user validation functions
+export const validateAdminLogin = [
+  secureValidators.email,
+  body('password')
+    .notEmpty()
+    .withMessage('Password is required')
+    .isLength({ max: 128 })
+    .withMessage('Password is too long'),
+  advancedValidationHandler
+];
+
+export const validateRefreshToken = [
+  body('refreshToken')
+    .notEmpty()
+    .withMessage('Refresh token is required')
+    .isJWT()
+    .withMessage('Invalid refresh token format'),
+  advancedValidationHandler
+];
+
+export const validateEmailVerification = [
+  body('token')
+    .notEmpty()
+    .withMessage('Verification token is required')
+    .isLength({ min: 10, max: 500 })
+    .withMessage('Invalid verification token'),
+  advancedValidationHandler
+];
+
+export const validatePasswordResetRequest = [
+  secureValidators.email,
+  advancedValidationHandler
+];
+
+export const validatePasswordReset = [
+  body('token')
+    .notEmpty()
+    .withMessage('Reset token is required')
+    .isLength({ min: 10, max: 500 })
+    .withMessage('Invalid reset token'),
+  secureValidators.password,
+  advancedValidationHandler
+];
+
+export const validatePasswordChange = [
+  body('currentPassword')
+    .notEmpty()
+    .withMessage('Current password is required')
+    .isLength({ max: 128 })
+    .withMessage('Current password is too long'),
+  body('newPassword')
+    .custom((value) => {
+      const validation = SecurityUtils.isValidPassword(value);
+      if (!validation.valid) {
+        throw new Error(validation.message);
+      }
+      return true;
+    }),
+  advancedValidationHandler
+];
+
+export const validateProfileUpdate = [
+  secureValidators.name,
+  secureValidators.email,
+  advancedValidationHandler
+];
+
+export const validateLogout = [
+  // No specific validation needed for logout
+  advancedValidationHandler
+];
+
+// Order validation functions
+export const validatePaymentVerification = [
+  body('orderId')
+    .isMongoId()
+    .withMessage('Invalid order ID format'),
+  body('paymentId')
+    .notEmpty()
+    .withMessage('Payment ID is required')
+    .isLength({ min: 1, max: 200 })
+    .withMessage('Payment ID must be between 1 and 200 characters'),
+  body('signature')
+    .optional()
+    .isLength({ max: 500 })
+    .withMessage('Signature is too long'),
+  advancedValidationHandler
+];
+
+export const validateOrderStatusUpdate = [
+  body('orderId')
+    .isMongoId()
+    .withMessage('Invalid order ID format'),
+  body('status')
+    .isIn(['Order Placed', 'Packing', 'Shipped', 'Out for delivery', 'Delivered', 'Cancelled'])
+    .withMessage('Invalid order status'),
+  advancedValidationHandler
+]; 
+
+// Common validation functions that can be reused
+export const commonValidations = [
   advancedValidationHandler
 ]; 
