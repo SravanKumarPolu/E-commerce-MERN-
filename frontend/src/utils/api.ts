@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { backendUrl } from '../config';
 
+// Configure axios defaults
+axios.defaults.headers.common['Content-Type'] = 'application/json';
+
 // Types
 export interface Product {
   _id: string;
@@ -73,9 +76,25 @@ class ApiService {
   // Product API methods
   async getProducts(): Promise<ApiResponse<Product[]>> {
     try {
-      const response = await axios.get(`${backendUrl}/api/product/list`);
+      console.log('Fetching products from:', `${backendUrl}/api/product/list`);
+      const response = await axios.get(`${backendUrl}/api/product/list`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        timeout: 30000,
+      });
+      console.log('Products response:', response.data);
       return response.data;
     } catch (error: any) {
+      console.error('Error fetching products:', error);
+      if (error.response) {
+        console.error('Response data:', error.response.data);
+        console.error('Response status:', error.response.status);
+      } else if (error.request) {
+        console.error('Request made but no response:', error.request);
+      } else {
+        console.error('Error message:', error.message);
+      }
       throw error.response?.data || error;
     }
   }
