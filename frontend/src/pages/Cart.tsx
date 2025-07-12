@@ -3,32 +3,29 @@ import CartTotal from "../components/CartTotal";
 import Title from "../components/Title";
 import { assets } from "../assets/assets";
 import { useShopContext } from "../context/ShopContext";
-
-interface CartItem {
-  _id: string;
-  color: string;
-  quantity: number;
-}
+import { useAuth } from "../context/AuthContext";
 
 const Cart: React.FC = () => {
-  const { products, currency, cartItems, updateQuantity, navigate } = useShopContext();
-  const [cartData, setCartData] = useState<CartItem[]>([]);
+  const { products, currency, cartItems, updateQuantity, navigate, loading, getProductById } = useShopContext();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    const tempData: CartItem[] = [];
-    for (const itemId in cartItems) {
-      for (const color in cartItems[itemId]) {
-        if (cartItems[itemId][color] > 0) {
-          tempData.push({
-            _id: itemId,
-            color,
-            quantity: cartItems[itemId][color],
-          });
-        }
-      }
+    if (!isAuthenticated) {
+      navigate('/login');
     }
-    setCartData(tempData);
-  }, [cartItems]);
+  }, [isAuthenticated, navigate]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="w-12 h-12 border-4 border-gray-300 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="border-t pt-14 min-h-screen px-4 sm:px-6 lg:px-8">
@@ -38,18 +35,28 @@ const Cart: React.FC = () => {
       </div>
 
       {/* If cart is empty */}
-      {cartData.length === 0 ? (
-        <p className="text-center text-gray-500 text-lg mt-20">Your cart is empty.</p>
+      {cartItems.length === 0 ? (
+        <div className="text-center mt-20">
+          <p className="text-gray-500 text-lg mb-6">Your cart is empty.</p>
+          <button
+            onClick={() => navigate('/collection')}
+            className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+          >
+            Continue Shopping
+          </button>
+        </div>
       ) : (
         <>
           {/* Cart Items */}
           <div className="max-w-5xl mx-auto space-y-6">
-            {cartData.map((item) => {
-              const productData = products.find((product) => product._id === item._id);
+            {cartItems.map((item) => {
+              const productData = getProductById(item.productId);
+
+              if (!productData) return null;
 
               return (
                 <div
-                  key={`${item._id}-${item.color}`}
+                  key={`${item._id}`}
                   className="flex gap-4 flex-col sm:flex-row items-center justify-between p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition"
                 >
                   {/* Product Image */}
@@ -70,33 +77,39 @@ const Cart: React.FC = () => {
                       <span className="text-gray-600">
                         <b>{currency}</b> {productData?.price}
                       </span>
-                      <span className="px-3 py-1 border rounded-md bg-gray-100 text-gray-600 text-xs sm:text-sm">
-                        {item.color}
-                      </span>
+                      {item.size && (
+                        <span className="px-3 py-1 border rounded-md bg-gray-100 text-gray-600 text-xs sm:text-sm">
+                          Size: {item.size}
+                        </span>
+                      )}
+                      {item.color && (
+                        <span className="px-3 py-1 border rounded-md bg-gray-100 text-gray-600 text-xs sm:text-sm">
+                          Color: {item.color}
+                        </span>
+                      )}
                     </div>
                   </div>
 
                   {/* Quantity Input */}
                   <div className="flex items-center gap-3 mt-4 sm:mt-0">
-                  <input
-  type="number"
-  min={1}
-  value={item.quantity}
-  onChange={(e) => {
-    const val = Number(e.target.value);
-    if (val > 0) {
-      updateQuantity(item._id, item.color, val);
-    }
-  }}
-  className="w-16 h-10 text-center cursor-pointer text-gray-800 bg-white border border-gray-300 rounded-md focus:ring focus:ring-indigo-200"
-/>
-
+                    <input
+                      type="number"
+                      min={1}
+                      value={item.quantity}
+                      onChange={(e) => {
+                        const val = Number(e.target.value);
+                        if (val > 0) {
+                          updateQuantity(item.productId, val, item.size, item.color);
+                        }
+                      }}
+                      className="w-16 h-10 text-center cursor-pointer text-gray-800 bg-white border border-gray-300 rounded-md focus:ring focus:ring-indigo-200"
+                    />
                   </div>
 
                   {/* Remove Button */}
                   <div className="mt-4 sm:mt-0">
                     <button
-                      onClick={() => updateQuantity(item._id, item.color, 0)}
+                      onClick={() => updateQuantity(item.productId, 0, item.size, item.color)}
                       aria-label="Remove item from cart"
                       className="p-2 rounded-full hover:bg-red-100 transition"
                     >
@@ -121,10 +134,10 @@ const Cart: React.FC = () => {
               <div className="text-end">
                 <button
                   onClick={() => navigate("/place-order")}
-                  disabled={cartData.length === 0}
+                  disabled={cartItems.length === 0}
                   aria-label="Proceed to Checkout"
                   className={`px-6 py-3 w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold text-lg rounded-lg shadow-lg transition-all duration-300 ease-in-out transform ${
-                    cartData.length === 0
+                    cartItems.length === 0
                       ? "opacity-50 cursor-not-allowed"
                       : "hover:from-indigo-600 hover:to-blue-600 hover:scale-105"
                   }`}

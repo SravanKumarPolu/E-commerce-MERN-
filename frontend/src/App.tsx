@@ -1,9 +1,12 @@
 // src/App.jsx
 import "./App.css";
-import { Route, Routes,  } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Layout from "./layout/Layout";
 import ScrollToTop from "./utils/ScrollToTop";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Lazy-loaded pages
 const Home = lazy(() => import("./pages/Home"));
@@ -38,14 +41,51 @@ function App() {
             <Route path="/collection" element={<Collection />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/product/:productId" element={<Product />} />
-            <Route path="/cart" element={<Cart />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/place-order" element={<PlaceOrder />} />
-            <Route path="/orders" element={<Orders />} />
+            
+            {/* Protected Routes */}
+            <Route 
+              path="/cart" 
+              element={
+                <ProtectedRoute>
+                  <Cart />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/place-order" 
+              element={
+                <ProtectedRoute>
+                  <PlaceOrder />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/orders" 
+              element={
+                <ProtectedRoute>
+                  <Orders />
+                </ProtectedRoute>
+              } 
+            />
+            
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
       </Suspense>
+      
+      {/* Toast notifications */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </>
   );
 }
