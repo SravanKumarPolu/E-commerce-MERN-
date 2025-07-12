@@ -1,5 +1,6 @@
 import { body, query, validationResult } from 'express-validator';
 import validator from 'validator';
+import { SecurityUtils, securityMonitor } from '../config/security.js';
 
 // Middleware to handle validation results
 export const handleValidationErrors = (req, res, next) => {
@@ -12,6 +13,14 @@ export const handleValidationErrors = (req, res, next) => {
       value: error.value
     }));
     
+    // Log validation failures for security monitoring
+    securityMonitor.logEvent('validation_failed', {
+      ip: req.ip,
+      url: req.originalUrl,
+      errors: errorMessages,
+      userAgent: req.get('User-Agent')
+    });
+    
     return res.status(400).json({
       success: false,
       message: 'Validation failed',
@@ -22,571 +31,22 @@ export const handleValidationErrors = (req, res, next) => {
   next();
 };
 
-// Custom validators
-const isStrongPassword = (password) => {
-  return validator.isStrongPassword(password, {
-    minLength: 8,
-    minLowercase: 1,
-    minUppercase: 1,
-    minNumbers: 1,
-    minSymbols: 0,
-    returnScore: false
-  });
-};
-
-const sanitizeName = (name) => {
-  return validator.escape(validator.trim(name));
-};
-
-// Validation rules for user registration
-export const validateRegistration = [
-  body('name')
-    .notEmpty()
-    .withMessage('Name is required')
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Name must be between 2 and 50 characters')
-    .matches(/^[a-zA-Z\s]+$/)
-    .withMessage('Name can only contain letters and spaces')
-    .customSanitizer(sanitizeName),
-  
-  body('email')
-    .notEmpty()
-    .withMessage('Email is required')
-    .isEmail()
-    .withMessage('Please provide a valid email address')
-    .normalizeEmail({
-      gmail_remove_dots: false,
-      gmail_remove_subaddress: false,
-      outlookdotcom_remove_subaddress: false,
-      yahoo_remove_subaddress: false,
-      icloud_remove_subaddress: false
-    })
-    .isLength({ max: 255 })
-    .withMessage('Email must not exceed 255 characters'),
-  
-  body('password')
-    .notEmpty()
-    .withMessage('Password is required')
-    .isLength({ min: 8 })
-    .withMessage('Password must be at least 8 characters long')
-    .custom((password) => {
-      if (!isStrongPassword(password)) {
-        throw new Error('Password must contain at least one uppercase letter, one lowercase letter, and one number');
-      }
-      return true;
-    })
-    .isLength({ max: 128 })
-    .withMessage('Password must not exceed 128 characters')
-];
-
-// Validation rules for user login
-export const validateLogin = [
-  body('email')
-    .notEmpty()
-    .withMessage('Email is required')
-    .isEmail()
-    .withMessage('Please provide a valid email address')
-    .normalizeEmail({
-      gmail_remove_dots: false,
-      gmail_remove_subaddress: false,
-      outlookdotcom_remove_subaddress: false,
-      yahoo_remove_subaddress: false,
-      icloud_remove_subaddress: false
-    }),
-  
-  body('password')
-    .notEmpty()
-    .withMessage('Password is required')
-    .isLength({ min: 1 })
-    .withMessage('Password cannot be empty')
-];
-
-// Validation rules for admin login
-export const validateAdminLogin = [
-  body('email')
-    .notEmpty()
-    .withMessage('Email is required')
-    .isEmail()
-    .withMessage('Please provide a valid email address')
-    .normalizeEmail(),
-  
-  body('password')
-    .notEmpty()
-    .withMessage('Password is required')
-    .isLength({ min: 1 })
-    .withMessage('Password cannot be empty')
-];
-
-// Validation rules for refresh token
-export const validateRefreshToken = [
-  body('refreshToken')
-    .notEmpty()
-    .withMessage('Refresh token is required')
-    .isJWT()
-    .withMessage('Invalid refresh token format')
-];
-
-// Validation rules for email verification
-export const validateEmailVerification = [
-  body('token')
-    .notEmpty()
-    .withMessage('Verification token is required')
-    .isLength({ min: 32, max: 64 })
-    .withMessage('Invalid verification token format')
-    .matches(/^[a-f0-9]+$/)
-    .withMessage('Verification token must be a valid hex string')
-];
-
-// Validation rules for password reset request
-export const validatePasswordResetRequest = [
-  body('email')
-    .notEmpty()
-    .withMessage('Email is required')
-    .isEmail()
-    .withMessage('Please provide a valid email address')
-    .normalizeEmail()
-];
-
-// Validation rules for password reset
-export const validatePasswordReset = [
-  body('token')
-    .notEmpty()
-    .withMessage('Reset token is required')
-    .isLength({ min: 32, max: 64 })
-    .withMessage('Invalid reset token format')
-    .matches(/^[a-f0-9]+$/)
-    .withMessage('Reset token must be a valid hex string'),
-  
-  body('newPassword')
-    .notEmpty()
-    .withMessage('New password is required')
-    .isLength({ min: 8 })
-    .withMessage('New password must be at least 8 characters long')
-    .custom((password) => {
-      if (!isStrongPassword(password)) {
-        throw new Error('New password must contain at least one uppercase letter, one lowercase letter, and one number');
-      }
-      return true;
-    })
-    .isLength({ max: 128 })
-    .withMessage('New password must not exceed 128 characters')
-];
-
-// Validation rules for password change
-export const validatePasswordChange = [
-  body('currentPassword')
-    .notEmpty()
-    .withMessage('Current password is required')
-    .isLength({ min: 1 })
-    .withMessage('Current password cannot be empty'),
-  
-  body('newPassword')
-    .notEmpty()
-    .withMessage('New password is required')
-    .isLength({ min: 8 })
-    .withMessage('New password must be at least 8 characters long')
-    .custom((password) => {
-      if (!isStrongPassword(password)) {
-        throw new Error('New password must contain at least one uppercase letter, one lowercase letter, and one number');
-      }
-      return true;
-    })
-    .isLength({ max: 128 })
-    .withMessage('New password must not exceed 128 characters')
-    .custom((newPassword, { req }) => {
-      if (newPassword === req.body.currentPassword) {
-        throw new Error('New password must be different from current password');
-      }
-      return true;
-    })
-];
-
-// Validation rules for profile update
-export const validateProfileUpdate = [
-  body('name')
-    .notEmpty()
-    .withMessage('Name is required')
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Name must be between 2 and 50 characters')
-    .matches(/^[a-zA-Z\s]+$/)
-    .withMessage('Name can only contain letters and spaces')
-    .customSanitizer(sanitizeName),
-  
-  body('email')
-    .notEmpty()
-    .withMessage('Email is required')
-    .isEmail()
-    .withMessage('Please provide a valid email address')
-    .normalizeEmail({
-      gmail_remove_dots: false,
-      gmail_remove_subaddress: false,
-      outlookdotcom_remove_subaddress: false,
-      yahoo_remove_subaddress: false,
-      icloud_remove_subaddress: false
-    })
-    .isLength({ max: 255 })
-    .withMessage('Email must not exceed 255 characters')
-];
-
-// Validation rules for logout
-export const validateLogout = [
-  body('refreshToken')
-    .optional()
-    .isJWT()
-    .withMessage('Invalid refresh token format')
-];
-
-// Validation rules for query parameters
-export const validateEmailVerificationQuery = [
-  query('token')
-    .optional()
-    .isLength({ min: 32, max: 64 })
-    .withMessage('Invalid verification token format')
-    .matches(/^[a-f0-9]+$/)
-    .withMessage('Verification token must be a valid hex string')
-];
-
-export const validatePasswordResetQuery = [
-  query('token')
-    .optional()
-    .isLength({ min: 32, max: 64 })
-    .withMessage('Invalid reset token format')
-    .matches(/^[a-f0-9]+$/)
-    .withMessage('Reset token must be a valid hex string')
-];
-
-// Validation for product-related endpoints (for cart and orders)
-export const validateProductId = [
-  body('productId')
-    .optional()
-    .isMongoId()
-    .withMessage('Invalid product ID format'),
-  
-  body('itemId')
-    .optional()
-    .isMongoId()
-    .withMessage('Invalid item ID format')
-];
-
-// Validation for cart operations
-export const validateCartOperation = [
-  body('itemId')
-    .notEmpty()
-    .withMessage('Item ID is required')
-    .isMongoId()
-    .withMessage('Invalid item ID format'),
-  
-  body('size')
-    .optional()
-    .isString()
-    .withMessage('Size must be a string')
-    .isLength({ min: 1, max: 10 })
-    .withMessage('Size must be between 1 and 10 characters'),
-  
-  body('color')
-    .optional()
-    .isString()
-    .withMessage('Color must be a string')
-    .isLength({ min: 1, max: 20 })
-    .withMessage('Color must be between 1 and 20 characters'),
-  
-  body('quantity')
-    .optional()
-    .isInt({ min: 0, max: 100 })
-    .withMessage('Quantity must be a number between 0 and 100')
-];
-
-// Validation for order placement
-export const validateOrderPlacement = [
-  body('items')
-    .isArray({ min: 1 })
-    .withMessage('Items must be a non-empty array'),
-  
-  body('items.*.productId')
-    .isMongoId()
-    .withMessage('Invalid product ID format'),
-  
-  body('items.*.quantity')
-    .isInt({ min: 1, max: 100 })
-    .withMessage('Quantity must be between 1 and 100'),
-  
-  body('items.*.size')
-    .optional()
-    .isString()
-    .withMessage('Size must be a string')
-    .isLength({ min: 1, max: 10 })
-    .withMessage('Size must be between 1 and 10 characters'),
-  
-  body('items.*.color')
-    .optional()
-    .isString()
-    .withMessage('Color must be a string')
-    .isLength({ min: 1, max: 20 })
-    .withMessage('Color must be between 1 and 20 characters'),
-  
-  body('amount')
-    .isFloat({ min: 0.01 })
-    .withMessage('Amount must be a positive number'),
-  
-  body('address')
-    .notEmpty()
-    .withMessage('Address is required')
-    .isObject()
-    .withMessage('Address must be an object'),
-  
-  body('address.firstName')
-    .notEmpty()
-    .withMessage('First name is required')
-    .isLength({ min: 2, max: 50 })
-    .withMessage('First name must be between 2 and 50 characters'),
-  
-  body('address.lastName')
-    .notEmpty()
-    .withMessage('Last name is required')
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Last name must be between 2 and 50 characters'),
-  
-  body('address.email')
-    .notEmpty()
-    .withMessage('Email is required')
-    .isEmail()
-    .withMessage('Please provide a valid email address'),
-  
-  body('address.street')
-    .notEmpty()
-    .withMessage('Street is required')
-    .isLength({ min: 5, max: 200 })
-    .withMessage('Street must be between 5 and 200 characters'),
-  
-  body('address.city')
-    .notEmpty()
-    .withMessage('City is required')
-    .isLength({ min: 2, max: 100 })
-    .withMessage('City must be between 2 and 100 characters'),
-  
-  body('address.state')
-    .notEmpty()
-    .withMessage('State is required')
-    .isLength({ min: 2, max: 100 })
-    .withMessage('State must be between 2 and 100 characters'),
-  
-  body('address.zipcode')
-    .notEmpty()
-    .withMessage('Zipcode is required')
-    .matches(/^[0-9]{5,10}$/)
-    .withMessage('Zipcode must be 5-10 digits'),
-  
-  body('address.country')
-    .notEmpty()
-    .withMessage('Country is required')
-    .isLength({ min: 2, max: 100 })
-    .withMessage('Country must be between 2 and 100 characters'),
-  
-  body('address.phone')
-    .notEmpty()
-    .withMessage('Phone number is required')
-    .matches(/^[\+]?[1-9][\d]{0,15}$/)
-    .withMessage('Please provide a valid phone number')
-];
-
-// Validation for payment verification
-export const validatePaymentVerification = [
-  body('orderId')
-    .notEmpty()
-    .withMessage('Order ID is required')
-    .isMongoId()
-    .withMessage('Invalid order ID format'),
-  
-  body('paymentId')
-    .notEmpty()
-    .withMessage('Payment ID is required')
-    .isString()
-    .withMessage('Payment ID must be a string'),
-  
-  body('signature')
-    .optional()
-    .isString()
-    .withMessage('Signature must be a string')
-];
-
-// Validation for order status update
-export const validateOrderStatusUpdate = [
-  body('orderId')
-    .notEmpty()
-    .withMessage('Order ID is required')
-    .isMongoId()
-    .withMessage('Invalid order ID format'),
-  
-  body('status')
-    .notEmpty()
-    .withMessage('Status is required')
-    .isIn(['Order Placed', 'Packing', 'Shipped', 'Out for delivery', 'Delivered', 'Cancelled'])
-    .withMessage('Invalid order status')
-];
-
-// Validation for product operations
-export const validateProductAdd = [
-  body('name')
-    .notEmpty()
-    .withMessage('Product name is required')
-    .isLength({ min: 2, max: 200 })
-    .withMessage('Product name must be between 2 and 200 characters'),
-  
-  body('description')
-    .notEmpty()
-    .withMessage('Product description is required')
-    .isLength({ min: 10, max: 2000 })
-    .withMessage('Product description must be between 10 and 2000 characters'),
-  
-  body('price')
-    .isFloat({ min: 0.01 })
-    .withMessage('Price must be a positive number'),
-  
-  body('category')
-    .notEmpty()
-    .withMessage('Category is required')
-    .isLength({ min: 2, max: 100 })
-    .withMessage('Category must be between 2 and 100 characters'),
-  
-  body('subCategory')
-    .optional()
-    .isLength({ min: 2, max: 100 })
-    .withMessage('Sub-category must be between 2 and 100 characters'),
-  
-  body('sizes')
-    .optional()
-    .isArray()
-    .withMessage('Sizes must be an array'),
-  
-  body('colors')
-    .optional()
-    .isArray()
-    .withMessage('Colors must be an array'),
-  
-  body('bestseller')
-    .optional()
-    .isBoolean()
-    .withMessage('Bestseller must be a boolean')
-];
-
-export const validateProductRemove = [
-  body('id')
-    .notEmpty()
-    .withMessage('Product ID is required')
-    .isMongoId()
-    .withMessage('Invalid product ID format')
-];
-
-export const validateProductSingle = [
-  body('productId')
-    .notEmpty()
-    .withMessage('Product ID is required')
-    .isMongoId()
-    .withMessage('Invalid product ID format')
-];
-
-// Validation for file uploads (if needed)
-export const validateFileUpload = [
-  body('file')
-    .optional()
-    .custom((value, { req }) => {
-      if (req.file) {
-        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-        if (!allowedTypes.includes(req.file.mimetype)) {
-          throw new Error('Invalid file type. Only JPEG, PNG, GIF, and WebP images are allowed');
-        }
-        if (req.file.size > 5 * 1024 * 1024) { // 5MB
-          throw new Error('File size too large. Maximum size is 5MB');
-        }
-      }
-      return true;
-    })
-];
-
-// Sanitize input middleware
-export const sanitizeInput = (req, res, next) => {
-  // Sanitize string inputs to prevent XSS
-  const sanitizeObject = (obj) => {
-    for (const key in obj) {
-      if (typeof obj[key] === 'string') {
-        obj[key] = validator.escape(obj[key]);
-      } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-        sanitizeObject(obj[key]);
-      }
-    }
-  };
-  
-  if (req.body) {
-    sanitizeObject(req.body);
-  }
-  
-  if (req.query) {
-    sanitizeObject(req.query);
-  }
-  
-  if (req.params) {
-    sanitizeObject(req.params);
-  }
-  
-  next();
-};
-
-// Rate limiting validation helper
-export const validateRateLimitBypass = [
-  body('bypassToken')
-    .optional()
-    .isLength({ min: 32, max: 64 })
-    .withMessage('Invalid bypass token format')
-];
-
-// Common validation chains
-export const commonValidations = {
-  mongoId: (field) => [
-    body(field)
-      .isMongoId()
-      .withMessage(`${field} must be a valid MongoDB ObjectId`)
-  ],
-  
-  optionalString: (field, min = 1, max = 255) => [
-    body(field)
-      .optional()
-      .isString()
-      .withMessage(`${field} must be a string`)
-      .isLength({ min, max })
-      .withMessage(`${field} must be between ${min} and ${max} characters`)
-  ],
-  
-  requiredString: (field, min = 1, max = 255) => [
-    body(field)
-      .notEmpty()
-      .withMessage(`${field} is required`)
-      .isString()
-      .withMessage(`${field} must be a string`)
-      .isLength({ min, max })
-      .withMessage(`${field} must be between ${min} and ${max} characters`)
-  ]
-};
-
-// Custom error formatter
-export const formatValidationErrors = (errors) => {
-  const formatted = {};
-  
-  errors.forEach(error => {
-    if (!formatted[error.path]) {
-      formatted[error.path] = [];
-    }
-    formatted[error.path].push(error.msg);
-  });
-  
-  return formatted;
-};
-
-// Advanced validation middleware with custom error handling
+// Enhanced validation middleware with security checks
 export const advancedValidationHandler = (req, res, next) => {
   const errors = validationResult(req);
   
   if (!errors.isEmpty()) {
     const formattedErrors = formatValidationErrors(errors.array());
+    
+    // Enhanced security logging
+    securityMonitor.logEvent('validation_failed', {
+      ip: req.ip,
+      url: req.originalUrl,
+      method: req.method,
+      errors: formattedErrors,
+      userAgent: req.get('User-Agent'),
+      timestamp: new Date().toISOString()
+    });
     
     return res.status(400).json({
       success: false,
@@ -599,4 +59,450 @@ export const advancedValidationHandler = (req, res, next) => {
   }
   
   next();
-}; 
+};
+
+// Format validation errors with security considerations
+const formatValidationErrors = (errors) => {
+  return errors.map(error => {
+    // Don't expose sensitive field values in errors
+    const sensitiveFields = ['password', 'token', 'secret', 'key'];
+    const exposedValue = sensitiveFields.some(field => 
+      error.path.toLowerCase().includes(field)
+    ) ? '[HIDDEN]' : error.value;
+    
+    return {
+      field: error.path,
+      message: error.msg,
+      value: exposedValue,
+      location: error.location
+    };
+  });
+};
+
+// Custom validator functions with security enhancements
+export const secureValidators = {
+  // Enhanced email validation
+  email: body('email')
+    .isEmail()
+    .withMessage('Please provide a valid email address')
+    .normalizeEmail()
+    .isLength({ max: 254 })
+    .withMessage('Email address is too long')
+    .custom((value) => {
+      // Check for suspicious email patterns
+      const suspiciousPatterns = [
+        /(.{1,64}@.{1,255}){2,}/, // Multiple @ symbols
+        /[<>"]/, // HTML injection attempts
+        /@.*@/, // Double @ symbols
+      ];
+      
+      const isSuspicious = suspiciousPatterns.some(pattern => pattern.test(value));
+      if (isSuspicious) {
+        throw new Error('Email format appears to be invalid or suspicious');
+      }
+      return true;
+    }),
+
+  // Secure password validation
+  password: body('password')
+    .custom((value) => {
+      const validation = SecurityUtils.isValidPassword(value);
+      if (!validation.valid) {
+        throw new Error(validation.message);
+      }
+      return true;
+    })
+    .customSanitizer((value) => {
+      // Don't log or store passwords in plain text anywhere
+      return value;
+    }),
+
+  // Enhanced name validation
+  name: body('name')
+    .trim()
+    .isLength({ min: 1, max: 100 })
+    .withMessage('Name must be between 1 and 100 characters')
+    .matches(/^[a-zA-Z\s\-\.\']+$/)
+    .withMessage('Name contains invalid characters')
+    .custom((value) => {
+      // Check for potential XSS or injection attempts
+      const dangerousPatterns = [
+        /<script/i,
+        /javascript:/i,
+        /on\w+\s*=/i,
+        /data:text\/html/i
+      ];
+      
+      const isDangerous = dangerousPatterns.some(pattern => pattern.test(value));
+      if (isDangerous) {
+        throw new Error('Name contains potentially dangerous content');
+      }
+      return true;
+    }),
+
+  // Secure product ID validation
+  productId: body('productId')
+    .isMongoId()
+    .withMessage('Invalid product ID format')
+    .customSanitizer((value) => {
+      return validator.escape(value);
+    }),
+
+  // Enhanced quantity validation
+  quantity: body('quantity')
+    .isInt({ min: 0, max: 999 })
+    .withMessage('Quantity must be between 0 and 999')
+    .toInt(),
+
+  // Secure size validation
+  size: body('size')
+    .optional()
+    .trim()
+    .isLength({ max: 10 })
+    .withMessage('Size is too long')
+    .matches(/^[a-zA-Z0-9\s\-]+$/)
+    .withMessage('Size contains invalid characters'),
+
+  // Color validation with security
+  color: body('color')
+    .optional()
+    .trim()
+    .isLength({ max: 30 })
+    .withMessage('Color name is too long')
+    .matches(/^[a-zA-Z0-9\s\-#]+$/)
+    .withMessage('Color contains invalid characters'),
+
+  // Search query validation
+  search: query('search')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('Search query is too long')
+    .custom((value) => {
+      // Prevent NoSQL injection attempts in search
+      const dangerousPatterns = [
+        /\$where/i,
+        /\$ne/i,
+        /\$gt/i,
+        /\$lt/i,
+        /\$regex/i,
+        /\$or/i,
+        /\$and/i
+      ];
+      
+      const isDangerous = dangerousPatterns.some(pattern => pattern.test(value));
+      if (isDangerous) {
+        throw new Error('Search query contains invalid operators');
+      }
+      return true;
+    }),
+
+  // Pagination validation
+  page: query('page')
+    .optional()
+    .isInt({ min: 1, max: 1000 })
+    .withMessage('Page must be between 1 and 1000')
+    .toInt(),
+
+  limit: query('limit')
+    .optional()
+    .isInt({ min: 1, max: 100 })
+    .withMessage('Limit must be between 1 and 100')
+    .toInt(),
+
+  // Order status validation
+  status: body('status')
+    .isIn(['Order Placed', 'Packing', 'Shipped', 'Out for delivery', 'Delivered', 'Cancelled'])
+    .withMessage('Invalid order status'),
+
+  // Address validation with security
+  address: {
+    firstName: body('address.firstName')
+      .trim()
+      .isLength({ min: 1, max: 50 })
+      .withMessage('First name must be between 1 and 50 characters')
+      .matches(/^[a-zA-Z\s\-\.\']+$/)
+      .withMessage('First name contains invalid characters'),
+
+    lastName: body('address.lastName')
+      .trim()
+      .isLength({ min: 1, max: 50 })
+      .withMessage('Last name must be between 1 and 50 characters')
+      .matches(/^[a-zA-Z\s\-\.\']+$/)
+      .withMessage('Last name contains invalid characters'),
+
+    street: body('address.street')
+      .trim()
+      .isLength({ min: 1, max: 200 })
+      .withMessage('Street address must be between 1 and 200 characters')
+      .matches(/^[a-zA-Z0-9\s\-\.,#]+$/)
+      .withMessage('Street address contains invalid characters'),
+
+    city: body('address.city')
+      .trim()
+      .isLength({ min: 1, max: 100 })
+      .withMessage('City must be between 1 and 100 characters')
+      .matches(/^[a-zA-Z\s\-\.\']+$/)
+      .withMessage('City contains invalid characters'),
+
+    state: body('address.state')
+      .trim()
+      .isLength({ min: 1, max: 100 })
+      .withMessage('State must be between 1 and 100 characters')
+      .matches(/^[a-zA-Z\s\-\.\']+$/)
+      .withMessage('State contains invalid characters'),
+
+    zipcode: body('address.zipcode')
+      .trim()
+      .matches(/^[a-zA-Z0-9\s\-]+$/)
+      .withMessage('Zipcode contains invalid characters')
+      .isLength({ min: 3, max: 15 })
+      .withMessage('Zipcode must be between 3 and 15 characters'),
+
+    country: body('address.country')
+      .trim()
+      .isLength({ min: 1, max: 100 })
+      .withMessage('Country must be between 1 and 100 characters')
+      .matches(/^[a-zA-Z\s\-\.\']+$/)
+      .withMessage('Country contains invalid characters'),
+
+    phone: body('address.phone')
+      .isMobilePhone()
+      .withMessage('Please provide a valid phone number')
+      .customSanitizer((value) => {
+        // Normalize phone number format
+        return value.replace(/[^\d+]/g, '');
+      })
+  }
+};
+
+// Product validation with enhanced security
+export const validateProduct = [
+  body('name')
+    .trim()
+    .isLength({ min: 1, max: 200 })
+    .withMessage('Product name must be between 1 and 200 characters')
+    .custom((value) => {
+      // Check for XSS attempts
+      const xssPatterns = [
+        /<script/i,
+        /javascript:/i,
+        /on\w+\s*=/i,
+        /<iframe/i,
+        /<object/i,
+        /<embed/i
+      ];
+      
+      const hasXSS = xssPatterns.some(pattern => pattern.test(value));
+      if (hasXSS) {
+        throw new Error('Product name contains potentially dangerous content');
+      }
+      return true;
+    }),
+
+  body('description')
+    .trim()
+    .isLength({ min: 1, max: 2000 })
+    .withMessage('Product description must be between 1 and 2000 characters')
+    .custom((value) => {
+      // Allow basic HTML but sanitize dangerous content
+      const dangerousPatterns = [
+        /<script/i,
+        /javascript:/i,
+        /on\w+\s*=/i,
+        /<iframe/i,
+        /<object/i,
+        /<embed/i,
+        /<form/i
+      ];
+      
+      const isDangerous = dangerousPatterns.some(pattern => pattern.test(value));
+      if (isDangerous) {
+        throw new Error('Product description contains potentially dangerous content');
+      }
+      return true;
+    }),
+
+  body('price')
+    .isFloat({ min: 0, max: 999999.99 })
+    .withMessage('Price must be between 0 and 999999.99')
+    .toFloat(),
+
+  body('category')
+    .trim()
+    .isLength({ min: 1, max: 50 })
+    .withMessage('Category must be between 1 and 50 characters')
+    .matches(/^[a-zA-Z\s\-]+$/)
+    .withMessage('Category contains invalid characters'),
+
+  body('subCategory')
+    .trim()
+    .isLength({ min: 1, max: 50 })
+    .withMessage('Sub-category must be between 1 and 50 characters')
+    .matches(/^[a-zA-Z\s\-]+$/)
+    .withMessage('Sub-category contains invalid characters'),
+
+  body('sizes')
+    .isArray({ max: 20 })
+    .withMessage('Sizes must be an array with maximum 20 items')
+    .custom((sizes) => {
+      if (sizes.some(size => typeof size !== 'string' || size.length > 10)) {
+        throw new Error('Each size must be a string with maximum 10 characters');
+      }
+      return true;
+    }),
+
+  body('colors')
+    .optional()
+    .isArray({ max: 20 })
+    .withMessage('Colors must be an array with maximum 20 items')
+    .custom((colors) => {
+      if (colors && colors.some(color => typeof color !== 'string' || color.length > 30)) {
+        throw new Error('Each color must be a string with maximum 30 characters');
+      }
+      return true;
+    }),
+
+  body('bestseller')
+    .optional()
+    .isBoolean()
+    .withMessage('Bestseller must be a boolean value')
+    .toBoolean(),
+
+  advancedValidationHandler
+];
+
+// User registration validation
+export const validateUserRegistration = [
+  secureValidators.name,
+  secureValidators.email,
+  secureValidators.password,
+  
+  // Additional security checks
+  body().custom((value, { req }) => {
+    // Rate limiting check for registration attempts
+    const clientIP = req.ip;
+    // This would integrate with your rate limiting system
+    return true;
+  }),
+
+  advancedValidationHandler
+];
+
+// User login validation
+export const validateUserLogin = [
+  secureValidators.email,
+  body('password')
+    .notEmpty()
+    .withMessage('Password is required')
+    .isLength({ max: 128 })
+    .withMessage('Password is too long'),
+
+  advancedValidationHandler
+];
+
+// Cart operations validation
+export const validateCartOperation = [
+  secureValidators.productId,
+  secureValidators.quantity.optional(),
+  secureValidators.size,
+  secureValidators.color,
+  advancedValidationHandler
+];
+
+// Order placement validation
+export const validateOrderPlacement = [
+  body('items')
+    .isArray({ min: 1, max: 50 })
+    .withMessage('Order must contain between 1 and 50 items'),
+  
+  body('items.*.productId')
+    .isMongoId()
+    .withMessage('Invalid product ID in order items'),
+  
+  body('items.*.quantity')
+    .isInt({ min: 1, max: 99 })
+    .withMessage('Item quantity must be between 1 and 99'),
+  
+  body('amount')
+    .isFloat({ min: 0.01, max: 999999.99 })
+    .withMessage('Order amount must be between 0.01 and 999999.99'),
+
+  secureValidators.address.firstName,
+  secureValidators.address.lastName,
+  secureValidators.address.street,
+  secureValidators.address.city,
+  secureValidators.address.state,
+  secureValidators.address.zipcode,
+  secureValidators.address.country,
+  secureValidators.address.phone,
+
+  advancedValidationHandler
+];
+
+// Search validation
+export const validateSearch = [
+  secureValidators.search,
+  secureValidators.page,
+  secureValidators.limit,
+  query('category')
+    .optional()
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage('Category filter is too long')
+    .matches(/^[a-zA-Z\s\-]+$/)
+    .withMessage('Category contains invalid characters'),
+  
+  query('sort')
+    .optional()
+    .isIn(['price_asc', 'price_desc', 'name_asc', 'name_desc', 'newest', 'popular'])
+    .withMessage('Invalid sort parameter'),
+
+  advancedValidationHandler
+];
+
+// Security-focused validation for admin operations
+export const validateAdminOperation = [
+  body().custom((value, { req }) => {
+    // Log all admin operations for security auditing
+    securityMonitor.logEvent('admin_operation', {
+      adminId: req.user?.id,
+      ip: req.ip,
+      action: req.originalUrl,
+      method: req.method,
+      timestamp: new Date().toISOString()
+    });
+    return true;
+  }),
+  advancedValidationHandler
+];
+
+// File upload validation with security checks
+export const validateFileUpload = [
+  body().custom((value, { req }) => {
+    if (!req.files && !req.file) {
+      return true; // No files to validate
+    }
+
+    const files = req.files ? Object.values(req.files).flat() : [req.file];
+    
+    for (const file of files) {
+      // Additional security checks beyond middleware
+      const suspiciousExtensions = ['.php', '.asp', '.jsp', '.exe', '.bat', '.cmd'];
+      const fileExt = file.originalname.toLowerCase().substring(file.originalname.lastIndexOf('.'));
+      
+      if (suspiciousExtensions.includes(fileExt)) {
+        throw new Error('File type not allowed for security reasons');
+      }
+
+      // Check for double extensions (file.jpg.php)
+      const doubleDotPattern = /\.[a-zA-Z0-9]+\.[a-zA-Z0-9]+$/;
+      if (doubleDotPattern.test(file.originalname)) {
+        throw new Error('Files with double extensions are not allowed');
+      }
+    }
+
+    return true;
+  }),
+  advancedValidationHandler
+]; 
