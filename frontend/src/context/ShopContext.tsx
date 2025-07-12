@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { apiService, Product, CartItem, Order } from "../utils/api";
 import { useAuth } from "./AuthContext";
+import { useErrorHandler } from "../hooks/useErrorHandler";
 
 // Define the shape of the context
 interface ShopContextValue {
@@ -22,11 +23,13 @@ interface ShopContextValue {
   cartItems: CartItem[];
   setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
   updateQuantity: (itemId: string, quantity: number, size?: string, color?: string) => Promise<void>;
-  refreshProducts: () => Promise<void>;
+  refreshProducts: () => Promise<Product[] | null>;
   refreshCart: () => Promise<void>;
   getProductById: (id: string) => Product | undefined;
   getUserOrders: () => Promise<Order[]>;
   placeOrder: (orderData: any) => Promise<Order | null>;
+  retryLastOperation: () => void;
+  clearError: () => void;
 }
 
 // Create the context with a default value to avoid `undefined` issues
@@ -48,6 +51,18 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
+  // Use the error handler hook
+  const { 
+    execute, 
+    retry, 
+    clearError: clearErrorHandler,
+    error: handlerError,
+    loading: handlerLoading 
+  } = useErrorHandler();
+
+  // Combine local loading state with error handler loading
+  const isLoading = loading || handlerLoading;
+
   // Fetch products on mount
   useEffect(() => {
     refreshProducts();
@@ -63,40 +78,52 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
   }, [isAuthenticated]);
 
   const refreshProducts = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await apiService.getProducts();
-      
-      if (response.success && response.data) {
-        setProducts(response.data);
-      } else {
-        setError('Failed to fetch products');
-        toast.error('Failed to fetch products');
+    const result = await execute(
+      async () => {
+        const response = await apiService.getProducts();
+        if (response.success && response.data) {
+          setProducts(response.data);
+          setError(null);
+          return response.data;
+        } else {
+          throw new Error('Failed to fetch products');
+        }
+      },
+      {
+        toastMessage: 'Failed to load products',
+        onError: (error) => {
+          setError(error.message);
+          setProducts([]);
+        }
       }
-    } catch (error: any) {
-      setError('Error fetching products');
-      toast.error('Error fetching products');
-      console.error('Error fetching products:', error);
-    } finally {
-      setLoading(false);
-    }
+    );
+
+    setLoading(false);
+    return result;
   };
 
   const refreshCart = async () => {
     if (!isAuthenticated) return;
     
-    try {
-      const response = await apiService.getCart();
-      
-      if (response.success && response.data) {
-        setCartItems(response.data);
-      } else {
-        console.error('Failed to fetch cart items');
+    await execute(
+      async () => {
+        const response = await apiService.getCart();
+        if (response.success && response.data) {
+          setCartItems(response.data);
+          return response.data;
+        } else {
+          throw new Error('Failed to fetch cart items');
+        }
+      },
+      {
+        showToast: false, // Don't show toast for cart refresh errors
+        logError: false,
+        onError: (error) => {
+          console.error('Error fetching cart items:', error);
+          setCartItems([]);
+        }
       }
-    } catch (error: any) {
-      console.error('Error fetching cart items:', error);
-    }
+    );
   };
 
   const addToCart = async (itemId: string, size?: string, color?: string) => {
@@ -111,19 +138,25 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
       return;
     }
 
-    try {
-      const response = await apiService.addToCart(itemId, size, color);
-      
-      if (response.success) {
-        await refreshCart();
-        toast.success("Item added to cart");
-      } else {
-        toast.error(response.message || "Failed to add item to cart");
+    await execute(
+      async () => {
+        const response = await apiService.addToCart(itemId, size, color);
+        if (response.success) {
+          await refreshCart();
+          toast.success("Item added to cart");
+          return response;
+        } else {
+          throw new Error(response.message || "Failed to add item to cart");
+        }
+      },
+      {
+        toastMessage: 'Failed to add item to cart',
+        retryAttempts: 2,
+        onError: (error) => {
+          console.error('Error adding to cart:', error);
+        }
       }
-    } catch (error: any) {
-      toast.error(error.message || "Error adding item to cart");
-      console.error('Error adding to cart:', error);
-    }
+    );
   };
 
   const updateQuantity = async (itemId: string, quantity: number, size?: string, color?: string) => {
@@ -132,23 +165,29 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
       return;
     }
 
-    try {
-      const response = await apiService.updateCart(itemId, quantity, size, color);
-      
-      if (response.success) {
-        await refreshCart();
-        if (quantity === 0) {
-          toast.success("Item removed from cart");
+    await execute(
+      async () => {
+        const response = await apiService.updateCart(itemId, quantity, size, color);
+        if (response.success) {
+          await refreshCart();
+          if (quantity === 0) {
+            toast.success("Item removed from cart");
+          } else {
+            toast.success("Cart updated");
+          }
+          return response;
         } else {
-          toast.success("Cart updated");
+          throw new Error(response.message || "Failed to update cart");
         }
-      } else {
-        toast.error(response.message || "Failed to update cart");
+      },
+      {
+        toastMessage: 'Failed to update cart',
+        retryAttempts: 2,
+        onError: (error) => {
+          console.error('Error updating cart:', error);
+        }
       }
-    } catch (error: any) {
-      toast.error(error.message || "Error updating cart");
-      console.error('Error updating cart:', error);
-    }
+    );
   };
 
   const getCartCount = (): number => {
@@ -178,20 +217,25 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
       return [];
     }
 
-    try {
-      const response = await apiService.getUserOrders();
-      
-      if (response.success && response.data) {
-        return response.data;
-      } else {
-        toast.error("Failed to fetch orders");
-        return [];
+    const result = await execute(
+      async () => {
+        const response = await apiService.getUserOrders();
+        if (response.success && response.data) {
+          return response.data;
+        } else {
+          throw new Error("Failed to fetch orders");
+        }
+      },
+      {
+        toastMessage: 'Failed to load orders',
+        retryAttempts: 2,
+        onError: (error) => {
+          console.error('Error fetching orders:', error);
+        }
       }
-    } catch (error: any) {
-      toast.error("Error fetching orders");
-      console.error('Error fetching orders:', error);
-      return [];
-    }
+    );
+
+    return result || [];
   };
 
   const placeOrder = async (orderData: {
@@ -214,23 +258,37 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
       return null;
     }
 
-    try {
-      const response = await apiService.placeOrder(orderData);
-      
-      if (response.success && response.data) {
-        // Clear cart after successful order
-        setCartItems([]);
-        toast.success("Order placed successfully!");
-        return response.data;
-      } else {
-        toast.error(response.message || "Failed to place order");
-        return null;
+    const result = await execute(
+      async () => {
+        const response = await apiService.placeOrder(orderData);
+        if (response.success && response.data) {
+          // Clear cart after successful order
+          setCartItems([]);
+          toast.success("Order placed successfully!");
+          return response.data;
+        } else {
+          throw new Error(response.message || "Failed to place order");
+        }
+      },
+      {
+        toastMessage: 'Failed to place order',
+        retryAttempts: 1,
+        onError: (error) => {
+          console.error('Error placing order:', error);
+        }
       }
-    } catch (error: any) {
-      toast.error(error.message || "Error placing order");
-      console.error('Error placing order:', error);
-      return null;
-    }
+    );
+
+    return result;
+  };
+
+  const retryLastOperation = () => {
+    retry();
+  };
+
+  const clearError = () => {
+    setError(null);
+    clearErrorHandler();
   };
 
   const value: ShopContextValue = {
@@ -238,8 +296,8 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
     currency,
     delivery_fee,
     search,
-    loading,
-    error,
+    loading: isLoading,
+    error: error || handlerError?.message || null,
     setSearch,
     getCartCount,
     updateQuantity,
@@ -255,6 +313,8 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
     getProductById,
     getUserOrders,
     placeOrder,
+    retryLastOperation,
+    clearError,
   };
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;

@@ -1,17 +1,15 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { backendUrl } from '../config';
+import { backendUrl } from '../config.ts';
+import { setupGlobalErrorReporting } from '../utils/errorReporting';
 
-// Types
 interface User {
   id: string;
   name: string;
   email: string;
-  role: 'user' | 'admin';
+  role: string;
   isEmailVerified: boolean;
-  createdAt: string;
-  updatedAt: string;
 }
 
 interface AuthContextType {
@@ -19,26 +17,24 @@ interface AuthContextType {
   accessToken: string | null;
   refreshToken: string | null;
   loading: boolean;
+  isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   register: (name: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
   refreshAccessToken: () => Promise<boolean>;
-  updateProfile: (name: string, email: string) => Promise<boolean>;
-  changePassword: (currentPassword: string, newPassword: string) => Promise<boolean>;
-  verifyEmail: (token: string) => Promise<boolean>;
   requestPasswordReset: (email: string) => Promise<boolean>;
   resetPassword: (token: string, newPassword: string) => Promise<boolean>;
+  verifyEmail: (token: string) => Promise<boolean>;
   resendVerificationEmail: () => Promise<boolean>;
-  setToken: (token: string) => void;
-  isAuthenticated: boolean;
-  isEmailVerified: boolean;
+  updateProfile: (name: string, email: string) => Promise<boolean>;
+  changePassword: (currentPassword: string, newPassword: string) => Promise<boolean>;
 }
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
   children: ReactNode;
 }
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -98,7 +94,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
       
       if (response.data.success) {
-        setUser(response.data.data);
+        const userData = response.data.data;
+        setUser(userData);
+        
+        // Set up global error reporting with user info
+        setupGlobalErrorReporting(userData.id, userData.email);
       }
     } catch (error) {
       console.error('Failed to fetch user profile:', error);
@@ -114,6 +114,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setRefreshToken(null);
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userId');
+    
+    // Clear user info from error reporting
+    setupGlobalErrorReporting();
   };
 
   const login = async (email: string, password: string): Promise<boolean> => {
@@ -130,6 +134,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         
         localStorage.setItem('accessToken', newAccessToken);
         localStorage.setItem('refreshToken', newRefreshToken);
+        localStorage.setItem('userId', userData.id);
+        
+        // Set up global error reporting with user info
+        setupGlobalErrorReporting(userData.id, userData.email);
         
         toast.success('Login successful!');
         return true;
@@ -138,7 +146,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return false;
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Login failed');
+      const errorMessage = error.response?.data?.message || 'Login failed';
+      toast.error(errorMessage);
       return false;
     } finally {
       setLoading(false);
@@ -148,62 +157,52 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const register = async (name: string, email: string, password: string): Promise<boolean> => {
     try {
       setLoading(true);
-      const response = await axios.post(`${backendUrl}/api/user/register`, { name, email, password });
+      const response = await axios.post(`${backendUrl}/api/user/register`, {
+        name,
+        email,
+        password,
+      });
       
       if (response.data.success) {
-        const { accessToken: newAccessToken, refreshToken: newRefreshToken, user: userData } = response.data.data;
-        
-        setAccessToken(newAccessToken);
-        setRefreshToken(newRefreshToken);
-        setUser(userData);
-        
-        localStorage.setItem('accessToken', newAccessToken);
-        localStorage.setItem('refreshToken', newRefreshToken);
-        
-        toast.success('Registration successful! Please verify your email.');
+        toast.success('Registration successful! Please check your email to verify your account.');
         return true;
       } else {
         toast.error(response.data.message || 'Registration failed');
         return false;
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Registration failed');
+      // Don't handle validation errors here as they're handled by the form
+      if (error.response?.data?.errors) {
+        throw error;
+      }
+      
+      const errorMessage = error.response?.data?.message || 'Registration failed';
+      toast.error(errorMessage);
       return false;
     } finally {
       setLoading(false);
     }
   };
 
-  const logout = async () => {
-    try {
-      if (refreshToken) {
-        await axios.post(`${backendUrl}/api/user/logout`, { refreshToken }, {
-          headers: { Authorization: `Bearer ${accessToken}` }
-        });
-      }
-    } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
-      clearAuthData();
-      toast.success('Logged out successfully');
-    }
+  const logout = () => {
+    clearAuthData();
+    toast.success('Logged out successfully');
   };
 
   const refreshAccessToken = async (): Promise<boolean> => {
     try {
-      if (!refreshToken) {
-        clearAuthData();
-        return false;
-      }
-
-      const response = await axios.post(`${backendUrl}/api/user/refresh-token`, { refreshToken });
+      const storedRefreshToken = localStorage.getItem('refreshToken');
+      if (!storedRefreshToken) return false;
+      
+      const response = await axios.post(`${backendUrl}/api/user/refresh-token`, {
+        refreshToken: storedRefreshToken,
+      });
       
       if (response.data.success) {
-        const { accessToken: newAccessToken, refreshToken: newRefreshToken, user: userData } = response.data.data;
+        const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data.data;
         
         setAccessToken(newAccessToken);
         setRefreshToken(newRefreshToken);
-        setUser(userData);
         
         localStorage.setItem('accessToken', newAccessToken);
         localStorage.setItem('refreshToken', newRefreshToken);
@@ -214,73 +213,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return false;
       }
     } catch (error) {
+      console.error('Token refresh failed:', error);
       clearAuthData();
-      return false;
-    }
-  };
-
-  const updateProfile = async (name: string, email: string): Promise<boolean> => {
-    try {
-      const response = await axios.put(`${backendUrl}/api/user/profile`, { name, email }, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-      
-      if (response.data.success) {
-        setUser(response.data.data);
-        toast.success(response.data.message);
-        return true;
-      } else {
-        toast.error(response.data.message || 'Profile update failed');
-        return false;
-      }
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Profile update failed');
-      return false;
-    }
-  };
-
-  const changePassword = async (currentPassword: string, newPassword: string): Promise<boolean> => {
-    try {
-      const response = await axios.post(`${backendUrl}/api/user/change-password`, 
-        { currentPassword, newPassword }, 
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-      
-      if (response.data.success) {
-        toast.success(response.data.message);
-        // Clear tokens as they're invalidated after password change
-        setTimeout(() => {
-          clearAuthData();
-          window.location.href = '/login';
-        }, 2000);
-        return true;
-      } else {
-        toast.error(response.data.message || 'Password change failed');
-        return false;
-      }
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Password change failed');
-      return false;
-    }
-  };
-
-  const verifyEmail = async (token: string): Promise<boolean> => {
-    try {
-      const response = await axios.post(`${backendUrl}/api/user/verify-email`, { token });
-      
-      if (response.data.success) {
-        toast.success(response.data.message);
-        // Refresh user profile to get updated verification status
-        if (accessToken) {
-          await fetchUserProfile(accessToken);
-        }
-        return true;
-      } else {
-        toast.error(response.data.message || 'Email verification failed');
-        return false;
-      }
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Email verification failed');
       return false;
     }
   };
@@ -290,31 +224,57 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const response = await axios.post(`${backendUrl}/api/user/request-password-reset`, { email });
       
       if (response.data.success) {
-        toast.success(response.data.message);
         return true;
       } else {
         toast.error(response.data.message || 'Password reset request failed');
         return false;
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Password reset request failed');
+      const errorMessage = error.response?.data?.message || 'Password reset request failed';
+      toast.error(errorMessage);
       return false;
     }
   };
 
   const resetPassword = async (token: string, newPassword: string): Promise<boolean> => {
     try {
-      const response = await axios.post(`${backendUrl}/api/user/reset-password`, { token, newPassword });
+      const response = await axios.post(`${backendUrl}/api/user/reset-password`, {
+        token,
+        newPassword,
+      });
       
       if (response.data.success) {
-        toast.success(response.data.message);
+        toast.success('Password reset successful! You can now log in with your new password.');
         return true;
       } else {
         toast.error(response.data.message || 'Password reset failed');
         return false;
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Password reset failed');
+      const errorMessage = error.response?.data?.message || 'Password reset failed';
+      toast.error(errorMessage);
+      return false;
+    }
+  };
+
+  const verifyEmail = async (token: string): Promise<boolean> => {
+    try {
+      const response = await axios.post(`${backendUrl}/api/user/verify-email`, { token });
+      
+      if (response.data.success) {
+        // Update user state to reflect email verification
+        if (user) {
+          setUser({ ...user, isEmailVerified: true });
+        }
+        toast.success('Email verified successfully!');
+        return true;
+      } else {
+        toast.error(response.data.message || 'Email verification failed');
+        return false;
+      }
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Email verification failed';
+      toast.error(errorMessage);
       return false;
     }
   };
@@ -326,24 +286,66 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
       
       if (response.data.success) {
-        toast.success(response.data.message);
+        toast.success('Verification email sent!');
         return true;
       } else {
-        toast.error(response.data.message || 'Failed to resend verification email');
+        toast.error(response.data.message || 'Failed to send verification email');
         return false;
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to resend verification email');
+      const errorMessage = error.response?.data?.message || 'Failed to send verification email';
+      toast.error(errorMessage);
       return false;
     }
   };
 
-  // Legacy function for backward compatibility
-  const setToken = (token: string) => {
-    setAccessToken(token);
-    localStorage.setItem('accessToken', token);
-    // Try to fetch user profile with the token
-    fetchUserProfile(token);
+  const updateProfile = async (name: string, email: string): Promise<boolean> => {
+    try {
+      const response = await axios.put(`${backendUrl}/api/user/profile`, { name, email }, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+      
+      if (response.data.success) {
+        const updatedUser = response.data.data;
+        setUser(updatedUser);
+        
+        // Update error reporting with new user info
+        setupGlobalErrorReporting(updatedUser.id, updatedUser.email);
+        
+        toast.success('Profile updated successfully!');
+        return true;
+      } else {
+        toast.error(response.data.message || 'Profile update failed');
+        return false;
+      }
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Profile update failed';
+      toast.error(errorMessage);
+      return false;
+    }
+  };
+
+  const changePassword = async (currentPassword: string, newPassword: string): Promise<boolean> => {
+    try {
+      const response = await axios.post(`${backendUrl}/api/user/change-password`, {
+        currentPassword,
+        newPassword,
+      }, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+      
+      if (response.data.success) {
+        toast.success('Password changed successfully!');
+        return true;
+      } else {
+        toast.error(response.data.message || 'Password change failed');
+        return false;
+      }
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Password change failed';
+      toast.error(errorMessage);
+      return false;
+    }
   };
 
   const value: AuthContextType = {
@@ -351,19 +353,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     accessToken,
     refreshToken,
     loading,
+    isAuthenticated: !!user && !!accessToken,
     login,
     register,
     logout,
     refreshAccessToken,
-    updateProfile,
-    changePassword,
-    verifyEmail,
     requestPasswordReset,
     resetPassword,
+    verifyEmail,
     resendVerificationEmail,
-    setToken,
-    isAuthenticated: !!user && !!accessToken,
-    isEmailVerified: user?.isEmailVerified || false
+    updateProfile,
+    changePassword,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -375,6 +375,4 @@ export const useAuth = () => {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-};
-
-export default AuthContext; 
+}; 

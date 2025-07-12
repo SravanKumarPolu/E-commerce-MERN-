@@ -2,6 +2,322 @@
 
 A full-stack e-commerce application built with the MERN stack (MongoDB, Express.js, React, Node.js) featuring comprehensive authentication, input validation, and modern security practices.
 
+## 🛡️ Error Handling & Boundaries
+
+### Error Boundary System
+
+The application implements a comprehensive error boundary system that catches JavaScript errors during rendering and provides fallback UI with error reporting capabilities.
+
+#### Main Error Boundary
+- **Component**: `ErrorBoundary.tsx`
+- **Features**:
+  - Catches rendering errors
+  - Shows user-friendly fallback UI
+  - Automatic error reporting
+  - Retry functionality
+  - Development mode error details
+  - Production error logging
+
+#### Async Error Boundary
+- **Component**: `AsyncErrorBoundary.tsx`
+- **Features**:
+  - Specialized for async operations
+  - Automatic retry with exponential backoff
+  - Network error detection
+  - Queue-based error handling
+  - Custom retry logic
+
+### Error Handling Hook
+
+#### useErrorHandler Hook
+```typescript
+const { loading, error, execute, retry, clearError } = useErrorHandler();
+
+// Usage
+const result = await execute(
+  async () => {
+    return await apiCall();
+  },
+  {
+    toastMessage: 'Operation failed',
+    retryAttempts: 3,
+    onError: (error) => console.error(error)
+  }
+);
+```
+
+**Features**:
+- Automatic loading states
+- Error state management
+- Retry functionality with exponential backoff
+- Toast notifications
+- Custom error handling
+- Error reporting integration
+
+#### useApiCall Hook
+```typescript
+const { apiCall } = useApiCall();
+
+const result = await apiCall(
+  () => apiService.getProducts(),
+  {
+    successMessage: 'Products loaded successfully',
+    retryAttempts: 2
+  }
+);
+```
+
+### Error Reporting System
+
+#### Global Error Reporting
+- **Service**: `errorReporting.ts`
+- **Features**:
+  - Automatic error capture
+  - Local storage fallback
+  - Online/offline handling
+  - User context tracking
+  - Error queuing and batch sending
+
+#### Error Report Structure
+```typescript
+interface ErrorReport {
+  message: string;
+  stack?: string;
+  timestamp: string;
+  url: string;
+  userAgent: string;
+  userId?: string;
+  componentStack?: string;
+  extra?: Record<string, any>;
+}
+```
+
+#### Setup & Configuration
+```typescript
+import { setupGlobalErrorReporting } from './utils/errorReporting';
+
+// Initialize with user context
+setupGlobalErrorReporting(userId, userEmail);
+
+// Manual error reporting
+reportError(new Error('Custom error'), {
+  context: 'UserAction',
+  severity: 'high'
+});
+```
+
+### Error Boundary Usage
+
+#### Application Level
+```tsx
+<ErrorBoundary 
+  onError={handleAppError}
+  showDetails={isDevelopment}
+>
+  <App />
+</ErrorBoundary>
+```
+
+#### Component Level
+```tsx
+<ErrorBoundary>
+  <ProtectedRoute>
+    <SensitiveComponent />
+  </ProtectedRoute>
+</ErrorBoundary>
+```
+
+#### Async Operations
+```tsx
+<AsyncErrorBoundary
+  maxRetries={3}
+  onRetry={handleRetry}
+>
+  <DataComponent />
+</AsyncErrorBoundary>
+```
+
+### Error Types & Handling
+
+#### Network Errors
+- Automatic retry with exponential backoff
+- Offline/online state detection
+- User-friendly error messages
+- Fallback to cached data when possible
+
+#### Validation Errors
+- Field-specific error display
+- Real-time validation feedback
+- Server-side validation integration
+- Form state management
+
+#### Authentication Errors
+- Automatic token refresh
+- Redirect to login when needed
+- Session timeout handling
+- Multi-tab synchronization
+
+#### Application Errors
+- Component error boundaries
+- Graceful degradation
+- Alternative UI paths
+- Error recovery mechanisms
+
+### Development Features
+
+#### Error Demo Page
+- Interactive error testing
+- Error boundary demonstrations
+- Async error handling examples
+- Error reporting testing
+
+#### Debug Information
+- Stack traces in development
+- Component stack information
+- Error reproduction steps
+- Environment details
+
+#### Error Analytics
+- Error frequency tracking
+- User impact analysis
+- Performance impact monitoring
+- Error trend analysis
+
+### Production Features
+
+#### Error Monitoring
+- Automatic error capture
+- Error aggregation
+- Alert notifications
+- Performance metrics
+
+#### User Experience
+- Graceful error fallbacks
+- Retry mechanisms
+- Offline support
+- Progress indicators
+
+#### Recovery Strategies
+- Automatic retry logic
+- Manual retry options
+- Alternative workflows
+- State restoration
+
+### Integration with External Services
+
+#### Error Reporting Services
+```typescript
+// Sentry integration example
+import * as Sentry from '@sentry/react';
+
+Sentry.init({
+  dsn: process.env.REACT_APP_SENTRY_DSN,
+  environment: process.env.NODE_ENV,
+});
+
+// Custom error reporting
+export const reportError = (error: Error, extra?: any) => {
+  Sentry.captureException(error, { extra });
+};
+```
+
+#### Analytics Integration
+```typescript
+// Google Analytics error tracking
+gtag('event', 'exception', {
+  'description': error.message,
+  'fatal': false
+});
+```
+
+### Best Practices
+
+#### Error Boundary Placement
+- Place at route level for navigation errors
+- Wrap complex components
+- Use specialized boundaries for specific error types
+- Avoid catching errors in event handlers
+
+#### Error Message Guidelines
+- Use clear, actionable language
+- Provide specific error context
+- Include recovery instructions
+- Avoid technical jargon
+
+#### Performance Considerations
+- Limit error boundary depth
+- Implement error throttling
+- Use efficient error logging
+- Monitor error impact on performance
+
+### Testing Error Boundaries
+
+#### Unit Tests
+```typescript
+import { render, screen } from '@testing-library/react';
+import { ErrorBoundary } from './ErrorBoundary';
+
+test('catches and displays error', () => {
+  const ThrowError = () => {
+    throw new Error('Test error');
+  };
+  
+  render(
+    <ErrorBoundary>
+      <ThrowError />
+    </ErrorBoundary>
+  );
+  
+  expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
+});
+```
+
+#### Integration Tests
+```typescript
+// Test error recovery
+test('retries failed operation', async () => {
+  const mockFn = jest.fn()
+    .mockRejectedValueOnce(new Error('Network error'))
+    .mockResolvedValueOnce('Success');
+  
+  const { result } = renderHook(() => useErrorHandler());
+  
+  await result.current.execute(mockFn, { retryAttempts: 1 });
+  
+  expect(mockFn).toHaveBeenCalledTimes(2);
+});
+```
+
+### Environment Variables
+
+Add these to your `.env` file:
+```bash
+# Error Reporting
+VITE_ERROR_REPORTING_API_KEY=your_error_reporting_api_key
+VITE_PROJECT_ID=your_project_id
+VITE_ENABLE_ERROR_REPORTING=true
+
+# Sentry (Optional)
+VITE_SENTRY_DSN=your_sentry_dsn
+VITE_SENTRY_ENVIRONMENT=production
+```
+
+### Monitoring & Alerts
+
+#### Error Thresholds
+- Set up alerts for error rate spikes
+- Monitor critical user journeys
+- Track error resolution time
+- Measure user impact
+
+#### Dashboard Metrics
+- Error frequency by component
+- User journey success rates
+- Error resolution effectiveness
+- Performance impact analysis
+
+This comprehensive error handling system ensures your application provides a smooth user experience even when things go wrong, while giving you the tools to quickly identify and fix issues.
+
 ## 🚀 Features
 
 ### Authentication & Security
