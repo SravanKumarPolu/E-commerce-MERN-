@@ -1,6 +1,7 @@
 import { body, query, validationResult } from 'express-validator';
 import validator from 'validator';
 import { SecurityUtils, securityMonitor } from '../config/security.js';
+import { sanitizeObject } from './security.js';
 
 // Middleware to handle validation results
 export const handleValidationErrors = (req, res, next) => {

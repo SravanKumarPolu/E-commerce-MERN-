@@ -42,6 +42,7 @@ export const createRateLimit = (windowMs = 15 * 60 * 1000, max = 100, message = 
     },
     standardHeaders: true,
     legacyHeaders: false,
+    trustProxy: 1, // Explicitly set trust proxy for rate limiter
     skip: (req) => {
       // Skip rate limiting for health checks
       return req.path === '/' || req.path === '/health';
@@ -76,7 +77,8 @@ export const speedLimiter = slowDown({
   delayAfter: 50, // Allow 50 requests per windowMs without delay
   delayMs: () => 500, // Fixed delay of 500ms (new v2 behavior)
   maxDelayMs: 20000, // Maximum delay of 20 seconds
-  validate: { delayMs: false } // Disable the warning
+  validate: { delayMs: false }, // Disable the warning
+  trustProxy: 1 // Explicitly set trust proxy for slow down
 });
 
 // MongoDB injection protection
@@ -113,7 +115,7 @@ export const xssProtection = (req, res, next) => {
 };
 
 // Recursive object sanitization
-const sanitizeObject = (obj) => {
+export const sanitizeObject = (obj) => {
   if (obj === null || obj === undefined) return obj;
   
   if (Array.isArray(obj)) {

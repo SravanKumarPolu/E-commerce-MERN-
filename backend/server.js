@@ -47,7 +47,7 @@ connectDB();
 connectCloudinary();
 
 // Trust proxy for accurate IP addresses
-app.set('trust proxy', true);
+app.set('trust proxy', 1); // Trust first proxy only (more secure than 'true')
 
 // Security middleware (applied early)
 app.use(securityHeaders);
