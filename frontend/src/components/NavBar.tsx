@@ -5,7 +5,7 @@ import { useShopContext } from '../context/ShopContext';
 
 const NavBar = () => {
   const [visible, setVisible] = useState(false);
-  const { setShowSearch, getCartCount } = useShopContext();
+  const { setShowSearch, getCartCount, isLoggedIn, logoutUser } = useShopContext();
 
   const navLinks = [
     { label: 'Home', path: '/' },
@@ -13,6 +13,11 @@ const NavBar = () => {
     { label: 'Collection', path: '/collection' },
     { label: 'Contact', path: '/contact' },
   ];
+
+  const handleLogout = () => {
+    logoutUser();
+    setVisible(false);
+  };
 
   return (
     <>
@@ -80,21 +85,41 @@ const NavBar = () => {
 
           {/* Profile Dropdown */}
           <div className="relative group">
-            <Link to="/login">
-              <img
-                src={assets.profile_icon}
-                className="w-6 cursor-pointer"
-                alt="Profile"
-                aria-label="Profile"
-              />
-            </Link>
-            <div className="absolute right-0 pt-4 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto z-40">
-              <div className="flex flex-col gap-2 w-36 px-5 py-3 bg-white shadow-md text-gray-600 rounded text-sm">
-                <p className="cursor-pointer hover:text-black">My Profile</p>
-                <p className="cursor-pointer hover:text-black">Orders</p>
-                <p className="cursor-pointer hover:text-black">Logout</p>
-              </div>
-            </div>
+            {isLoggedIn ? (
+              <>
+                <img
+                  src={assets.profile_icon}
+                  className="w-6 cursor-pointer"
+                  alt="Profile"
+                  aria-label="Profile"
+                />
+                <div className="absolute right-0 pt-4 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto z-40">
+                  <div className="flex flex-col gap-2 w-36 px-5 py-3 bg-white shadow-md text-gray-600 rounded text-sm">
+                    <Link to="/profile" className="cursor-pointer hover:text-black">
+                      My Profile
+                    </Link>
+                    <Link to="/orders" className="cursor-pointer hover:text-black">
+                      Orders
+                    </Link>
+                    <button 
+                      onClick={handleLogout}
+                      className="cursor-pointer hover:text-black text-left"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <Link to="/login">
+                <img
+                  src={assets.profile_icon}
+                  className="w-6 cursor-pointer"
+                  alt="Login"
+                  aria-label="Login"
+                />
+              </Link>
+            )}
           </div>
 
           {/* Cart */}
@@ -153,6 +178,42 @@ const NavBar = () => {
               {nav.label}
             </NavLink>
           ))}
+
+          {/* Mobile Authentication Section */}
+          <div className="border-t mt-auto">
+            {isLoggedIn ? (
+              <div className="flex flex-col">
+                <Link 
+                  to="/profile" 
+                  onClick={() => setVisible(false)}
+                  className="py-3 px-6 text-sm font-medium text-gray-600 hover:text-black"
+                >
+                  My Profile
+                </Link>
+                <Link 
+                  to="/orders" 
+                  onClick={() => setVisible(false)}
+                  className="py-3 px-6 text-sm font-medium text-gray-600 hover:text-black"
+                >
+                  Orders
+                </Link>
+                <button 
+                  onClick={handleLogout}
+                  className="py-3 px-6 text-sm font-medium text-gray-600 hover:text-black text-left"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link 
+                to="/login" 
+                onClick={() => setVisible(false)}
+                className="py-3 px-6 text-sm font-medium text-gray-600 hover:text-black block"
+              >
+                Login / Sign Up
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </>

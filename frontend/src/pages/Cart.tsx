@@ -11,10 +11,20 @@ interface CartItem {
   quantity: number;
 }
 const Cart: React.FC = () => {
-  const { products, currency, cartItems, updateQuantity, navigate } = useShopContext();
+  const { products, currency, cartItems, updateQuantity, navigate, isLoggedIn } = useShopContext();
   const [cartData, setCartData] = useState<CartItem[]>([]);
 
+  // Redirect to login if not authenticated
   useEffect(() => {
+    if (!isLoggedIn) {
+      navigate('/login');
+      return;
+    }
+  }, [isLoggedIn, navigate]);
+
+  useEffect(() => {
+    if (!isLoggedIn) return; // Don't process cart if not logged in
+    
     const tempData = [];
     for (const itemId in cartItems) {
       for (const color in cartItems[itemId]) {
@@ -27,9 +37,26 @@ const Cart: React.FC = () => {
         }
       }
     }
-    console.log(tempData)
     setCartData(tempData);
-  }, [cartItems])
+  }, [cartItems, isLoggedIn]);
+
+  // Show loading or redirect message if not logged in
+  if (!isLoggedIn) {
+    return (
+      <div className="border-t pt-14 min-h-screen">
+        <div className="text-center py-20">
+          <h2 className="text-2xl font-semibold mb-4">Please Login</h2>
+          <p className="text-gray-600 mb-6">You need to be logged in to view your cart.</p>
+          <button 
+            onClick={() => navigate('/login')}
+            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-colors"
+          >
+            Go to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="border-t pt-14  min-h-screen">
       <div className="pb-8 text-center">

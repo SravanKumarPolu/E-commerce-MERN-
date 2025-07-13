@@ -25,6 +25,13 @@ interface ShopContextValue {
   updateQuantity: (itemId: string, color: string, quantity: number) => void;
   refreshProducts: () => void;
   isLoading: boolean;
+  // Authentication related
+  token: string;
+  setToken: React.Dispatch<React.SetStateAction<string>>;
+  isLoggedIn: boolean;
+  loginUser: (email: string, password: string) => Promise<boolean>;
+  registerUser: (name: string, email: string, password: string) => Promise<boolean>;
+  logoutUser: () => void;
 }
 
 // Create the context with a default value to avoid `undefined` issues
@@ -42,7 +49,20 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
   const [cartItems, setCartItems] = useState<Record<string, Record<string, number>>>({});
   const [products, setProducts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [token, setToken] = useState<string>(localStorage.getItem('token') || '');
   const navigate = useNavigate();
+
+  // Computed value for login status
+  const isLoggedIn = token !== '';
+
+  // Sync token with localStorage
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem('token', token);
+    } else {
+      localStorage.removeItem('token');
+    }
+  }, [token]);
 
   // Fetch products from backend
   const fetchProducts = async () => {
@@ -60,6 +80,53 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // User login function
+  const loginUser = async (email: string, password: string): Promise<boolean> => {
+    try {
+      const response = await axios.post(`${backendUrl}/api/user/login`, { email, password });
+      
+      if (response.data.success) {
+        setToken(response.data.token);
+        toast.success("Login successful!");
+        return true;
+      } else {
+        toast.error(response.data.message || "Login failed");
+        return false;
+      }
+    } catch (error: any) {
+      console.error('Login error:', error);
+      toast.error(error?.response?.data?.message || "Login failed");
+      return false;
+    }
+  };
+
+  // User registration function
+  const registerUser = async (name: string, email: string, password: string): Promise<boolean> => {
+    try {
+      const response = await axios.post(`${backendUrl}/api/user/register`, { name, email, password });
+      
+      if (response.data.success) {
+        setToken(response.data.token);
+        toast.success("Registration successful!");
+        return true;
+      } else {
+        toast.error(response.data.message || "Registration failed");
+        return false;
+      }
+    } catch (error: any) {
+      console.error('Registration error:', error);
+      toast.error(error?.response?.data?.message || "Registration failed");
+      return false;
+    }
+  };
+
+  // User logout function
+  const logoutUser = () => {
+    setToken('');
+    setCartItems({});
+    toast.success("Logged out successfully!");
   };
 
   // Refresh products function that can be called from outside
@@ -82,7 +149,15 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
     return () => clearInterval(interval);
   }, []);
 
+  // Modified addToCart function with authentication check
   const addToCart = (itemId: string, color: string) => {
+    // Check if user is logged in
+    if (!isLoggedIn || !token) {
+      toast.error("Please login to add items to cart");
+      navigate('/login');
+      return;
+    }
+
     if (!color) {
       toast.error("Select Product Color");
       return;
@@ -167,6 +242,13 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
     navigate,
     refreshProducts,
     isLoading,
+    // Authentication
+    token,
+    setToken,
+    isLoggedIn,
+    loginUser,
+    registerUser,
+    logoutUser,
   };
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;

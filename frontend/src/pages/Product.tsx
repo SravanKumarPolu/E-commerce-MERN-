@@ -9,12 +9,22 @@ import type { Product } from '../types';
 
 const Product: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
-  const { products, addToCart } = useContext(ShopContext) ?? { products: [], addToCart: () => { } };
+  const context = useContext(ShopContext);
+  
+  // Ensure context is available
+  if (!context) {
+    return (
+      <div className="text-center py-20">
+        <p>Loading authentication...</p>
+      </div>
+    );
+  }
+
+  const { products, addToCart, isLoggedIn, navigate } = context;
 
   const [productData, setProductData] = useState<Product | null>(null);
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
-
 
   useEffect(() => {
     if (products && productId) {
@@ -32,6 +42,21 @@ const Product: React.FC = () => {
 
   const handleColorChange = (color: string) => {
     setSelectedColor(color);
+  };
+
+  const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      toast.error("Please login to add items to cart");
+      navigate('/login');
+      return;
+    }
+    
+    if (!selectedColor) {
+      toast.error("Please select a color");
+      return;
+    }
+    
+    addToCart(productData._id, selectedColor);
   };
 
 
@@ -132,22 +157,34 @@ const Product: React.FC = () => {
 
           {/* Add to Cart Button */}
           <div className="mt-6">
-            <button
-              onClick={(e) => {
-                e.preventDefault(); // Ensure default behavior doesn't interrupt
-                if (!selectedColor) {
-                  toast.error("Please select a color");
-                  return;
-                }
-                addToCart(productData._id, selectedColor);
-              }}
-              className={`w-full sm:w-auto bg-blue-600 text-white text-lg font-medium py-3 px-6 
-rounded-lg shadow hover:bg-blue-700 transition duration-300`}
-            >
-              {selectedColor ? "Add to Cart" : "Select a Color First"}
-            </button>
-
-
+            {!isLoggedIn ? (
+              <div className="space-y-3">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                    <p className="text-yellow-800 font-medium">Please login to add items to your cart</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => navigate('/login')}
+                  className="w-full sm:w-auto bg-blue-600 text-white text-lg font-medium py-3 px-6 rounded-lg shadow hover:bg-blue-700 transition duration-300"
+                >
+                  Login to Shop
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={handleAddToCart}
+                className={`w-full sm:w-auto bg-blue-600 text-white text-lg font-medium py-3 px-6 rounded-lg shadow hover:bg-blue-700 transition duration-300 ${
+                  !selectedColor ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+                disabled={!selectedColor}
+              >
+                {selectedColor ? "Add to Cart" : "Select a Color First"}
+              </button>
+            )}
           </div>
           <hr className="mt-8 sm:w-4/5" />
           <div className="text-sm text-gray-500 mt-5 flex flex-col gap-1">
