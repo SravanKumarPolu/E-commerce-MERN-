@@ -148,12 +148,12 @@ const Add: React.FC<AddProps> = ({ token }) => {
             onChange={(e) => setCategory(e.target.value)}
             className="w-full border border-gray-300 px-3 py-2 rounded-md focus:outline-none  hover:shadow-md focus:shadow-md"
           >
-            <option>Watch</option>
-            <option>iPad</option>
             <option>iPhone</option>
-            <option>Laptop</option>
-            <option>Airpods</option>
-            <option>TV</option>
+            <option>iPad</option>
+            <option>Mac</option>
+            <option>Watch</option>
+            <option>AirPods</option>
+            <option>Accessories</option>
           </select>
         </div>
         <div>
@@ -163,8 +163,11 @@ const Add: React.FC<AddProps> = ({ token }) => {
             onChange={(e) => setSubCategory(e.target.value)}
             className="w-full border border-gray-300 px-3 py-2 rounded-md focus:outline-none  hover:shadow-md focus:shadow-md"
           >
-            <option>Plus</option>
             <option>Pro</option>
+            <option>Air</option>
+            <option>Mini</option>
+            <option>Standard</option>
+            <option>Max</option>
             <option>Ultra</option>
           </select>
         </div>
