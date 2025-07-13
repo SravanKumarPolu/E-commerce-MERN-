@@ -6,7 +6,7 @@ import { assets } from "../assets/assets"
 import { useShopContext } from "../context/ShopContext";
 
 const Collection = () => {
-  const { products, search, showSearch } = useShopContext();
+  const { products, search, showSearch, refreshProducts, isLoading } = useShopContext();
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [sortType, setSortType] = useState<string>('relavent');
 
@@ -46,110 +46,184 @@ const Collection = () => {
   }
   useEffect(() => {
     applyFilter();
-  }, [category, search, showSearch, subCategory])
+  }, [category, search, showSearch, subCategory, products])
 
   const sortProduct = () => {
-    const fpCopy = filterProducts.slice();
+    let fpCopy = filterProducts.slice()
     switch (sortType) {
       case 'low-high':
-        setFilterProducts(fpCopy.sort((a, b) => (a.price - b.price)));
-        break;
+        setFilterProducts(fpCopy.sort((a, b) => (a.price - b.price)))
+        break
       case 'high-low':
         setFilterProducts(fpCopy.sort((a, b) => (b.price - a.price)))
-        break;
+        break
       default:
-        applyFilter();
-        break;
+        applyFilter()
+        break
     }
   }
+
   useEffect(() => {
-    sortProduct();
+    sortProduct()
   }, [sortType])
+
   return (
     <div className="flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t">
-    <div className="w-full sm:w-72 bg-base-200 p-4 rounded-2xl shadow-md">
-  <div className="collapse sm:collapse-open bg-base-100 rounded-lg">
-    <input
-      type="checkbox"
-      className="sm:hidden"
-      checked={showFilter}
-      onChange={() => setShowFilter(!showFilter)}
-    />
-    <div className="collapse-title text-lg font-semibold cursor-pointer flex items-center justify-between">
-      Filter Options
-      <img
-        src={assets.dropdown_icon}
-        className={`h-3 transition-transform duration-200 ${
-          showFilter ? "rotate-180" : ""
-        } sm:hidden`}
-        alt="Toggle"
-      />
-    </div>
+      {/* Filter Options */}
+      <div className="min-w-60">
+        <p
+          onClick={() => setShowFilter(!showFilter)}
+          className="my-2 text-xl flex items-center cursor-pointer gap-2"
+        >
+          FILTERS
+          <img
+            className={`h-3 sm:hidden ${showFilter ? 'rotate-90' : ''}`}
+            src={assets.dropdown_icon}
+            alt=""
+          />
+        </p>
 
-    <div className="collapse-content space-y-6 mt-2">
-      {/* Category Filter */}
-      <div className="bg-base-100 border border-base-300 rounded-lg p-4 shadow-sm">
-        <h3 className="text-sm font-medium mb-2">Categories</h3>
-        <div className="form-control space-y-2">
-          {["Watch", "iPad", "iPhone", "Laptop", "Airpods", "TV"].map((item) => (
-            <label key={item} className="label cursor-pointer justify-start gap-2">
+        {/* Category Filter */}
+        <div className={`border border-gray-300 pl-5 py-3 mt-6 ${showFilter ? '' : 'hidden'} sm:block`}>
+          <p className="mb-3 text-sm font-medium">CATEGORIES</p>
+          <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
+            <p className="flex gap-2">
               <input
+                className="w-3"
                 type="checkbox"
-                value={item}
+                value="iPhone"
                 onChange={toggleCategory}
-                className="checkbox checkbox-sm checkbox-primary"
               />
-              <span className="label-text text-sm">{item}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {/* Type Filter */}
-      <div className="bg-base-100 border border-base-300 rounded-lg p-4 shadow-sm">
-        <h3 className="text-sm font-medium mb-2">Type</h3>
-        <div className="form-control space-y-2">
-          {["Plus", "Pro", "Ultra"].map((type) => (
-            <label key={type} className="label cursor-pointer justify-start gap-2">
+              iPhone
+            </p>
+            <p className="flex gap-2">
               <input
+                className="w-3"
                 type="checkbox"
-                value={type}
-                onChange={toggleSubCategory}
-                className="checkbox checkbox-sm checkbox-secondary"
+                value="iPad"
+                onChange={toggleCategory}
               />
-              <span className="label-text text-sm">{type}</span>
-            </label>
-          ))}
+              iPad
+            </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                type="checkbox"
+                value="Laptop"
+                onChange={toggleCategory}
+              />
+              Laptop
+            </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                type="checkbox"
+                value="Watch"
+                onChange={toggleCategory}
+              />
+              Watch
+            </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                type="checkbox"
+                value="Airpods"
+                onChange={toggleCategory}
+              />
+              Airpods
+            </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                type="checkbox"
+                value="TV"
+                onChange={toggleCategory}
+              />
+              TV
+            </p>
+          </div>
+        </div>
+
+        {/* SubCategory Filter */}
+        <div className={`border border-gray-300 pl-5 py-3 my-5 ${showFilter ? '' : 'hidden'} sm:block`}>
+          <p className="mb-3 text-sm font-medium">TYPE</p>
+          <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                type="checkbox"
+                value="Pro"
+                onChange={toggleSubCategory}
+              />
+              Pro
+            </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                type="checkbox"
+                value="Plus"
+                onChange={toggleSubCategory}
+              />
+              Plus
+            </p>
+            <p className="flex gap-2">
+              <input
+                className="w-3"
+                type="checkbox"
+                value="Ultra"
+                onChange={toggleSubCategory}
+              />
+              Ultra
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
 
       {/* Right Side */}
       <div className="flex-1">
         <div className="flex justify-between items-center text-base sm:text-2xl mb-4">
           <Title text1="All" text2="Collection" />
-          <select
-            onChange={(e) => setSortType(e.target.value)}
-            className="select select-bordered  text-sm "
-          >
-            <option value="relavent">Sort by: Relevant</option>
-            <option value="low-high">Sort by: Low to High</option>
-            <option value="high-low">Sort by: High to Low</option>
-          </select>
-        </div>
-        {/* MapProduct */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6">
-          {
-            filterProducts.map((item) => (
-              <ProductItems key={item._id} id={item._id} image={item.image} name={item.name} price={item.price} />
-            ))
-          }
-        </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={refreshProducts}
+              disabled={isLoading}
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+            >
+              {isLoading ? 'Refreshing...' : 'Refresh'}
+            </button>
+            <select
+              onChange={(e) => setSortType(e.target.value)}
+              className="select select-bordered text-sm"
+            >
+              <option value="relavent">Sort by: Relevant</option>
+              <option value="low-high">Sort by: Low to High</option>
+              <option value="high-low">Sort by: High to Low</option>
+            </select>
+          </div>
         </div>
 
+        {/* Loading Indicator */}
+        {isLoading && (
+          <div className="text-center py-8">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+            <p className="mt-2 text-gray-600">Loading products...</p>
+          </div>
+        )}
+
+        {/* Products Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6">
+          {filterProducts.map((item) => (
+            <ProductItems key={item._id} id={item._id} image={item.image} name={item.name} price={item.price} />
+          ))}
+        </div>
+
+        {/* No Products Message */}
+        {!isLoading && filterProducts.length === 0 && (
+          <div className="text-center py-8 text-gray-500">
+            <p>No products found matching your criteria.</p>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

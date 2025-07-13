@@ -1,12 +1,15 @@
-import React, { ReactNode, createContext, useContext, useState } from "react";
+import React, { ReactNode, createContext, useContext, useState, useEffect } from "react";
 
-import { products } from "../assets/assets";
+import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
+// Define the backend URL
+const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+
 // Define the shape of the context
 interface ShopContextValue {
-  products: typeof products;
+  products: any[];
   currency: string;
   delivery_fee: number;
   search: string;
@@ -20,6 +23,8 @@ interface ShopContextValue {
   cartItems: Record<string, Record<string, number>>;
   setCartItems: React.Dispatch<React.SetStateAction<Record<string, Record<string, number>>>>;
   updateQuantity: (itemId: string, color: string, quantity: number) => void;
+  refreshProducts: () => void;
+  isLoading: boolean;
 }
 
 // Create the context with a default value to avoid `undefined` issues
@@ -35,7 +40,48 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
   const [search, setSearch] = useState<string>('');
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<Record<string, Record<string, number>>>({});
+  const [products, setProducts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  // Fetch products from backend
+  const fetchProducts = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get(`${backendUrl}/api/product/list`);
+      if (response.data.success) {
+        setProducts(response.data.products);
+      } else {
+        toast.error(response.data.message || "Failed to fetch products");
+      }
+    } catch (error: any) {
+      console.error('Error fetching products:', error);
+      toast.error(error?.message || "Error fetching products");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Refresh products function that can be called from outside
+  const refreshProducts = () => {
+    fetchProducts();
+    toast.info("Refreshing products...");
+  };
+
+  // Fetch products on component mount
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  // Auto-refresh products every 10 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchProducts();
+    }, 10000); // 10 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   const addToCart = (itemId: string, color: string) => {
     if (!color) {
       toast.error("Select Product Color");
@@ -61,7 +107,6 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
     toast.success("Item added to cart");
   };
 
-
   const getCartCount = (): number => {
     let totalCount = 0;
     for (const items in cartItems) {
@@ -77,6 +122,7 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
     }
     return totalCount;
   };
+
   const updateQuantity = async (itemId: string, color: string, quantity: number) => {
     const cartData = structuredClone(cartItems);
     if (cartData[itemId] && cartData[itemId][color] !== undefined) {
@@ -84,6 +130,7 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
     }
     setCartItems(cartData);
   };
+
   const getCartAmount = (): number => {
     let totalAmount = 0;
     for (const items in cartItems) {
@@ -101,14 +148,16 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
       }
     }
     return totalAmount;
-  }
+  };
+
   const value: ShopContextValue = {
     products,
     currency,
     delivery_fee,
     search,
     setSearch,
-    getCartCount, updateQuantity,
+    getCartCount,
+    updateQuantity,
     showSearch,
     addToCart,
     cartItems,
@@ -116,6 +165,8 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
     setCartItems,
     setShowSearch,
     navigate,
+    refreshProducts,
+    isLoading,
   };
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;

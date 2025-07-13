@@ -18,7 +18,7 @@ const LatestCollection: React.FC = () => {
     );
   }
 
-  const { products } = context;
+  const { products, refreshProducts } = context;
   const [latestProducts, setLatestProducts] = useState<Product[]>([]);
 
   useEffect(() => {
@@ -34,6 +34,12 @@ const LatestCollection: React.FC = () => {
         <p className="w-full sm:w-3/4 lg:w-2/3 mx-auto text-sm sm:text-base text-gray-500 mt-2 leading-relaxed">
           Check out our freshest drops—hand-picked just for you!
         </p>
+        <button
+          onClick={refreshProducts}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+        >
+          Refresh Products
+        </button>
       </div>
 
       {latestProducts.length === 0 ? (

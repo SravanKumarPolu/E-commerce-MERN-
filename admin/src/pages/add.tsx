@@ -3,11 +3,13 @@ import axios from 'axios';
 import { backendUrl } from '../App';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface AddProps {
   token: string;
 }
 const Add: React.FC<AddProps> = ({ token }) => {
+  const navigate = useNavigate();
   const [image1, setImage1] = useState<File | null>(null);
   const [image2, setImage2] = useState<File | null>(null);
   const [image3, setImage3] = useState<File | null>(null);
@@ -44,10 +46,16 @@ const Add: React.FC<AddProps> = ({ token }) => {
         setName('')
         setDescription('')
         setPrice('')
-        setImage1(null)  // Use null instead of false
-        setImage2(null)  // Use null instead of false
-        setImage3(null)  // Use null instead of false
+        setColor([])
+        setBestseller(false)
+        setImage1(null)
+        setImage2(null)
+        setImage3(null)
         setImage4(null)
+        // Navigate to list page to see the new product
+        setTimeout(() => {
+          navigate('/list');
+        }, 1000);
       } else {
         toast.error(response.data.message)
       }
