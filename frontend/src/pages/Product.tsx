@@ -131,18 +131,47 @@ const Product: React.FC = () => {
             </label>
             <div className="flex gap-3">
               {productData.color && productData.color.length > 0 ? (
-                productData.color.map((color) => (
-                  <button
-                    key={color}
-                    onClick={() => handleColorChange(color)}
-                    className={`px-4 py-2 border rounded-lg transition-colors ${selectedColor === color
-                        ? "bg-blue-600 text-white border-blue-600"
-                        : "bg-gray-200 text-gray-700 hover:bg-gray-300 border-gray-300"
-                      }`}
-                  >
-                    {color}
-                  </button>
-                ))
+                (() => {
+                  // Debug: Log the raw color data
+                  console.log('Raw color data:', productData.color);
+                  console.log('Type of color data:', typeof productData.color);
+                  
+                  // Simple approach: convert to string and clean up
+                  let colorString = '';
+                  
+                  if (Array.isArray(productData.color)) {
+                    colorString = productData.color.join(',');
+                  } else {
+                    colorString = String(productData.color);
+                  }
+                  
+                  // Clean up the string by removing ALL unwanted characters
+                  const cleanedString = colorString
+                    .replace(/[\[\]"'\\]/g, '') // Remove brackets, quotes, backslashes
+                    .replace(/\s*,\s*/g, ',') // Normalize commas
+                    .trim();
+                  
+                  // Split by comma and clean each color
+                  const colors = cleanedString
+                    .split(',')
+                    .map((color: string) => color.trim())
+                    .filter((color: string) => color.length > 0);
+                  
+                  console.log('Final colors:', colors);
+                  
+                  return colors.map((color: string, index: number) => (
+                    <button
+                      key={index}
+                      onClick={() => handleColorChange(color)}
+                      className={`px-4 py-2 border rounded-lg transition-colors ${selectedColor === color
+                          ? "bg-blue-600 text-white border-blue-600"
+                          : "bg-gray-200 text-gray-700 hover:bg-gray-300 border-gray-300"
+                        }`}
+                    >
+                      {color}
+                    </button>
+                  ));
+                })()
               ) : (
                 <p className="text-gray-500">No colors available</p>
               )}

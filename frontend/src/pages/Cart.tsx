@@ -89,7 +89,21 @@ const Cart: React.FC = () => {
                     {productData?.price}
                   </p>
                   <p className="px-3 py-1 border rounded-md bg-gray-100 text-gray-600 text-xs sm:text-sm">
-                    {item.color}
+                    {(() => {
+                      // Simple approach: convert to string and clean up thoroughly
+                      let colorString = String(item.color);
+                      
+                      // Clean up the string by removing ALL unwanted characters
+                      const cleanedString = colorString
+                        .replace(/[\[\]"'\\]/g, '') // Remove brackets, quotes, backslashes
+                        .replace(/\s*,\s*/g, ',') // Normalize commas
+                        .trim();
+                      
+                      // Take the first color if multiple colors exist
+                      const firstColor = cleanedString.split(',')[0].trim();
+                      
+                      return firstColor || 'Unknown';
+                    })()}
                   </p>
                 </div>
               </div>
