@@ -6,7 +6,7 @@ export interface Product {
   image: string[];
   category: string;
   subCategory: string;
-  colors: string[];
+  color: string[];
   date: number;
   bestseller: boolean;
 }

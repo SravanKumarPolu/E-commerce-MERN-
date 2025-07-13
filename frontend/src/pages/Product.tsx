@@ -30,7 +30,7 @@ const Product: React.FC = () => {
     return <div className="text-center py-10">Loading...</div>;
   }
 
-  const handleSizeChange = (color: string) => {
+  const handleColorChange = (color: string) => {
     setSelectedColor(color);
   };
 
@@ -99,27 +99,27 @@ const Product: React.FC = () => {
             {productData.category} / {productData.subCategory}
           </p>
 
-          {/* Size Selection */}
+          {/* Color Selection */}
           <div className="mb-6">
             <label className="text-sm font-medium text-gray-800 mb-2 block">
               Select Color:
             </label>
             <div className="flex gap-3">
-              {productData.colors && productData.colors.length > 0 ? (
-                productData.colors.map((color) => (
+              {productData.color && productData.color.length > 0 ? (
+                productData.color.map((color) => (
                   <button
                     key={color}
-                    onClick={() => handleSizeChange(color)}
-                    className={`px-4 py-2 border rounded-lg ${selectedColor === color
-                        ? "bg-blue-600 text-white"
-                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    onClick={() => handleColorChange(color)}
+                    className={`px-4 py-2 border rounded-lg transition-colors ${selectedColor === color
+                        ? "bg-blue-600 text-white border-blue-600"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300 border-gray-300"
                       }`}
                   >
                     {color}
                   </button>
                 ))
               ) : (
-                <p>No colors available</p>
+                <p className="text-gray-500">No colors available</p>
               )}
             </div>
           </div>
