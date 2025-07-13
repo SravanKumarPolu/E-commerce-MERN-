@@ -22,6 +22,7 @@ const Add: React.FC<AddProps> = ({ token }) => {
   const [subCategory, setSubCategory] = useState('Pro');
   const [bestseller, setBestseller] = useState(false);
   const [color, setColor] = useState<string[]>([]);
+  const [stock, setStock] = useState('100');
 
   const colorOptions = ["Black", "Black Titanium", "Desert Titanium", "Gold", "Pink", "Silver", "Teal", "Ultramarine", "White", "Yellow"];
   const onSubmitHandler = async (e: { preventDefault: () => void; }) => {
@@ -35,6 +36,7 @@ const Add: React.FC<AddProps> = ({ token }) => {
       formData.append("subCategory", subCategory)
       formData.append("bestseller", JSON.stringify(bestseller))
       formData.append("color", JSON.stringify(color))
+      formData.append("stockQuantity", stock);
       if (image1) formData.append('image1', image1);
       if (image2) formData.append('image2', image2);
       if (image3) formData.append('image3', image3);
@@ -176,6 +178,19 @@ const Add: React.FC<AddProps> = ({ token }) => {
             className="w-full border border-gray-300 px-3 py-2 rounded-md focus:outline-none  hover:shadow-md focus:shadow-md"
           />
         </div>
+      </div>
+
+      {/* Stock Quantity */}
+      <div>
+        <label className="block mb-1 font-medium">Stock Quantity</label>
+        <input
+          type="number"
+          placeholder="100"
+          onChange={(e) => setStock(e.target.value)}
+          value={stock}
+          min={0}
+          className="w-full border border-gray-300 px-3 py-2 rounded-md focus:outline-none hover:shadow-md focus:shadow-md"
+        />
       </div>
 
       {/* Color Selection */}

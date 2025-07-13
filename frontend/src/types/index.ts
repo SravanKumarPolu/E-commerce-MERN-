@@ -117,6 +117,7 @@ export interface ShopContextType {
   getCartAmount: () => number;
   navigate: (path: string) => void;
   refreshProducts: () => void;
+  forceRefreshProducts: () => Promise<void>;
   isLoading: boolean;
   
   // Authentication related

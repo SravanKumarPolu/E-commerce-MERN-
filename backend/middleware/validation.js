@@ -131,6 +131,11 @@ export const validateProduct = [
     .isBoolean()
     .withMessage('Bestseller must be a boolean value'),
   
+  body('stockQuantity')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Stock quantity must be a non-negative integer'),
+  
   handleValidationErrors
 ];
 

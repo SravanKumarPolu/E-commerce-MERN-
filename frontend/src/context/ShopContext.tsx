@@ -88,6 +88,11 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
       const response = await api.get<ProductResponse>('/api/product/list');
       
       if (response.data.success) {
+        console.log("📦 Fetched products:", response.data.products.map(p => ({
+          name: p.name,
+          inStock: p.inStock,
+          stockQuantity: p.stockQuantity
+        })));
         setProducts(response.data.products);
       } else {
         toast.error("Failed to fetch products");
@@ -99,6 +104,13 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
       setIsLoading(false);
     }
   }, []);
+
+  // Force refresh products (clears cache)
+  const forceRefreshProducts = useCallback(async () => {
+    console.log("🔄 Force refreshing products...");
+    await fetchProducts();
+    toast.info("Products refreshed!");
+  }, [fetchProducts]);
 
   // Refresh products function
   const refreshProducts = useCallback(() => {
@@ -204,7 +216,16 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
       return;
     }
 
+    // Debug logging
+    console.log("🛒 Adding to cart:", {
+      productName: product.name,
+      inStock: product.inStock,
+      stockQuantity: product.stockQuantity,
+      color: color
+    });
+
     if (!product.inStock) {
+      console.error("❌ Product out of stock:", product);
       toast.error("Product is out of stock");
       return;
     }
@@ -301,7 +322,8 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
     loginUser,
     registerUser,
     logoutUser,
-    setCartItems
+    setCartItems,
+    forceRefreshProducts
   };
 
   return (

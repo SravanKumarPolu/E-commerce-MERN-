@@ -112,7 +112,7 @@ const Cart: React.FC = () => {
               <div className="flex items-center gap-3 mt-4 sm:mt-0">
                 <input
                   onChange={(e) => e.target.value === "" || e.target.value === "0" ? null : updateQuantity(item._id, item.color, Number(e.target.value))}
-                  className="w-16 h-10 text-center text-gray-700 border border-gray-300 rounded-md focus:ring "
+                  className="w-16 h-10 text-center bg-white text-gray-700 border border-gray-300 rounded-md focus:ring "
                   type="number"
                   min={1}
                   defaultValue={item.quantity}

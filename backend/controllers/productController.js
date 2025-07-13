@@ -76,8 +76,8 @@ const addProduct = async (req, res, next) => {
       bestseller: bestseller === "true" || bestseller === true,
       image: imagesUrl,
       date: Date.now(),
-      inStock: true,
-      stockQuantity: 100 // Default stock quantity
+      stockQuantity: Number(req.body.stockQuantity) || 0,
+      inStock: Number(req.body.stockQuantity) > 0
     };
 
     // Create and save product
