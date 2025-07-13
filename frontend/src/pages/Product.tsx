@@ -5,20 +5,7 @@ import { ShopContext } from "../context/ShopContext";
 import { assets } from "../assets/assets";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
-
-interface Product {
-  _id: string;
-  name: string;
-  description: string;
-  price: number;
-  image: string[];
-  category: string;
-  subCategory: string;
-  colors: string[];
-  date: number;
-  bestseller: boolean;
-  rating?: number;
-}
+import type { Product } from '../types';
 
 const Product: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();

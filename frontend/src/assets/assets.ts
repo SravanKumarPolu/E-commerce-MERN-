@@ -6,11 +6,11 @@ import contact_img from './contact.png'
 import cross_icon from './cross.svg'
 import dropdown_icon from './chevronDown.svg'
 import exchange_icon from './exchange_icon.png'
-import hero_1 from './hero_1.mp4'
-import hero_2 from './hero_2.mp4'
-import hero_3 from './hero_3.mp4'
-import hero_4 from './hero_4.mp4'
-import hero_5 from './hero_5.mp4'
+import hero_1 from './hero_1.png'
+import hero_2 from './hero_2.png'
+import hero_3 from './hero_3.png'
+import hero_4 from './hero_4.png'
+import hero_5 from './hero.png'
 import hero_img from './hero.png'
 import hero_img1 from './hero_1.png'
 import hero_img2 from './hero_2.png'
@@ -65,7 +65,6 @@ import p_img2_3 from './p_img2_3.png'
 import p_img2_4 from './p_img2_4.png'
 import p_img30_1 from './p_img30_1.png';
 import p_img31_1 from './p_img31_1.png'
-import p_img32_1 from './p_img32_1.png'
 import p_img3_1 from './p_img3_1.png'
 import p_img3_2 from './p_img3_2.png'
 import p_img3_3 from './p_img3_3.png'
@@ -382,7 +381,7 @@ export const products = [
         name: "Watch Series Ultra 10",
         description: "APPLE WATCH ULTRA 2 Natural Titanium Case with Alpine Loop.",
         price: 244,
-        image: [p_img32_1],
+        image: [p_img20_1],
         category: "Watch",
         subCategory: "Ultra",
         colors: ["White", "Teal", "Black", "Ultramarine", "Pink"],

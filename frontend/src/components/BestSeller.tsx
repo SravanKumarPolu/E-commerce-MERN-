@@ -3,18 +3,7 @@ import { ShopContext } from '../context/ShopContext';
 import Title from './Title';
 import { motion } from 'framer-motion';
 import ProductItems from './ProductItems';
-interface Product {
-  _id: string;
-  name: string;
-  description: string;
-  price: number;
-  image: string[]; // <-- this is an array
-  category: string;
-  subCategory: string;
-  colors: string[];
-  date: number;
-  bestseller: boolean;
-}
+import type { Product } from '../types';
 
 const BestSeller: React.FC = () => {
   const context = useContext(ShopContext);

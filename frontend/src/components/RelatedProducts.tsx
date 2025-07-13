@@ -1,19 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import ProductItems from './ProductItems';
 import { ShopContext } from '../context/ShopContext';
 import Title from './Title';
+import type { Product } from '../types';
 
 interface RelatedProductsProps {
-  category: string;
-  subCategory: string;
-}
-
-interface Product {
-  _id: string;
-  name: string;
-  price: number;
-  image: string[];
   category: string;
   subCategory: string;
 }

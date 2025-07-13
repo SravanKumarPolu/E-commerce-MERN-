@@ -4,6 +4,7 @@ import Title from './Title';
 import ProductItems from './ProductItems';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import type { Product } from '../types';
 
 const LatestCollection: React.FC = () => {
   const context = useContext(ShopContext);
