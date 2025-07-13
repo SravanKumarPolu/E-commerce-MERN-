@@ -117,6 +117,27 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
     fetchProducts();
   }, [fetchProducts]);
 
+  // Load cart data from database
+  const loadCartFromDatabase = useCallback(async () => {
+    if (!isLoggedIn || !user?.id) return;
+    
+    try {
+      const response = await api.post('/api/cart/get', {
+        userId: user.id
+      });
+
+      if (response.data.success) {
+        const dbCartData = response.data.cartData || {};
+        console.log("📦 Loaded cart from database:", dbCartData);
+        setCartItems(dbCartData);
+      } else {
+        console.error("❌ Failed to load cart from database:", response.data.message);
+      }
+    } catch (error: any) {
+      console.error("❌ Error loading cart from database:", error);
+    }
+  }, [isLoggedIn, user, api]);
+
   // User login function
   const loginUser = useCallback(async (email: string, password: string): Promise<boolean> => {
     try {
@@ -125,6 +146,21 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
       if (response.data.success && response.data.token) {
         setToken(response.data.token);
         setUser(response.data.user || null);
+        
+        // Load cart data from database after successful login
+        if (response.data.user?.id) {
+          try {
+            const cartResponse = await api.post('/api/cart/get', {
+              userId: response.data.user.id
+            });
+            if (cartResponse.data.success) {
+              setCartItems(cartResponse.data.cartData || {});
+            }
+          } catch (cartError) {
+            console.error("Error loading cart after login:", cartError);
+          }
+        }
+        
         toast.success("Login successful!");
         return true;
       } else {
@@ -137,7 +173,7 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
       toast.error(errorMessage);
       return false;
     }
-  }, []);
+  }, [api]);
 
   // User registration function
   const registerUser = useCallback(async (name: string, email: string, password: string): Promise<boolean> => {
@@ -204,7 +240,7 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
   }, [cartItems]);
 
   // Add item to cart
-  const addToCart = useCallback((itemId: string, color: string) => {
+  const addToCart = useCallback(async (itemId: string, color: string) => {
     if (!color) {
       toast.error("Please select a color");
       return;
@@ -230,6 +266,7 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
       return;
     }
 
+    // Update local cart state
     setCartItems(prev => {
       const updated = { ...prev };
       if (!updated[itemId]) {
@@ -239,8 +276,29 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
       return updated;
     });
 
+    // If user is logged in, also save to database
+    if (isLoggedIn && user?.id) {
+      try {
+        const response = await api.post('/api/cart/add', {
+          userId: user.id,
+          itemId,
+          color
+        });
+
+        if (response.data.success) {
+          console.log("✅ Cart saved to database:", response.data.cartData);
+        } else {
+          console.error("❌ Failed to save cart to database:", response.data.message);
+          toast.error("Failed to save cart to database");
+        }
+      } catch (error: any) {
+        console.error("❌ Error saving cart to database:", error);
+        toast.error("Error saving cart to database");
+      }
+    }
+
     toast.success("Item added to cart!");
-  }, [products]);
+  }, [products, isLoggedIn, user, api]);
 
   // Get cart count
   const getCartCount = useCallback((): number => {
@@ -254,7 +312,8 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
   }, [cartItems]);
 
   // Update cart quantity
-  const updateQuantity = useCallback((itemId: string, color: string, quantity: number) => {
+  const updateQuantity = useCallback(async (itemId: string, color: string, quantity: number) => {
+    // Update local cart state
     setCartItems(prev => {
       const updated = { ...prev };
       
@@ -276,7 +335,29 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
       
       return updated;
     });
-  }, []);
+
+    // If user is logged in, also update in database
+    if (isLoggedIn && user?.id) {
+      try {
+        const response = await api.post('/api/cart/update', {
+          userId: user.id,
+          itemId,
+          color,
+          quantity
+        });
+
+        if (response.data.success) {
+          console.log("✅ Cart updated in database:", response.data.cartData);
+        } else {
+          console.error("❌ Failed to update cart in database:", response.data.message);
+          toast.error("Failed to update cart in database");
+        }
+      } catch (error: any) {
+        console.error("❌ Error updating cart in database:", error);
+        toast.error("Error updating cart in database");
+      }
+    }
+  }, [isLoggedIn, user, api]);
 
   // Get cart total amount
   const getCartAmount = useCallback((): number => {
@@ -323,7 +404,8 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
     registerUser,
     logoutUser,
     setCartItems,
-    forceRefreshProducts
+    forceRefreshProducts,
+    loadCartFromDatabase
   };
 
   return (

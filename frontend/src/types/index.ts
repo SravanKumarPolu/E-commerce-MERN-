@@ -130,6 +130,7 @@ export interface ShopContextType {
   
   // Cart related
   setCartItems: (items: CartData) => void;
+  loadCartFromDatabase: () => Promise<void>;
 }
 
 // Admin related types
