@@ -1,5 +1,5 @@
 import { assets } from '../assets/assets';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { backendUrl } from '../App';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
@@ -59,9 +59,17 @@ const Add: React.FC<AddProps> = ({ token }) => {
       } else {
         toast.error(response.data.message)
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.log(error)
-      if (error instanceof Error) {
+      
+      // Handle validation errors from backend
+      if (error instanceof AxiosError && error?.response?.data?.errors) {
+        error.response.data.errors.forEach((err: any) => {
+          toast.error(`${err.field}: ${err.message}`);
+        });
+      } else if (error instanceof AxiosError && error?.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else if (error instanceof Error) {
         toast.error(error.message);
       } else {
         toast.error("Something went wrong!");
