@@ -119,6 +119,7 @@ export interface ShopContextType {
   refreshProducts: () => void;
   forceRefreshProducts: () => Promise<void>;
   isLoading: boolean;
+  isInitializing: boolean;
   
   // Authentication related
   token: string;
@@ -131,6 +132,8 @@ export interface ShopContextType {
   // Cart related
   setCartItems: (items: CartData) => void;
   loadCartFromDatabase: () => Promise<void>;
+  syncCartOnAuth: () => Promise<void>;
+  loadAndSyncCart: (userId: string) => Promise<boolean>;
 }
 
 // Admin related types

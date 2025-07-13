@@ -136,4 +136,42 @@ const getUserCart = async (req, res) => {
   }
 };
 
-export { addToCart, updateCart, getUserCart }
+// Sync localStorage cart to database
+const syncLocalCart = async (req, res) => {
+  try {
+    const { userId, cartData } = req.body;
+    
+    if (!userId || !cartData) {
+      return res.status(400).json({
+        success: false,
+        message: 'userId and cartData are required'
+      });
+    }
+
+    const userData = await userModel.findById(userId);
+    if (!userData) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+    
+    // Update user's cart data in database
+    await userModel.findByIdAndUpdate(userId, { cartData });
+    
+    res.json({
+      success: true,
+      message: 'Cart synced successfully',
+      cartData
+    });
+    
+  } catch (error) {
+    console.error('Sync local cart error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+export { addToCart, updateCart, getUserCart, syncLocalCart }
