@@ -6,19 +6,8 @@ import Title from "../components/Title";
 import { assets } from "../assets/assets";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
-// REMOVE react-hook-form and yup imports
-// import { useForm } from "react-hook-form";
-// import { yupResolver } from "@hookform/resolvers/yup";
-// import * as yup from "yup";
-// REMOVE Stripe imports
-// import {
-//   Elements,
-//   CardElement,
-//   useStripe,
-//   useElements,
-// } from "@stripe/react-stripe-js";
-// import { loadStripe } from "@stripe/stripe-js";
-// const stripePromise = loadStripe("pk_test_51N...your_test_key_here...");
+
+const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 
 const paymentMethods = [
   { key: "stripe", label: "Stripe", icon: assets.stripe_logo },
@@ -28,50 +17,8 @@ const paymentMethods = [
   { key: "cod", label: "Cash on Delivery", icon: null },
 ];
 
-// REMOVE schema and useForm logic
-// const schema = yup.object().shape({
-//   firstName: yup.string().required("First name is required"),
-//   lastName: yup.string().required("Last name is required"),
-//   email: yup.string().email("Invalid email").required("Email is required"),
-//   street: yup.string().required("Street is required"),
-//   city: yup.string().required("City is required"),
-//   state: yup.string().required("State is required"),
-//   zipcode: yup.string().required("Zip code is required"),
-//   country: yup.string().required("Country is required"),
-//   phone: yup.string().required("Phone is required"),
-// });
-
-// REMOVE StripePayment component
-// const StripePayment = ({ onSuccess }: { onSuccess: () => void }) => {
-//   const stripe = useStripe();
-//   const elements = useElements();
-//   const [loading, setLoading] = useState(false);
-
-//   const handleStripePay = async (e: any) => {
-//     e.preventDefault();
-//     if (!stripe || !elements) return;
-//     setLoading(true);
-//     // Simulate payment intent (replace with your backend call)
-//     setTimeout(() => {
-//       setLoading(false);
-//       toast.success("Payment successful (test mode)");
-//       onSuccess();
-//     }, 1500);
-//   };
-
-//   return (
-//     <form onSubmit={handleStripePay} className="space-y-4 mt-4">
-//       <CardElement className="p-3 border rounded" />
-//       <button
-//         type="submit"
-//         disabled={loading}
-//         className="w-full py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700"
-//       >
-//         {loading ? "Processing..." : "Pay with Stripe"}
-//       </button>
-//     </form>
-//   );
-// };
+const validateEmail = (email: string) => /.+@.+\..+/.test(email);
+const validatePhone = (phone: string) => /^\d{7,15}$/.test(phone);
 
 const PlaceOrder = () => {
   const { token, isLoggedIn } = useShopContext();
@@ -92,17 +39,6 @@ const PlaceOrder = () => {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [mode, setMode] = useState<'add' | 'edit' | 'view'>('add');
   const [loading, setLoading] = useState(false);
-  // REMOVE showStripe state
-  // const [showStripe, setShowStripe] = useState(false);
-
-  // REMOVE useEffect for auto-filling form
-  // useEffect(() => {
-  //   if (defaultAddress && mode === "add") {
-  //     Object.keys(defaultAddress).forEach((key) => {
-  //       setValue(key, defaultAddress[key] || "");
-  //     });
-  //   }
-  // }, [defaultAddress, mode, setValue]);
 
   useEffect(() => {
     if (defaultAddress && mode === "add") {
@@ -120,7 +56,6 @@ const PlaceOrder = () => {
     }
   }, [defaultAddress, mode]);
 
-  // Handler to use a selected address
   const handleUseAddress = (address: any) => {
     setFormData({
       firstName: address.firstName || '',
@@ -137,7 +72,6 @@ const PlaceOrder = () => {
     setSelectedAddressId(address._id);
   };
 
-  // Handler to start a new address
   const handleNewAddress = () => {
     setFormData({
       firstName: '',
@@ -154,36 +88,6 @@ const PlaceOrder = () => {
     setSelectedAddressId(null);
   };
 
-  // REMOVE onSubmit function
-  // const onSubmit = async (data: any) => {
-  //   if (!isLoggedIn) {
-  //     toast.error("You must be logged in to save an address.");
-  //     return;
-  //   }
-  //   setLoading(true);
-  //   try {
-  //     const response = await fetch("http://localhost:3001/api/user/address", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         token,
-  //       },
-  //       body: JSON.stringify(data),
-  //     });
-  //     const res = await response.json();
-  //     if (res.success) {
-  //       toast.success("Address saved to your profile!");
-  //       setMode("view");
-  //     } else {
-  //       toast.error(res.message || "Failed to save address.");
-  //     }
-  //   } catch (error) {
-  //     toast.error("Error saving address.");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -194,9 +98,17 @@ const PlaceOrder = () => {
       toast.error("You must be logged in to save an address.");
       return;
     }
+    if (!validateEmail(formData.email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+    if (!validatePhone(formData.phone)) {
+      toast.error("Please enter a valid phone number (7-15 digits).");
+      return;
+    }
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3001/api/user/address", {
+      const response = await fetch(`${backendUrl}/api/user/address`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -218,7 +130,6 @@ const PlaceOrder = () => {
     }
   };
 
-  // Payment handler (no Stripe)
   const handlePlaceOrder = () => {
     toast.success("Order placed successfully!");
   };
@@ -248,8 +159,7 @@ const PlaceOrder = () => {
                       className={`p-3 border rounded w-64 cursor-pointer transition-all duration-150 shadow-sm bg-white hover:shadow-md ${addr.default ? "border-blue-500 bg-blue-50" : "border-gray-200"} ${selectedAddressId === addr._id ? "ring-2 ring-green-500" : ""}`}
                     >
                       <div className="font-semibold">
-                        {addr.firstName} {addr.lastName}{" "}
-                        {addr.default && (
+                        {addr.firstName} {addr.lastName} {addr.default && (
                           <span className="text-xs text-blue-600">(Default)</span>
                         )}
                       </div>
@@ -261,6 +171,7 @@ const PlaceOrder = () => {
                       </div>
                       <button
                         type="button"
+                        aria-label="Use this address"
                         onClick={() => handleUseAddress(addr)}
                         className="mt-2 text-xs bg-blue-600 text-white px-2 py-1 rounded"
                       >
@@ -277,6 +188,7 @@ const PlaceOrder = () => {
                 >
                   <button
                     type="button"
+                    aria-label="Add new address"
                     onClick={handleNewAddress}
                     className="text-xs bg-green-600 text-white px-2 py-1 rounded"
                   >
@@ -290,9 +202,14 @@ const PlaceOrder = () => {
         {/* Delivery form as a card/modal */}
         <motion.form
           layout
-          className="bg-white rounded-lg shadow p-6 space-y-4"
+          className="bg-white rounded-lg shadow p-6 space-y-4 relative"
           onSubmit={handleSubmit}
         >
+          {loading && (
+            <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10">
+              <div className="loader border-4 border-blue-200 border-t-blue-600 rounded-full w-10 h-10 animate-spin"></div>
+            </div>
+          )}
           <div className="flex gap-3">
             <div className="w-1/2">
               <input
@@ -302,6 +219,7 @@ const PlaceOrder = () => {
                 type="text"
                 className="border border-gray-300 rounded py-2 px-4 w-full focus:ring-2 focus:ring-blue-200"
                 placeholder="First name"
+                aria-label="First name"
                 required
                 disabled={mode === "view"}
               />
@@ -314,6 +232,7 @@ const PlaceOrder = () => {
                 type="text"
                 className="border border-gray-300 rounded py-2 px-4 w-full focus:ring-2 focus:ring-blue-200"
                 placeholder="Last name"
+                aria-label="Last name"
                 required
                 disabled={mode === "view"}
               />
@@ -326,6 +245,7 @@ const PlaceOrder = () => {
             type="email"
             className="border border-gray-300 rounded py-2 px-4 w-full focus:ring-2 focus:ring-blue-200"
             placeholder="Email address "
+            aria-label="Email address"
             required
             disabled={mode === "view"}
           />
@@ -336,6 +256,7 @@ const PlaceOrder = () => {
             type="text"
             className="border border-gray-300 rounded py-2 px-4 w-full focus:ring-2 focus:ring-blue-200"
             placeholder="Street"
+            aria-label="Street"
             required
             disabled={mode === "view"}
           />
@@ -348,6 +269,7 @@ const PlaceOrder = () => {
                 type="text"
                 className="border border-gray-300 rounded py-2 px-4 w-full focus:ring-2 focus:ring-blue-200"
                 placeholder="City"
+                aria-label="City"
                 required
                 disabled={mode === "view"}
               />
@@ -360,6 +282,7 @@ const PlaceOrder = () => {
                 type="text"
                 className="border border-gray-300 rounded py-2 px-4 w-full focus:ring-2 focus:ring-blue-200"
                 placeholder="State"
+                aria-label="State"
                 required
                 disabled={mode === "view"}
               />
@@ -374,6 +297,7 @@ const PlaceOrder = () => {
                 type="text"
                 className="border border-gray-300 rounded py-2 px-4 w-full focus:ring-2 focus:ring-blue-200"
                 placeholder="ZipCode"
+                aria-label="Zip code"
                 required
                 disabled={mode === "view"}
               />
@@ -386,6 +310,7 @@ const PlaceOrder = () => {
                 type="text"
                 className="border border-gray-300 rounded py-2 px-4 w-full focus:ring-2 focus:ring-blue-200"
                 placeholder="Country"
+                aria-label="Country"
                 required
                 disabled={mode === "view"}
               />
@@ -398,6 +323,7 @@ const PlaceOrder = () => {
             type="text"
             className="border border-gray-300 rounded py-2 px-4 w-full focus:ring-2 focus:ring-blue-200"
             placeholder="Phone"
+            aria-label="Phone"
             required
             disabled={mode === "view"}
           />
@@ -405,6 +331,7 @@ const PlaceOrder = () => {
             {mode === "add" && (
               <button
                 type="button"
+                aria-label="Add address"
                 onClick={() => setMode("edit")}
                 className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700"
               >
@@ -414,6 +341,7 @@ const PlaceOrder = () => {
             {mode === "view" && (
               <button
                 type="button"
+                aria-label="Edit address"
                 onClick={() => setMode("edit")}
                 className="bg-yellow-500 text-white px-4 py-2 rounded shadow hover:bg-yellow-600"
               >
@@ -423,6 +351,7 @@ const PlaceOrder = () => {
             {mode === "edit" && (
               <button
                 type="submit"
+                aria-label="Save address"
                 className="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700"
                 disabled={loading}
               >
@@ -444,6 +373,7 @@ const PlaceOrder = () => {
                 <button
                   key={pm.key}
                   type="button"
+                  aria-label={`Select payment method: ${pm.label}`}
                   onClick={() => setMethod(pm.key)}
                   className={`flex items-center gap-3 border p-3 rounded-lg shadow-sm transition-all duration-150 ${method === pm.key ? "bg-blue-600 text-white border-blue-600" : "bg-white text-gray-700 border-gray-300"} hover:shadow-md`}
                 >
@@ -454,9 +384,9 @@ const PlaceOrder = () => {
                 </button>
               ))}
             </div>
-            {/* REMOVE Stripe payment modal and AnimatePresence */}
             <button
               type="button"
+              aria-label="Place order"
               onClick={handlePlaceOrder}
               className="w-full mt-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-lg shadow-lg hover:scale-105 transition"
             >

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useShopContext } from "../context/ShopContext";
+import { toast } from "react-toastify";
+
+const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 
 interface Address {
   _id: string;
@@ -48,7 +51,7 @@ const AddressBook: React.FC<AddressBookProps> = ({ onDefaultAddress, onAddresses
     if (!isLoggedIn) return;
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:3001/api/user/address", {
+      const res = await fetch(`${backendUrl}/api/user/address`, {
         headers: { token },
       });
       const data = await res.json();
@@ -82,8 +85,8 @@ const AddressBook: React.FC<AddressBookProps> = ({ onDefaultAddress, onAddresses
     setLoading(true);
     try {
       const url = editingId
-        ? "http://localhost:3001/api/user/address"
-        : "http://localhost:3001/api/user/address";
+        ? `${backendUrl}/api/user/address`
+        : `${backendUrl}/api/user/address`;
       const method = editingId ? "PUT" : "POST";
       const body = editingId ? { ...form, addressId: editingId } : form;
       const res = await fetch(url, {
@@ -98,7 +101,7 @@ const AddressBook: React.FC<AddressBookProps> = ({ onDefaultAddress, onAddresses
         setAdding(false);
         fetchAddresses();
       } else {
-        alert(data.message || "Failed to save address.");
+        toast.error(data.message || "Failed to save address.");
       }
     } finally {
       setLoading(false);
@@ -117,14 +120,14 @@ const AddressBook: React.FC<AddressBookProps> = ({ onDefaultAddress, onAddresses
     if (!window.confirm("Delete this address?")) return;
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:3001/api/user/address", {
+      const res = await fetch(`${backendUrl}/api/user/address`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json", token },
         body: JSON.stringify({ addressId }),
       });
       const data = await res.json();
       if (data.success) fetchAddresses();
-      else alert(data.message || "Failed to delete address.");
+      else toast.error(data.message || "Failed to delete address.");
     } finally {
       setLoading(false);
     }
@@ -134,14 +137,14 @@ const AddressBook: React.FC<AddressBookProps> = ({ onDefaultAddress, onAddresses
   const handleSetDefault = async (addressId: string) => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:3001/api/user/address/default", {
+      const res = await fetch(`${backendUrl}/api/user/address/default`, {
         method: "POST",
         headers: { "Content-Type": "application/json", token },
         body: JSON.stringify({ addressId }),
       });
       const data = await res.json();
       if (data.success) fetchAddresses();
-      else alert(data.message || "Failed to set default.");
+      else toast.error(data.message || "Failed to set default.");
     } finally {
       setLoading(false);
     }
@@ -177,37 +180,37 @@ const AddressBook: React.FC<AddressBookProps> = ({ onDefaultAddress, onAddresses
                 {addr.deliveryInstructions && <div className="text-xs text-gray-600 italic">Instructions: {addr.deliveryInstructions}</div>}
               </div>
               <div className="flex flex-col gap-1 items-end">
-                {!addr.default && <button onClick={() => handleSetDefault(addr._id)} className="text-xs text-blue-600 underline">Set Default</button>}
-                <button onClick={() => handleEdit(addr)} className="text-xs text-yellow-600 underline">Edit</button>
-                <button onClick={() => handleDelete(addr._id)} className="text-xs text-red-600 underline">Delete</button>
+                {!addr.default && <button aria-label="Set as default address" onClick={() => handleSetDefault(addr._id)} className="text-xs text-blue-600 underline">Set Default</button>}
+                <button aria-label="Edit address" onClick={() => handleEdit(addr)} className="text-xs text-yellow-600 underline">Edit</button>
+                <button aria-label="Delete address" onClick={() => handleDelete(addr._id)} className="text-xs text-red-600 underline">Delete</button>
               </div>
             </div>
           </li>
         ))}
       </ul>
       <div className="mt-6">
-        {!adding && !editingId && <button onClick={handleAdd} className="bg-blue-600 text-white px-4 py-2 rounded">Add New Address</button>}
+        {!adding && !editingId && <button aria-label="Add new address" onClick={handleAdd} className="bg-blue-600 text-white px-4 py-2 rounded">Add New Address</button>}
         {(adding || editingId) && (
           <form onSubmit={handleSave} className="space-y-2 mt-4">
             <div className="flex gap-2">
-              <input name="firstName" value={form.firstName} onChange={handleChange} placeholder="First name" required className="border px-2 py-1 rounded w-1/2" />
-              <input name="lastName" value={form.lastName} onChange={handleChange} placeholder="Last name" required className="border px-2 py-1 rounded w-1/2" />
+              <input name="firstName" value={form.firstName} onChange={handleChange} placeholder="First name" required className="border px-2 py-1 rounded w-1/2" aria-label="First name" />
+              <input name="lastName" value={form.lastName} onChange={handleChange} placeholder="Last name" required className="border px-2 py-1 rounded w-1/2" aria-label="Last name" />
             </div>
-            <input name="email" value={form.email} onChange={handleChange} placeholder="Email" required className="border px-2 py-1 rounded w-full" />
-            <input name="street" value={form.street} onChange={handleChange} placeholder="Street" required className="border px-2 py-1 rounded w-full" />
+            <input name="email" value={form.email} onChange={handleChange} placeholder="Email" required className="border px-2 py-1 rounded w-full" aria-label="Email" />
+            <input name="street" value={form.street} onChange={handleChange} placeholder="Street" required className="border px-2 py-1 rounded w-full" aria-label="Street" />
             <div className="flex gap-2">
-              <input name="city" value={form.city} onChange={handleChange} placeholder="City" required className="border px-2 py-1 rounded w-1/2" />
-              <input name="state" value={form.state} onChange={handleChange} placeholder="State" required className="border px-2 py-1 rounded w-1/2" />
+              <input name="city" value={form.city} onChange={handleChange} placeholder="City" required className="border px-2 py-1 rounded w-1/2" aria-label="City" />
+              <input name="state" value={form.state} onChange={handleChange} placeholder="State" required className="border px-2 py-1 rounded w-1/2" aria-label="State" />
             </div>
             <div className="flex gap-2">
-              <input name="zipcode" value={form.zipcode} onChange={handleChange} placeholder="ZipCode" required className="border px-2 py-1 rounded w-1/2" />
-              <input name="country" value={form.country} onChange={handleChange} placeholder="Country" required className="border px-2 py-1 rounded w-1/2" />
+              <input name="zipcode" value={form.zipcode} onChange={handleChange} placeholder="ZipCode" required className="border px-2 py-1 rounded w-1/2" aria-label="Zip code" />
+              <input name="country" value={form.country} onChange={handleChange} placeholder="Country" required className="border px-2 py-1 rounded w-1/2" aria-label="Country" />
             </div>
-            <input name="phone" value={form.phone} onChange={handleChange} placeholder="Phone" required className="border px-2 py-1 rounded w-full" />
-            <textarea name="deliveryInstructions" value={form.deliveryInstructions} onChange={handleChange} placeholder="Delivery instructions (optional)" className="border px-2 py-1 rounded w-full" />
+            <input name="phone" value={form.phone} onChange={handleChange} placeholder="Phone" required className="border px-2 py-1 rounded w-full" aria-label="Phone" />
+            <textarea name="deliveryInstructions" value={form.deliveryInstructions} onChange={handleChange} placeholder="Delivery instructions (optional)" className="border px-2 py-1 rounded w-full" aria-label="Delivery instructions" />
             <div className="flex gap-2 mt-2">
-              <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">Save</button>
-              <button type="button" onClick={handleCancel} className="bg-gray-300 text-gray-800 px-4 py-2 rounded">Cancel</button>
+              <button type="submit" aria-label="Save address" className="bg-green-600 text-white px-4 py-2 rounded">Save</button>
+              <button type="button" aria-label="Cancel address edit" onClick={handleCancel} className="bg-gray-300 text-gray-800 px-4 py-2 rounded">Cancel</button>
             </div>
           </form>
         )}
