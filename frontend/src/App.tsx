@@ -1,9 +1,9 @@
 // src/App.jsx
-import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Layout from "./layout/Layout";
 import ScrollToTop from "./utils/ScrollToTop";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 // Lazy-loaded pages
 const Home = lazy(() => import("./pages/Home"));
@@ -22,7 +22,7 @@ function App() {
   return (
     <>
       <ScrollToTop />
-      <Suspense fallback={<div className="py-20 text-center">Loading...</div>}>
+      <Suspense fallback={<LoadingSpinner size="lg" message="Loading page..." className="py-20" />}>
         <Routes>
           <Route
             path="/"

@@ -5,14 +5,27 @@ import { BrowserRouter } from 'react-router-dom';
 import ShopContextProvider from './context/ShopContext.tsx';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <ShopContextProvider>
-      <App />
+        <App />
+        <ToastContainer 
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </ShopContextProvider>
-
     </BrowserRouter>
   </StrictMode>,
 );

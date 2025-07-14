@@ -2,17 +2,11 @@ import { Link, NavLink } from 'react-router-dom';
 import { useState } from 'react';
 import { assets } from '../assets/assets';
 import { useShopContext } from '../context/ShopContext';
+import { navLinks, userMenuLinks } from '../constants/navigation';
 
 const NavBar = () => {
   const [visible, setVisible] = useState(false);
   const { setShowSearch, getCartCount, isLoggedIn, logoutUser } = useShopContext();
-
-  const navLinks = [
-    { label: 'Home', path: '/' },
-    { label: 'About', path: '/about' },
-    { label: 'Collection', path: '/collection' },
-    { label: 'Contact', path: '/contact' },
-  ];
 
   const handleLogout = () => {
     logoutUser();
@@ -29,47 +23,22 @@ const NavBar = () => {
 
         {/* Desktop Tabs */}
         <div role="tablist" className="tabs tabs-lifted hidden sm:flex text-sm text-gray-900">
-        <div role="tablist" className="tabs tabs-lifted hidden sm:flex text-sm text-gray-900">
-        <NavLink
-          to="/"
-          role="tab"
-          className={({ isActive }) =>
-            `tab  flex-col items-center gap-1 ${isActive ? 'tab-active bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-yellow-500' : ''}`
-          }
-        >
-          <p>Home</p>
-        </NavLink>
-
-       
-
-        <NavLink
-          to="/collection"
-          role="tab"
-          className={({ isActive }) =>
-            `tab  flex-col items-center gap-1 ${isActive ? 'tab-active bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-yellow-500' : ''}`
-          }
-        >
-          <p>Collection</p>
-        </NavLink>
-        <NavLink
-          to="/about"
-          role="tab"
-          className={({ isActive }) =>
-            `tab  flex-col items-center gap-1 ${isActive ? 'tab-active bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-yellow-500' : ''}`
-          }
-        >
-          <p>About</p>
-        </NavLink>
-        <NavLink
-          to="/contact"
-          role="tab"
-          className={({ isActive }) =>
-            `tab  flex-col items-center gap-1 ${isActive ? 'tab-active bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-yellow-500' : ''}`
-          }
-        >
-          <p>Contact</p>
-        </NavLink>
-        </div>
+          {navLinks.map((navItem) => (
+            <NavLink
+              key={navItem.path}
+              to={navItem.path}
+              role="tab"
+              className={({ isActive }) =>
+                `tab flex-col items-center gap-1 ${
+                  isActive 
+                    ? 'tab-active bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-yellow-500' 
+                    : ''
+                }`
+              }
+            >
+              <p>{navItem.label}</p>
+            </NavLink>
+          ))}
         </div>
 
         {/* Right Icons */}
@@ -95,12 +64,15 @@ const NavBar = () => {
                 />
                 <div className="absolute right-0 pt-4 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto z-40">
                   <div className="flex flex-col gap-2 w-36 px-5 py-3 bg-white shadow-md text-gray-600 rounded text-sm">
-                    <Link to="/profile" className="cursor-pointer hover:text-black">
-                      My Profile
-                    </Link>
-                    <Link to="/orders" className="cursor-pointer hover:text-black">
-                      Orders
-                    </Link>
+                    {userMenuLinks.map((link) => (
+                      <Link 
+                        key={link.path}
+                        to={link.path} 
+                        className="cursor-pointer hover:text-black"
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
                     <button 
                       onClick={handleLogout}
                       className="cursor-pointer hover:text-black text-left"
@@ -164,10 +136,10 @@ const NavBar = () => {
             <p>Back</p>
           </div>
 
-          {navLinks.map((nav) => (
+          {navLinks.map((navItem) => (
             <NavLink
-              key={nav.path}
-              to={nav.path}
+              key={navItem.path}
+              to={navItem.path}
               onClick={() => setVisible(false)}
               className={({ isActive }) =>
                 `py-3 px-6 border-b text-sm font-medium ${
@@ -175,7 +147,7 @@ const NavBar = () => {
                 }`
               }
             >
-              {nav.label}
+              {navItem.label}
             </NavLink>
           ))}
 
@@ -183,20 +155,16 @@ const NavBar = () => {
           <div className="border-t mt-auto">
             {isLoggedIn ? (
               <div className="flex flex-col">
-                <Link 
-                  to="/profile" 
-                  onClick={() => setVisible(false)}
-                  className="py-3 px-6 text-sm font-medium text-gray-600 hover:text-black"
-                >
-                  My Profile
-                </Link>
-                <Link 
-                  to="/orders" 
-                  onClick={() => setVisible(false)}
-                  className="py-3 px-6 text-sm font-medium text-gray-600 hover:text-black"
-                >
-                  Orders
-                </Link>
+                {userMenuLinks.map((link) => (
+                  <Link 
+                    key={link.path}
+                    to={link.path} 
+                    onClick={() => setVisible(false)}
+                    className="py-3 px-6 text-sm font-medium text-gray-600 hover:text-black"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
                 <button 
                   onClick={handleLogout}
                   className="py-3 px-6 text-sm font-medium text-gray-600 hover:text-black text-left"
@@ -210,7 +178,7 @@ const NavBar = () => {
                 onClick={() => setVisible(false)}
                 className="py-3 px-6 text-sm font-medium text-gray-600 hover:text-black block"
               >
-                Login / Sign Up
+                Login
               </Link>
             )}
           </div>
