@@ -635,6 +635,7 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
     token,
     setToken,
     isLoggedIn,
+    user,
     loginUser,
     registerUser,
     logoutUser,

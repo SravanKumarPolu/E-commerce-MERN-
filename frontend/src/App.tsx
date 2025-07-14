@@ -13,6 +13,7 @@ const Contact = lazy(() => import("./pages/Contact"));
 const Product = lazy(() => import("./pages/Product"));
 const Cart = lazy(() => import("./pages/Cart"));
 const Login = lazy(() => import("./pages/Login"));
+const Profile = lazy(() => import("./pages/Profile"));
 const Orders = lazy(() => import("./pages/Orders"));
 const PlaceOrder = lazy(() => import("./pages/PlaceOrder"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -76,6 +77,14 @@ function App() {
             element={
               <Layout>
                 <Login />
+              </Layout>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <Layout>
+                <Profile />
               </Layout>
             }
           />
