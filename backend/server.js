@@ -12,6 +12,7 @@ import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 import compression from 'compression';
 import { handleMulterError } from './middleware/multer.js';
+import addressRouter from './routes/addressRoute.js';
 
 //App config
 const app = express();
@@ -93,6 +94,7 @@ app.use(mongoSanitize());
 app.use('/api/user', authLimiter, userRouter);
 app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
+app.use('/api/address', addressRouter);
 
 // Multer error handling middleware
 app.use(handleMulterError);

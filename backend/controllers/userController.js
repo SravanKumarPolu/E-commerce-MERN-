@@ -261,4 +261,25 @@ const updateUserProfile = async (req, res, next) => {
   }
 };
 
+// Add delivery address to user
+export const addUserAddress = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { firstName, lastName, email, street, city, state, zipcode, country, phone } = req.body;
+    if (!firstName || !lastName || !email || !street || !city || !state || !zipcode || !country || !phone) {
+      return res.status(400).json({ success: false, message: 'All fields are required.' });
+    }
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+    user.addresses.push({ firstName, lastName, email, street, city, state, zipcode, country, phone });
+    await user.save();
+    res.status(201).json({ success: true, message: 'Address added to user.', addresses: user.addresses });
+  } catch (error) {
+    console.error('Add user address error:', error);
+    res.status(500).json({ success: false, message: 'Server error.' });
+  }
+};
+
 export { adminLogin, loginUser, registerUser, getUserProfile, updateUserProfile };
