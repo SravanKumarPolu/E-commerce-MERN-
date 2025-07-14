@@ -32,9 +32,10 @@ const emptyAddress: Omit<Address, '_id'> = {
 
 interface AddressBookProps {
   onDefaultAddress?: (address: Address | null) => void;
+  onAddresses?: (addresses: Address[]) => void;
 }
 
-const AddressBook: React.FC<AddressBookProps> = ({ onDefaultAddress }) => {
+const AddressBook: React.FC<AddressBookProps> = ({ onDefaultAddress, onAddresses }) => {
   const { token, isLoggedIn } = useShopContext();
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(false);
@@ -59,13 +60,16 @@ const AddressBook: React.FC<AddressBookProps> = ({ onDefaultAddress }) => {
 
   useEffect(() => { fetchAddresses(); }, [isLoggedIn]);
 
-  // Call onDefaultAddress whenever addresses change
+  // Call onDefaultAddress and onAddresses whenever addresses change
   useEffect(() => {
     if (onDefaultAddress) {
       const def = addresses.find(a => a.default);
       onDefaultAddress(def || null);
     }
-  }, [addresses, onDefaultAddress]);
+    if (onAddresses) {
+      onAddresses(addresses);
+    }
+  }, [addresses, onDefaultAddress, onAddresses]);
 
   // Handle form changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

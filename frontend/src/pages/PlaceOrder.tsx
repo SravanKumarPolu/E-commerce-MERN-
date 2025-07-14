@@ -1,12 +1,81 @@
+import { useState, useEffect } from "react";
+import { useShopContext } from "../context/ShopContext";
+import AddressBook from "../components/AddressBook";
 import CartTotal from "../components/CartTotal";
 import Title from "../components/Title";
 import { assets } from "../assets/assets";
-import { useShopContext } from "../context/ShopContext";
-import { useState, useEffect } from "react";
-import AddressBook from "../components/AddressBook";
+import { toast } from "react-toastify";
+import { motion, AnimatePresence } from "framer-motion";
+// REMOVE react-hook-form and yup imports
+// import { useForm } from "react-hook-form";
+// import { yupResolver } from "@hookform/resolvers/yup";
+// import * as yup from "yup";
+// REMOVE Stripe imports
+// import {
+//   Elements,
+//   CardElement,
+//   useStripe,
+//   useElements,
+// } from "@stripe/react-stripe-js";
+// import { loadStripe } from "@stripe/stripe-js";
+// const stripePromise = loadStripe("pk_test_51N...your_test_key_here...");
+
+const paymentMethods = [
+  { key: "stripe", label: "Stripe", icon: assets.stripe_logo },
+  { key: "razorpay", label: "Razorpay", icon: assets.razorpay_logo },
+  { key: "GPay", label: "GPay", icon: assets.GPay_logo },
+  { key: "paytm", label: "Paytm", icon: assets.paytm_logo },
+  { key: "cod", label: "Cash on Delivery", icon: null },
+];
+
+// REMOVE schema and useForm logic
+// const schema = yup.object().shape({
+//   firstName: yup.string().required("First name is required"),
+//   lastName: yup.string().required("Last name is required"),
+//   email: yup.string().email("Invalid email").required("Email is required"),
+//   street: yup.string().required("Street is required"),
+//   city: yup.string().required("City is required"),
+//   state: yup.string().required("State is required"),
+//   zipcode: yup.string().required("Zip code is required"),
+//   country: yup.string().required("Country is required"),
+//   phone: yup.string().required("Phone is required"),
+// });
+
+// REMOVE StripePayment component
+// const StripePayment = ({ onSuccess }: { onSuccess: () => void }) => {
+//   const stripe = useStripe();
+//   const elements = useElements();
+//   const [loading, setLoading] = useState(false);
+
+//   const handleStripePay = async (e: any) => {
+//     e.preventDefault();
+//     if (!stripe || !elements) return;
+//     setLoading(true);
+//     // Simulate payment intent (replace with your backend call)
+//     setTimeout(() => {
+//       setLoading(false);
+//       toast.success("Payment successful (test mode)");
+//       onSuccess();
+//     }, 1500);
+//   };
+
+//   return (
+//     <form onSubmit={handleStripePay} className="space-y-4 mt-4">
+//       <CardElement className="p-3 border rounded" />
+//       <button
+//         type="submit"
+//         disabled={loading}
+//         className="w-full py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700"
+//       >
+//         {loading ? "Processing..." : "Pay with Stripe"}
+//       </button>
+//     </form>
+//   );
+// };
 
 const PlaceOrder = () => {
-  const [method, setMethod] = useState('cod');
+  const { token, isLoggedIn } = useShopContext();
+  const [method, setMethod] = useState("cod");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: '',
@@ -18,13 +87,25 @@ const PlaceOrder = () => {
     country: '',
     phone: '',
   });
-  const [mode, setMode] = useState<'add' | 'edit' | 'view'>('add');
-  const { navigate, token, isLoggedIn } = useShopContext();
   const [defaultAddress, setDefaultAddress] = useState<any>(null);
+  const [allAddresses, setAllAddresses] = useState<any[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
+  const [mode, setMode] = useState<'add' | 'edit' | 'view'>('add');
+  const [loading, setLoading] = useState(false);
+  // REMOVE showStripe state
+  // const [showStripe, setShowStripe] = useState(false);
 
-  // Auto-fill form with default address when it changes and mode is 'add'
+  // REMOVE useEffect for auto-filling form
+  // useEffect(() => {
+  //   if (defaultAddress && mode === "add") {
+  //     Object.keys(defaultAddress).forEach((key) => {
+  //       setValue(key, defaultAddress[key] || "");
+  //     });
+  //   }
+  // }, [defaultAddress, mode, setValue]);
+
   useEffect(() => {
-    if (defaultAddress && mode === 'add') {
+    if (defaultAddress && mode === "add") {
       setFormData({
         firstName: defaultAddress.firstName || '',
         lastName: defaultAddress.lastName || '',
@@ -39,163 +120,353 @@ const PlaceOrder = () => {
     }
   }, [defaultAddress, mode]);
 
-  // Handle input changes
+  // Handler to use a selected address
+  const handleUseAddress = (address: any) => {
+    setFormData({
+      firstName: address.firstName || '',
+      lastName: address.lastName || '',
+      email: address.email || '',
+      street: address.street || '',
+      city: address.city || '',
+      state: address.state || '',
+      zipcode: address.zipcode || '',
+      country: address.country || '',
+      phone: address.phone || '',
+    });
+    setMode("view");
+    setSelectedAddressId(address._id);
+  };
+
+  // Handler to start a new address
+  const handleNewAddress = () => {
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      street: '',
+      city: '',
+      state: '',
+      zipcode: '',
+      country: '',
+      phone: '',
+    });
+    setMode("add");
+    setSelectedAddressId(null);
+  };
+
+  // REMOVE onSubmit function
+  // const onSubmit = async (data: any) => {
+  //   if (!isLoggedIn) {
+  //     toast.error("You must be logged in to save an address.");
+  //     return;
+  //   }
+  //   setLoading(true);
+  //   try {
+  //     const response = await fetch("http://localhost:3001/api/user/address", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         token,
+  //       },
+  //       body: JSON.stringify(data),
+  //     });
+  //     const res = await response.json();
+  //     if (res.success) {
+  //       toast.success("Address saved to your profile!");
+  //       setMode("view");
+  //     } else {
+  //       toast.error(res.message || "Failed to save address.");
+  //     }
+  //   } catch (error) {
+  //     toast.error("Error saving address.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle form submit (Add or Save)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isLoggedIn) {
-      alert('You must be logged in to save an address.');
+      toast.error("You must be logged in to save an address.");
       return;
     }
+    setLoading(true);
     try {
-      const response = await fetch('http://localhost:3001/api/user/address', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3001/api/user/address", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'token': token,
+          "Content-Type": "application/json",
+          token,
         },
         body: JSON.stringify(formData),
       });
-      const data = await response.json();
-      if (data.success) {
-        alert('Address saved to your profile!');
-        setMode('view');
+      const res = await response.json();
+      if (res.success) {
+        toast.success("Address saved to your profile!");
+        setMode("view");
       } else {
-        alert(data.message || 'Failed to save address.');
+        toast.error(res.message || "Failed to save address.");
       }
     } catch (error) {
-      alert('Error saving address.');
+      toast.error("Error saving address.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Handlers for Add, Edit, Save
-  const handleAdd = () => setMode('edit');
-  const handleEdit = () => setMode('edit');
-  // Save is handled by form submit
+  // Payment handler (no Stripe)
+  const handlePlaceOrder = () => {
+    toast.success("Order placed successfully!");
+  };
 
   return (
-    <div>
-      <AddressBook onDefaultAddress={setDefaultAddress} />
-      <form className="flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t" onSubmit={handleSubmit}>
-        {/* Left side */}
-        <div className="flex flex-col gap-4 w-full sm:max-w-[480px]">
-          <div className=" text-xl sm:text-2xl my-3">
-            <Title text1={'DELIVERY '} text2={'INFORMATION'} />
-          </div>
-          <div className="flex gap-3">
-            <input required
-              name="firstName" value={formData.firstName} onChange={handleChange}
-              type="text" className="border border-gra-300 rounded py-1.5 px-3.5 w-full" placeholder="First name"
-              disabled={mode === 'view'} />
-            <input required
-              name="lastName" value={formData.lastName} onChange={handleChange}
-              type="text" className="border border-gra-300 rounded py-1.5 px-3.5 w-full" placeholder="Last name"
-              disabled={mode === 'view'} />
-          </div>
-          <input required
-            name="email" value={formData.email} onChange={handleChange}
-            type="email" className="border border-gra-300 rounded py-1.5 px-3.5 w-full" placeholder="Email address "
-            disabled={mode === 'view'} />
-          <input required
-            name="street" value={formData.street} onChange={handleChange}
-            type="text" className="border border-gra-300 rounded py-1.5 px-3.5 w-full" placeholder="Street"
-            disabled={mode === 'view'} />
-          <div className="flex gap-3">
-            <input required
-              name="city" value={formData.city} onChange={handleChange}
-              type="text" className="border border-gra-300 rounded py-1.5 px-3.5 w-full" placeholder="City"
-              disabled={mode === 'view'} />
-            <input required
-              name="state" value={formData.state} onChange={handleChange}
-              type="text" className="border border-gra-300 rounded py-1.5 px-3.5 w-full" placeholder="State"
-              disabled={mode === 'view'} />
-          </div>
-          <div className="flex gap-3">
-            <input required
-              name="zipcode" value={formData.zipcode} onChange={handleChange}
-              type="number" className="border border-gra-300 rounded py-1.5 px-3.5 w-full" placeholder="ZipCode"
-              disabled={mode === 'view'} />
-            <input required
-              name="country" value={formData.country} onChange={handleChange}
-              type="text" className="border border-gra-300 rounded py-1.5 px-3.5 w-full" placeholder="Country"
-              disabled={mode === 'view'} />
-          </div>
-          <input required
-            name="phone" value={formData.phone} onChange={handleChange}
-            type="number" className="border border-gra-300 rounded py-1.5 px-3.5 w-full" placeholder="Phone"
-            disabled={mode === 'view'} />
-          {/* Button logic below the form */}
-          <div className="mt-4 flex gap-2">
-            {mode === 'add' && (
-              <button type="button" onClick={handleAdd} className="bg-blue-600 text-white px-4 py-2 rounded">Add</button>
-            )}
-            {mode === 'view' && (
-              <button type="button" onClick={handleEdit} className="bg-yellow-500 text-white px-4 py-2 rounded">Edit</button>
-            )}
-            {mode === 'edit' && (
-              <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">Save</button>
-            )}
-          </div>
-        </div>
-        {/* Right side */}
-        <div className="mt-8">
-          <div className="mt-8 min-w-80">
-            <CartTotal />
-          </div>
-          <div className="mt-12">
-            <Title text1={'PAYMENT '} text2={'METHOD'} />
-            {/* --- Payment Methods--- */}
-            <div className="flex gap-3 flex-col ">
-              <div
-                onClick={() => setMethod('stripe')}
-                className="flex items-center gap-3 border p-2 px-3 cursor-pointer ">
-                <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'stripe' ? 'bg-green-400' : ''}`}>  </p>
-                <img className=" h-4 mx-4 " src={assets.stripe_logo} alt="" />
-              </div>
-              <div
-                onClick={() => setMethod('razorpay')}
-                className="flex items-center gap-3 border p-2 px-3 cursor-pointer ">
-                <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'razorpay' ? 'bg-green-400' : ''}`}></p>
-                <img className="h-4 mx-4 " src={assets.razorpay_logo} alt="" />
-              </div>
-              <div
-                onClick={() => setMethod('GPay')}
-                className="flex items-center gap-3 border p-2 px-3 cursor-pointer ">
-                <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'GPay' ? 'bg-green-400' : ''}`}></p>
-                <img className=" h-4 mx-4 " src={assets.GPay_logo} alt="" />
-              </div>
-              <div
-                onClick={() => setMethod('patym')}
-                className="flex items-center gap-3 border p-2 px-3 cursor-pointer ">
-                <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'paytm' ? 'bg-green-400' : ''}`}></p>
-                <img className="h-4 mx-4 " src={assets.paytm_logo} alt="" />
-              </div>
-              <div onClick={() => setMethod('cod')} className="flex items-center gap-3 border p-2 px-3 cursor-pointer  ">
-                <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'cod' ? 'bg-green-400' : ''}`}></p>
-                <p className="text-gray-500 text-sm font-medium h-4 mx-4">CASH ON DELIVERY</p>
+    <div className="flex flex-col md:flex-row gap-8 p-4 md:p-10 bg-gray-50 min-h-screen">
+      {/* Left: Address and Delivery */}
+      <div className="flex-1 max-w-xl mx-auto">
+        <Title text1="DELIVERY " text2="INFORMATION" />
+        <div className="mb-6">
+          <AddressBook
+            onDefaultAddress={setDefaultAddress}
+            onAddresses={setAllAddresses}
+          />
+          {allAddresses.length > 0 && (
+            <div className="mb-4">
+              <h3 className="font-semibold mb-2">Choose a saved address:</h3>
+              <div className="flex flex-wrap gap-3">
+                <AnimatePresence>
+                  {allAddresses.map((addr) => (
+                    <motion.div
+                      key={addr._id}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className={`p-3 border rounded w-64 cursor-pointer transition-all duration-150 shadow-sm bg-white hover:shadow-md ${addr.default ? "border-blue-500 bg-blue-50" : "border-gray-200"} ${selectedAddressId === addr._id ? "ring-2 ring-green-500" : ""}`}
+                    >
+                      <div className="font-semibold">
+                        {addr.firstName} {addr.lastName}{" "}
+                        {addr.default && (
+                          <span className="text-xs text-blue-600">(Default)</span>
+                        )}
+                      </div>
+                      <div className="text-sm text-gray-700">
+                        {addr.street}, {addr.city}, {addr.state}, {addr.zipcode}, {addr.country}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        Email: {addr.email} | Phone: {addr.phone}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleUseAddress(addr)}
+                        className="mt-2 text-xs bg-blue-600 text-white px-2 py-1 rounded"
+                      >
+                        Use this address
+                      </button>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="flex flex-col justify-center"
+                >
+                  <button
+                    type="button"
+                    onClick={handleNewAddress}
+                    className="text-xs bg-green-600 text-white px-2 py-1 rounded"
+                  >
+                    New Address
+                  </button>
+                </motion.div>
               </div>
             </div>
-
-            <div className="w-full flex justify-end mt-8">
+          )}
+        </div>
+        {/* Delivery form as a card/modal */}
+        <motion.form
+          layout
+          className="bg-white rounded-lg shadow p-6 space-y-4"
+          onSubmit={handleSubmit}
+        >
+          <div className="flex gap-3">
+            <div className="w-1/2">
+              <input
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                type="text"
+                className="border border-gray-300 rounded py-2 px-4 w-full focus:ring-2 focus:ring-blue-200"
+                placeholder="First name"
+                required
+                disabled={mode === "view"}
+              />
+            </div>
+            <div className="w-1/2">
+              <input
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                type="text"
+                className="border border-gray-300 rounded py-2 px-4 w-full focus:ring-2 focus:ring-blue-200"
+                placeholder="Last name"
+                required
+                disabled={mode === "view"}
+              />
+            </div>
+          </div>
+          <input
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            type="email"
+            className="border border-gray-300 rounded py-2 px-4 w-full focus:ring-2 focus:ring-blue-200"
+            placeholder="Email address "
+            required
+            disabled={mode === "view"}
+          />
+          <input
+            name="street"
+            value={formData.street}
+            onChange={handleChange}
+            type="text"
+            className="border border-gray-300 rounded py-2 px-4 w-full focus:ring-2 focus:ring-blue-200"
+            placeholder="Street"
+            required
+            disabled={mode === "view"}
+          />
+          <div className="flex gap-3">
+            <div className="w-1/2">
+              <input
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                type="text"
+                className="border border-gray-300 rounded py-2 px-4 w-full focus:ring-2 focus:ring-blue-200"
+                placeholder="City"
+                required
+                disabled={mode === "view"}
+              />
+            </div>
+            <div className="w-1/2">
+              <input
+                name="state"
+                value={formData.state}
+                onChange={handleChange}
+                type="text"
+                className="border border-gray-300 rounded py-2 px-4 w-full focus:ring-2 focus:ring-blue-200"
+                placeholder="State"
+                required
+                disabled={mode === "view"}
+              />
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <div className="w-1/2">
+              <input
+                name="zipcode"
+                value={formData.zipcode}
+                onChange={handleChange}
+                type="text"
+                className="border border-gray-300 rounded py-2 px-4 w-full focus:ring-2 focus:ring-blue-200"
+                placeholder="ZipCode"
+                required
+                disabled={mode === "view"}
+              />
+            </div>
+            <div className="w-1/2">
+              <input
+                name="country"
+                value={formData.country}
+                onChange={handleChange}
+                type="text"
+                className="border border-gray-300 rounded py-2 px-4 w-full focus:ring-2 focus:ring-blue-200"
+                placeholder="Country"
+                required
+                disabled={mode === "view"}
+              />
+            </div>
+          </div>
+          <input
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            type="text"
+            className="border border-gray-300 rounded py-2 px-4 w-full focus:ring-2 focus:ring-blue-200"
+            placeholder="Phone"
+            required
+            disabled={mode === "view"}
+          />
+          <div className="flex gap-2 justify-end mt-4">
+            {mode === "add" && (
+              <button
+                type="button"
+                onClick={() => setMode("edit")}
+                className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700"
+              >
+                Add
+              </button>
+            )}
+            {mode === "view" && (
+              <button
+                type="button"
+                onClick={() => setMode("edit")}
+                className="bg-yellow-500 text-white px-4 py-2 rounded shadow hover:bg-yellow-600"
+              >
+                Edit
+              </button>
+            )}
+            {mode === "edit" && (
               <button
                 type="submit"
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold text-lg rounded-lg shadow-lg hover:from-indigo-600 hover:to-blue-600 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-300"
+                className="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700"
+                disabled={loading}
               >
-                PLACE ORDER
+                {loading ? "Saving..." : "Save"}
               </button>
+            )}
+          </div>
+        </motion.form>
+      </div>
+      {/* Right: Order Summary and Payment */}
+      <div className="flex-1 max-w-md mx-auto">
+        <div className="sticky top-8">
+          <Title text1="ORDER " text2="SUMMARY" />
+          <CartTotal />
+          <div className="mt-8">
+            <Title text1="PAYMENT " text2="METHOD" />
+            <div className="flex flex-col gap-3 mt-4">
+              {paymentMethods.map((pm) => (
+                <button
+                  key={pm.key}
+                  type="button"
+                  onClick={() => setMethod(pm.key)}
+                  className={`flex items-center gap-3 border p-3 rounded-lg shadow-sm transition-all duration-150 ${method === pm.key ? "bg-blue-600 text-white border-blue-600" : "bg-white text-gray-700 border-gray-300"} hover:shadow-md`}
+                >
+                  {pm.icon && (
+                    <img src={pm.icon} alt={pm.label} className="h-6 w-6" />
+                  )}
+                  <span className="font-medium">{pm.label}</span>
+                </button>
+              ))}
             </div>
-
-
+            {/* REMOVE Stripe payment modal and AnimatePresence */}
+            <button
+              type="button"
+              onClick={handlePlaceOrder}
+              className="w-full mt-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-lg shadow-lg hover:scale-105 transition"
+            >
+              PLACE ORDER
+            </button>
           </div>
         </div>
-
-      </form>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default PlaceOrder
+export default PlaceOrder;
