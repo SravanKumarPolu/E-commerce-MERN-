@@ -47,6 +47,8 @@ const userSchema = new mongoose.Schema({
       zipcode: { type: String, required: true, trim: true },
       country: { type: String, required: true, trim: true },
       phone: { type: String, required: true, trim: true },
+      deliveryInstructions: { type: String, trim: true },
+      default: { type: Boolean, default: false },
       addedAt: { type: Date, default: Date.now }
     }
   ],

@@ -282,4 +282,92 @@ export const addUserAddress = async (req, res) => {
   }
 };
 
+// Get all addresses for the logged-in user
+export const getUserAddresses = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+    res.json({ success: true, addresses: user.addresses });
+  } catch (error) {
+    console.error('Get user addresses error:', error);
+    res.status(500).json({ success: false, message: 'Server error.' });
+  }
+};
+
+// Set an address as default
+export const setDefaultAddress = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { addressId } = req.body;
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+    let found = false;
+    user.addresses.forEach(addr => {
+      if (addr._id.toString() === addressId) {
+        addr.default = true;
+        found = true;
+      } else {
+        addr.default = false;
+      }
+    });
+    if (!found) {
+      return res.status(404).json({ success: false, message: 'Address not found.' });
+    }
+    await user.save();
+    res.json({ success: true, message: 'Default address set.', addresses: user.addresses });
+  } catch (error) {
+    console.error('Set default address error:', error);
+    res.status(500).json({ success: false, message: 'Server error.' });
+  }
+};
+
+// Edit an address
+export const editUserAddress = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { addressId, ...addressFields } = req.body;
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+    const address = user.addresses.id(addressId);
+    if (!address) {
+      return res.status(404).json({ success: false, message: 'Address not found.' });
+    }
+    Object.assign(address, addressFields);
+    await user.save();
+    res.json({ success: true, message: 'Address updated.', addresses: user.addresses });
+  } catch (error) {
+    console.error('Edit user address error:', error);
+    res.status(500).json({ success: false, message: 'Server error.' });
+  }
+};
+
+// Delete an address
+export const deleteUserAddress = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { addressId } = req.body;
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+    const address = user.addresses.id(addressId);
+    if (!address) {
+      return res.status(404).json({ success: false, message: 'Address not found.' });
+    }
+    address.remove();
+    await user.save();
+    res.json({ success: true, message: 'Address deleted.', addresses: user.addresses });
+  } catch (error) {
+    console.error('Delete user address error:', error);
+    res.status(500).json({ success: false, message: 'Server error.' });
+  }
+};
+
 export { adminLogin, loginUser, registerUser, getUserProfile, updateUserProfile };
