@@ -18,7 +18,7 @@ const PayPalPayment: React.FC<PayPalPaymentProps> = ({
   onError,
   onCancel
 }) => {
-  const { products, cartItems } = useShopContext();
+  const { products, cartItems, token } = useShopContext();
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Prepare items for PayPal
@@ -31,13 +31,12 @@ const PayPalPayment: React.FC<PayPalPaymentProps> = ({
           const quantity = cartItems[itemId][color];
           if (quantity > 0) {
             items.push({
+              productId: itemId,
               name: product.name,
-              unit_amount: {
-                currency_code: 'USD',
-                value: product.price.toFixed(2)
-              },
-              quantity: quantity.toString(),
-              category: 'PHYSICAL_GOODS'
+              image: product.image[0],
+              price: product.price,
+              quantity: quantity,
+              color: color
             });
           }
         }
@@ -54,6 +53,7 @@ const PayPalPayment: React.FC<PayPalPaymentProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'token': token,
         },
         body: JSON.stringify({
           items: getPayPalItems(),
@@ -86,6 +86,7 @@ const PayPalPayment: React.FC<PayPalPaymentProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'token': token,
         },
         body: JSON.stringify({
           orderID: data.orderID

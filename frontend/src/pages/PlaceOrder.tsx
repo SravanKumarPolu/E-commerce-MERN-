@@ -7,6 +7,7 @@ import PayPalPayment from "../components/PayPalPayment";
 import { assets } from "../assets/assets";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 
@@ -42,6 +43,7 @@ const PlaceOrder = () => {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [mode, setMode] = useState<'add' | 'edit' | 'view'>('add');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   // Calculate total amount
   const subtotal = getCartAmount();
@@ -155,7 +157,8 @@ const PlaceOrder = () => {
   const handlePayPalSuccess = () => {
     toast.success("Payment completed! Order placed successfully.");
     setShowPayPalPayment(false);
-    // Here you would typically redirect to order confirmation page
+    // Redirect to orders page to show the new order
+    navigate('/orders');
   };
 
   const handlePayPalError = (error: any) => {
