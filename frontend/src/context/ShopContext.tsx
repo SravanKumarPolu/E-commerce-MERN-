@@ -1,9 +1,7 @@
 import React, { ReactNode, createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
-  Product, 
-  ShopContextType, 
-  User
+  ShopContextType
 } from "../types";
 import { useAuth } from "../hooks/useAuth";
 import { useCart } from "../hooks/useCart";
@@ -82,7 +80,7 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
   };
 
   // Load and sync cart helper function
-  const loadAndSyncCart = async (userId: string): Promise<boolean> => {
+  const loadAndSyncCart = async (): Promise<boolean> => {
     try {
       await cart.loadCartFromDatabase();
       return true;

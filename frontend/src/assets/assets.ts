@@ -79,6 +79,7 @@ import p_img7_1 from './p_img7_1.png';
 import p_img8_1 from './p_img8_1.png';
 import p_img8_2 from './p_img8_2.png';
 import p_img9_1 from './p_img9_1.png';
+import paypal_logo from './paypal.svg'
 import paytm_logo from './paytm.svg'
 import profile_icon from './avatar.svg'
 import quality_icon from './quality_icon.png'
@@ -117,6 +118,7 @@ export const assets = {
     razorpay_logo,
     stripe_logo, 
     GPay_logo,
+    paypal_logo,
     paytm_logo,
     cross_icon
 }

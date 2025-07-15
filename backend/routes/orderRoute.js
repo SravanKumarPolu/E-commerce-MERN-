@@ -1,4 +1,4 @@
-import { allOrders, placeOrder, placeOrderGPay, placeOrderPatym, placeOrderRazorpay, placeOrderStripe, updateStatus, userOrders } from '../controllers/orderController';
+import { allOrders, placeOrder, placeOrderGPay, placeOrderPatym, placeOrderPayPal, capturePayPalPayment, handlePayPalWebhook, placeOrderRazorpay, placeOrderStripe, updateStatus, userOrders } from '../controllers/orderController';
 
 import express from 'express'
 
@@ -13,6 +13,11 @@ orderRouter.post('/stripe',placeOrderStripe)
 orderRouter.post('razopay',placeOrderRazorpay)
 orderRouter.post('/paytm',placeOrderPatym)
 orderRouter.post('/gpay',placeOrderGPay)
+
+// PayPal routes
+orderRouter.post('/paypal/create', placeOrderPayPal)
+orderRouter.post('/paypal/capture', capturePayPalPayment)
+orderRouter.post('/paypal/webhook', handlePayPalWebhook)
 
 //User feature
 orderRouter.post('userorders',userOrders)

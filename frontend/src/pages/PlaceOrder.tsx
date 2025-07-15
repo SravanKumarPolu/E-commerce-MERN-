@@ -3,6 +3,7 @@ import { useShopContext } from "../context/ShopContext";
 import AddressBook from "../components/AddressBook";
 import CartTotal from "../components/CartTotal";
 import Title from "../components/Title";
+import PayPalPayment from "../components/PayPalPayment";
 import { assets } from "../assets/assets";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
@@ -12,6 +13,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 const paymentMethods = [
   { key: "stripe", label: "Stripe", icon: assets.stripe_logo },
   { key: "razorpay", label: "Razorpay", icon: assets.razorpay_logo },
+  { key: "paypal", label: "PayPal", icon: assets.paypal_logo },
   { key: "GPay", label: "GPay", icon: assets.GPay_logo },
   { key: "paytm", label: "Paytm", icon: assets.paytm_logo },
   { key: "cod", label: "Cash on Delivery", icon: null },
@@ -21,8 +23,9 @@ const validateEmail = (email: string) => /.+@.+\..+/.test(email);
 const validatePhone = (phone: string) => /^\d{7,15}$/.test(phone);
 
 const PlaceOrder = () => {
-  const { token, isLoggedIn } = useShopContext();
+  const { token, isLoggedIn, getCartAmount, delivery_fee } = useShopContext();
   const [method, setMethod] = useState("cod");
+  const [showPayPalPayment, setShowPayPalPayment] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: '',
@@ -39,6 +42,10 @@ const PlaceOrder = () => {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [mode, setMode] = useState<'add' | 'edit' | 'view'>('add');
   const [loading, setLoading] = useState(false);
+
+  // Calculate total amount
+  const subtotal = getCartAmount();
+  const total = subtotal + delivery_fee;
 
   useEffect(() => {
     if (defaultAddress && mode === "add") {
@@ -131,8 +138,60 @@ const PlaceOrder = () => {
   };
 
   const handlePlaceOrder = () => {
-    toast.success("Order placed successfully!");
+    // Validate address
+    if (!formData.firstName || !formData.email || !formData.street || !formData.city || !formData.state || !formData.zipcode || !formData.country || !formData.phone) {
+      toast.error("Please fill in all address fields.");
+      return;
+    }
+
+    if (method === "paypal") {
+      setShowPayPalPayment(true);
+    } else {
+      // Handle other payment methods
+      toast.success("Order placed successfully!");
+    }
   };
+
+  const handlePayPalSuccess = () => {
+    toast.success("Payment completed! Order placed successfully.");
+    setShowPayPalPayment(false);
+    // Here you would typically redirect to order confirmation page
+  };
+
+  const handlePayPalError = (error: any) => {
+    console.error("PayPal payment error:", error);
+    setShowPayPalPayment(false);
+  };
+
+  const handlePayPalCancel = () => {
+    setShowPayPalPayment(false);
+    toast.info("PayPal payment cancelled.");
+  };
+
+  // Show PayPal payment component if selected
+  if (showPayPalPayment) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-6">
+            <button
+              onClick={() => setShowPayPalPayment(false)}
+              className="text-blue-600 hover:text-blue-800 font-medium"
+            >
+              ← Back to checkout
+            </button>
+          </div>
+          <PayPalPayment
+            amount={total}
+            address={formData}
+            onSuccess={handlePayPalSuccess}
+            onError={handlePayPalError}
+            onCancel={handlePayPalCancel}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col md:flex-row gap-8 p-4 md:p-10 bg-gray-50 min-h-screen">
