@@ -191,7 +191,7 @@ export interface PaymentData {
   currency: string;
   items: OrderItem[];
   address: any;
-  paymentMethod: 'COD' | 'Stripe' | 'Razorpay' | 'PayPal';
+  paymentMethod: 'COD' | 'PayPal';
 }
 
 // Error types

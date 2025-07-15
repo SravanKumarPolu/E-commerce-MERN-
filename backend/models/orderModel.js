@@ -51,7 +51,7 @@ const orderSchema = new mongoose.Schema({
   paymentMethod: {
     type: String,
     required: true,
-    enum: ['COD', 'Stripe', 'Razorpay', 'PayPal', 'GPay', 'Paytm']
+    enum: ['COD', 'PayPal']
   },
   paymentStatus: {
     type: String,
@@ -93,19 +93,6 @@ const orderSchema = new mongoose.Schema({
     sparse: true
   },
   paypalTransactionId: {
-    type: String,
-    sparse: true
-  },
-  // Other payment gateway fields (for future use)
-  stripePaymentIntentId: {
-    type: String,
-    sparse: true
-  },
-  razorpayOrderId: {
-    type: String,
-    sparse: true
-  },
-  razorpayPaymentId: {
     type: String,
     sparse: true
   },

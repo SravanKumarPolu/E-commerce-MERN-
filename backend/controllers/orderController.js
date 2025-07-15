@@ -193,45 +193,50 @@ const capturePayPalPayment = async (req, res) => {
     if (!orderID) {
       return res.status(400).json({
         success: false,
-        message: 'Order ID is required'
+        message: 'PayPal order ID is required'
       });
     }
 
+    // Capture the PayPal payment
     const request = new paypal.orders.OrdersCaptureRequest(orderID);
     request.requestBody({});
-
+    
     const capture = await client.execute(request);
     
-    // Find and update the order in database
-    const order = await orderModel.findOne({ 
-      paypalOrderId: orderID, 
-      userId,
-      isActive: true 
-    });
-
-    if (!order) {
-      return res.status(404).json({
+    if (capture.result.status === 'COMPLETED') {
+      // Update order in database
+      const order = await orderModel.findOneAndUpdate(
+        { paypalOrderId: orderID, userId },
+        {
+          paymentStatus: 'completed',
+          paypalCaptureId: capture.result.purchase_units[0].payments.captures[0].id,
+          paypalTransactionId: capture.result.purchase_units[0].payments.captures[0].id
+        },
+        { new: true }
+      );
+      
+      if (!order) {
+        return res.status(404).json({
+          success: false,
+          message: 'Order not found'
+        });
+      }
+      
+      // Clear user's cart after successful payment
+      await userModel.findByIdAndUpdate(userId, { cartData: {} });
+      
+      res.json({
+        success: true,
+        message: 'Payment captured successfully',
+        order: order.toJSON()
+      });
+    } else {
+      res.status(400).json({
         success: false,
-        message: 'Order not found'
+        message: 'Payment capture failed'
       });
     }
-
-    // Update order with PayPal capture details
-    order.paypalCaptureId = capture.result.purchase_units[0].payments.captures[0].id;
-    order.paypalTransactionId = capture.result.purchase_units[0].payments.captures[0].id;
-    order.paymentStatus = 'completed';
-    order.orderStatus = 'Order Placed';
-    await order.save();
-
-    // Clear user's cart after successful payment
-    await userModel.findByIdAndUpdate(userId, { cartData: {} });
-
-    res.json({
-      success: true,
-      message: 'Payment captured successfully',
-      order: order.toJSON()
-    });
-
+    
   } catch (error) {
     console.error('PayPal capture error:', error);
     res.status(500).json({
@@ -245,94 +250,63 @@ const handlePayPalWebhook = async (req, res) => {
   try {
     const event = req.body;
     
-    // Verify webhook signature (you should implement this for production)
-    // const isValid = verifyWebhookSignature(req.headers, req.body, webhookId);
+    // Verify webhook signature (implement proper verification in production)
+    // For now, we'll just process the event
     
-    console.log('PayPal webhook received:', event.event_type);
-    
-    switch (event.event_type) {
-      case 'PAYMENT.SALE.COMPLETED':
-        // Handle successful payment
-        await handlePaymentCompleted(event);
-        break;
-      case 'PAYMENT.SALE.REFUNDED':
-        // Handle refund
-        await handlePaymentRefunded(event);
-        break;
-      case 'PAYMENT.SALE.DENIED':
-        // Handle denied payment
-        await handlePaymentDenied(event);
-        break;
-      default:
-        console.log('Unhandled webhook event:', event.event_type);
+    if (event.event_type === 'PAYMENT.CAPTURE.COMPLETED') {
+      const captureId = event.resource.id;
+      
+      // Update order status
+      await orderModel.findOneAndUpdate(
+        { paypalCaptureId: captureId },
+        { paymentStatus: 'completed' }
+      );
     }
     
-    res.json({ received: true });
+    res.json({ success: true });
     
   } catch (error) {
-    console.error('Webhook processing error:', error);
-    res.status(500).json({ error: 'Webhook processing failed' });
+    console.error('PayPal webhook error:', error);
+    res.status(500).json({ success: false });
   }
 };
 
-const handlePaymentCompleted = async (event) => {
+const updateStatus = async (req, res) => {
   try {
-    const { resource } = event;
-    const { id: saleId, parent_payment: paymentId, amount } = resource;
+    const { orderId, status } = req.body;
     
-    console.log(`Payment completed: Sale ID ${saleId}, Payment ID ${paymentId}, Amount ${amount.total} ${amount.currency}`);
-    
-    // Update order status in database
-    const order = await orderModel.findByPayPalOrderId(paymentId);
-    if (order) {
-      order.paymentStatus = 'completed';
-      order.paypalTransactionId = saleId;
-      await order.save();
-      console.log(`Order ${order._id} updated with completed payment`);
+    if (!orderId || !status) {
+      return res.status(400).json({
+        success: false,
+        message: 'Order ID and status are required'
+      });
     }
     
-  } catch (error) {
-    console.error('Error handling payment completed:', error);
-  }
-};
-
-const handlePaymentRefunded = async (event) => {
-  try {
-    const { resource } = event;
-    const { id: refundId, sale_id: saleId, amount } = resource;
+    const order = await orderModel.findByIdAndUpdate(
+      orderId,
+      { orderStatus: status },
+      { new: true }
+    );
     
-    console.log(`Payment refunded: Refund ID ${refundId}, Sale ID ${saleId}, Amount ${amount.total} ${amount.currency}`);
-    
-    // Update order status in database
-    const order = await orderModel.findByPayPalCaptureId(saleId);
-    if (order) {
-      order.paymentStatus = 'refunded';
-      await order.save();
-      console.log(`Order ${order._id} updated with refund`);
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found'
+      });
     }
     
-  } catch (error) {
-    console.error('Error handling payment refunded:', error);
-  }
-};
-
-const handlePaymentDenied = async (event) => {
-  try {
-    const { resource } = event;
-    const { id: saleId, parent_payment: paymentId } = resource;
-    
-    console.log(`Payment denied: Sale ID ${saleId}, Payment ID ${paymentId}`);
-    
-    // Update order status in database
-    const order = await orderModel.findByPayPalOrderId(paymentId);
-    if (order) {
-      order.paymentStatus = 'failed';
-      await order.save();
-      console.log(`Order ${order._id} updated with denied payment`);
-    }
+    res.json({
+      success: true,
+      message: 'Order status updated successfully',
+      order: order.toJSON()
+    });
     
   } catch (error) {
-    console.error('Error handling payment denied:', error);
+    console.error('Update status error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
   }
 };
 
@@ -346,26 +320,16 @@ const userOrders = async (req, res) => {
         message: 'User authentication required'
       });
     }
-
-    const { page = 1, limit = 10, status } = req.body;
     
-    const orders = await orderModel.findByUser(userId, { page, limit, status });
-    const totalOrders = await orderModel.countDocuments({ userId, isActive: true });
+    const orders = await orderModel.find({ userId }).sort({ createdAt: -1 });
     
     res.json({
       success: true,
-      orders: orders.map(order => order.toJSON()),
-      pagination: {
-        currentPage: parseInt(page),
-        totalPages: Math.ceil(totalOrders / limit),
-        totalOrders,
-        hasNextPage: page * limit < totalOrders,
-        hasPrevPage: page > 1
-      }
+      orders: orders.map(order => order.toJSON())
     });
-
+    
   } catch (error) {
-    console.error('Get user orders error:', error);
+    console.error('User orders error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -375,104 +339,20 @@ const userOrders = async (req, res) => {
 
 const allOrders = async (req, res) => {
   try {
-    const { page = 1, limit = 20, status, paymentStatus } = req.body;
-    
-    const orders = await orderModel.findAllOrders({ page, limit, status, paymentStatus });
-    const totalOrders = await orderModel.countDocuments({ isActive: true });
+    const orders = await orderModel.find().sort({ createdAt: -1 });
     
     res.json({
       success: true,
-      orders: orders.map(order => order.toJSON()),
-      pagination: {
-        currentPage: parseInt(page),
-        totalPages: Math.ceil(totalOrders / limit),
-        totalOrders,
-        hasNextPage: page * limit < totalOrders,
-        hasPrevPage: page > 1
-      }
+      orders: orders.map(order => order.toJSON())
     });
-
+    
   } catch (error) {
-    console.error('Get all orders error:', error);
+    console.error('All orders error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
     });
   }
-};
-
-const updateStatus = async (req, res) => {
-  try {
-    const { orderId, status, paymentStatus } = req.body;
-    
-    if (!orderId) {
-      return res.status(400).json({
-        success: false,
-        message: 'Order ID is required'
-      });
-    }
-
-    const order = await orderModel.findById(orderId);
-    if (!order) {
-      return res.status(404).json({
-        success: false,
-        message: 'Order not found'
-      });
-    }
-
-    if (status) {
-      await order.updateStatus(status);
-    }
-    
-    if (paymentStatus) {
-      await order.updatePaymentStatus(paymentStatus);
-    }
-
-    res.json({
-      success: true,
-      message: 'Order status updated successfully',
-      order: order.toJSON()
-    });
-
-  } catch (error) {
-    console.error('Update order status error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
-  }
-};
-
-const placeOrderRazorpay = async (req, res) => {
-  // Existing Razorpay logic
-  res.status(501).json({
-    success: false,
-    message: 'Razorpay integration not implemented yet'
-  });
-};
-
-const placeOrderStripe = async (req, res) => {
-  // Existing Stripe logic
-  res.status(501).json({
-    success: false,
-    message: 'Stripe integration not implemented yet'
-  });
-};
-
-const placeOrderGPay = async (req, res) => {
-  // Existing GPay logic
-  res.status(501).json({
-    success: false,
-    message: 'GPay integration not implemented yet'
-  });
-};
-
-const placeOrderPatym = async (req, res) => {
-  // Existing Paytm logic
-  res.status(501).json({
-    success: false,
-    message: 'Paytm integration not implemented yet'
-  });
 };
 
 export { 
@@ -480,10 +360,6 @@ export {
   placeOrderPayPal,
   capturePayPalPayment,
   handlePayPalWebhook,
-  placeOrderRazorpay, 
-  placeOrderStripe,
-  placeOrderGPay,
-  placeOrderPatym, 
   updateStatus, 
   userOrders, 
   allOrders 

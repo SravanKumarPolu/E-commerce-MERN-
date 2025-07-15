@@ -7,16 +7,13 @@ import PayPalPayment from "../components/PayPalPayment";
 import { assets } from "../assets/assets";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { useNavigate } from "react-router-dom";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 
 const paymentMethods = [
-  { key: "stripe", label: "Stripe", icon: assets.stripe_logo },
-  { key: "razorpay", label: "Razorpay", icon: assets.razorpay_logo },
   { key: "paypal", label: "PayPal", icon: assets.paypal_logo },
-  { key: "GPay", label: "GPay", icon: assets.GPay_logo },
-  { key: "paytm", label: "Paytm", icon: assets.paytm_logo },
   { key: "cod", label: "Cash on Delivery", icon: null },
 ];
 
@@ -174,25 +171,32 @@ const PlaceOrder = () => {
   // Show PayPal payment component if selected
   if (showPayPalPayment) {
     return (
-      <div className="min-h-screen bg-gray-50 p-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-6">
-            <button
-              onClick={() => setShowPayPalPayment(false)}
-              className="text-blue-600 hover:text-blue-800 font-medium"
-            >
-              ← Back to checkout
-            </button>
+      <PayPalScriptProvider 
+        options={{ 
+          clientId: "AbOtiWHzUtnR9K6vDyyfTHQw0px-yRPwUngXPDoN7HbRZSkyMR65KNCvNEqvEldeouNwTwRKihtu1pCl",
+          currency: "USD"
+        }}
+      >
+        <div className="min-h-screen bg-gray-50 p-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="mb-6">
+              <button
+                onClick={() => setShowPayPalPayment(false)}
+                className="text-blue-600 hover:text-blue-800 font-medium"
+              >
+                ← Back to checkout
+              </button>
+            </div>
+            <PayPalPayment
+              amount={total}
+              address={formData}
+              onSuccess={handlePayPalSuccess}
+              onError={handlePayPalError}
+              onCancel={handlePayPalCancel}
+            />
           </div>
-          <PayPalPayment
-            amount={total}
-            address={formData}
-            onSuccess={handlePayPalSuccess}
-            onError={handlePayPalError}
-            onCancel={handlePayPalCancel}
-          />
         </div>
-      </div>
+      </PayPalScriptProvider>
     );
   }
 
