@@ -126,8 +126,7 @@ const orderSchema = new mongoose.Schema({
 orderSchema.index({ userId: 1, createdAt: -1 });
 orderSchema.index({ paymentStatus: 1 });
 orderSchema.index({ orderStatus: 1 });
-orderSchema.index({ paypalOrderId: 1 }, { sparse: true });
-orderSchema.index({ paypalCaptureId: 1 }, { sparse: true });
+// Removed duplicate indexes for paypalOrderId and paypalCaptureId since they are already sparse fields
 orderSchema.index({ createdAt: -1 });
 
 // Instance method to update order status

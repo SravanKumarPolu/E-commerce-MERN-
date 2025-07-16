@@ -14,6 +14,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 
 const paymentMethods = [
   { key: "paypal", label: "PayPal", icon: assets.paypal_logo },
+  { key: "stripe", label: "Credit/Debit Card", icon: null },
   { key: "cod", label: "Cash on Delivery", icon: null },
 ];
 
@@ -21,7 +22,7 @@ const validateEmail = (email: string) => /.+@.+\..+/.test(email);
 const validatePhone = (phone: string) => /^\d{7,15}$/.test(phone);
 
 const PlaceOrder = () => {
-  const { token, isLoggedIn, getCartAmount, delivery_fee } = useShopContext();
+  const { token, isLoggedIn, getCartAmount, delivery_fee, setCartItems } = useShopContext();
   const [method, setMethod] = useState("cod");
   const [showPayPalPayment, setShowPayPalPayment] = useState(false);
   const [formData, setFormData] = useState({
@@ -151,9 +152,16 @@ const PlaceOrder = () => {
     }
   };
 
-  const handlePayPalSuccess = () => {
+  const handlePayPalSuccess = (orderData: any) => {
     toast.success("Payment completed! Order placed successfully.");
     setShowPayPalPayment(false);
+    
+    // Clear cart in frontend context
+    setCartItems({});
+    
+    // Clear localStorage cart as well
+    localStorage.removeItem('cartItems');
+    
     // Redirect to orders page to show the new order
     navigate('/orders');
   };
@@ -161,6 +169,45 @@ const PlaceOrder = () => {
   const handlePayPalError = (error: any) => {
     console.error("PayPal payment error:", error);
     setShowPayPalPayment(false);
+    
+    // Enhanced error handling with automatic fallback
+    let errorMessage = "PayPal payment failed. Please try a different payment method.";
+    let shouldSwitchToAlternative = false;
+    
+    if (error.message) {
+      if (error.message.includes('currency') || error.message.includes('CURRENCY')) {
+        errorMessage = "PayPal currency issue detected. Switching to Credit/Debit Card.";
+        shouldSwitchToAlternative = true;
+      } else if (error.message.includes('seller') || error.message.includes('SELLER')) {
+        errorMessage = "PayPal payment not available for your region. Switching to Credit/Debit Card.";
+        shouldSwitchToAlternative = true;
+      } else if (error.message.includes('country') || error.message.includes('COUNTRY')) {
+        errorMessage = "PayPal payment not available for your country. Switching to Credit/Debit Card.";
+        shouldSwitchToAlternative = true;
+      } else if (error.message.includes('PAYPAL_UNAVAILABLE')) {
+        errorMessage = "PayPal is currently unavailable. Switching to Credit/Debit Card.";
+        shouldSwitchToAlternative = true;
+      }
+    }
+    
+    // Check for specific error codes from backend
+    if (error.error === 'CURRENCY_NOT_SUPPORTED' || error.error === 'PAYPAL_UNAVAILABLE') {
+      errorMessage = "PayPal payment not available. Switching to Credit/Debit Card.";
+      shouldSwitchToAlternative = true;
+    }
+    
+    toast.error(errorMessage);
+    
+    // Automatically switch to alternative payment method
+    if (shouldSwitchToAlternative) {
+      setTimeout(() => {
+        setMethod("stripe");
+        toast.info("Switched to Credit/Debit Card payment method.");
+      }, 2000);
+    } else {
+      // Fallback to stripe if no specific error detected
+      setMethod("stripe");
+    }
   };
 
   const handlePayPalCancel = () => {
@@ -170,11 +217,19 @@ const PlaceOrder = () => {
 
   // Show PayPal payment component if selected
   if (showPayPalPayment) {
+    // FIXED: Always use USD for PayPal sandbox compatibility
+    const currency = 'USD';
+    
+    // Use environment variable for PayPal client ID if available
+    const paypalClientId = import.meta.env.VITE_PAYPAL_CLIENT_ID || "AbOtiWHzUtnR9K6vDyyfTHQw0px-yRPwUngXPDoN7HbRZSkyMR65KNCvNEqvEldeouNwTwRKihtu1pCl";
+
     return (
       <PayPalScriptProvider 
         options={{ 
-          clientId: "AbOtiWHzUtnR9K6vDyyfTHQw0px-yRPwUngXPDoN7HbRZSkyMR65KNCvNEqvEldeouNwTwRKihtu1pCl",
-          currency: "USD"
+          clientId: paypalClientId,
+          currency: currency,
+          intent: "capture",
+          components: "buttons"
         }}
       >
         <div className="min-h-screen bg-gray-50 p-4">

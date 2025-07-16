@@ -1,5 +1,5 @@
-import { allOrders, placeOrder, placeOrderPayPal, capturePayPalPayment, handlePayPalWebhook, updateStatus, userOrders } from '../controllers/orderController';
-import { authUser } from '../middleware/authUser.js';
+import { allOrders, placeOrder, placeOrderPayPal, capturePayPalPayment, handlePayPalWebhook, updateStatus, userOrders } from '../controllers/orderController.js';
+import authUser from '../middleware/auth.js';
 
 import express from 'express'
 

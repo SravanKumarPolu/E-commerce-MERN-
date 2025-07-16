@@ -7,6 +7,7 @@ import express from 'express'
 import productRouter from './routes/productRoute.js';
 import userRouter from './routes/userRoute.js';
 import cartRouter from './routes/cartRoute.js';
+import orderRouter from './routes/orderRoute.js';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
@@ -95,6 +96,7 @@ app.use('/api/user', authLimiter, userRouter);
 app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/address', addressRouter);
+app.use('/api/orders', orderRouter);
 
 // Multer error handling middleware
 app.use(handleMulterError);

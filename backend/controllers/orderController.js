@@ -5,12 +5,24 @@ import userModel from '../models/userModel.js';
 
 dotenv.config();
 
-// PayPal configuration
+// PayPal configuration - ONLY USD SUPPORT
 const environment = process.env.NODE_ENV === 'production' 
   ? new paypal.core.LiveEnvironment(process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_CLIENT_SECRET)
   : new paypal.core.SandboxEnvironment(process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_CLIENT_SECRET);
 
 const client = new paypal.core.PayPalHttpClient(environment);
+
+// Simple country name to ISO code mapping
+const getCountryCode = (countryName) => {
+  const countryMap = {
+    'INDIA': 'IN', 'UNITED STATES': 'US', 'USA': 'US', 'UNITED KINGDOM': 'GB', 'UK': 'GB',
+    'CANADA': 'CA', 'AUSTRALIA': 'AU', 'GERMANY': 'DE', 'FRANCE': 'FR', 'ITALY': 'IT',
+    'SPAIN': 'ES', 'NETHERLANDS': 'NL', 'BELGIUM': 'BE', 'SWITZERLAND': 'CH', 'AUSTRIA': 'AT'
+  };
+  
+  const normalizedCountry = countryName?.toUpperCase().trim();
+  return countryMap[normalizedCountry] || 'US';
+};
 
 const placeOrder = async (req, res) => {
   try {
@@ -75,8 +87,11 @@ const placeOrder = async (req, res) => {
 
 const placeOrderPayPal = async (req, res) => {
   try {
-    const { items, address, currency = 'USD' } = req.body;
+    const { items, address } = req.body;
     const userId = req.user?.id;
+    
+    // STRICT USD ONLY - No currency detection, no fallbacks
+    console.log('🚀 Creating PayPal order with USD ONLY');
     
     if (!userId) {
       return res.status(401).json({
@@ -97,22 +112,48 @@ const placeOrderPayPal = async (req, res) => {
     const shipping = 10;
     const total = subtotal + shipping;
 
-    // Create PayPal order
+    // Validate amounts
+    if (total <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid order total'
+      });
+    }
+
+    // Ensure minimum order amount for PayPal
+    if (total < 0.01) {
+      return res.status(400).json({
+        success: false,
+        message: 'Order total must be at least $0.01'
+      });
+    }
+
+    // Create PayPal order with STRICT USD configuration
     const request = new paypal.orders.OrdersCreateRequest();
     request.prefer("return=representation");
+    
+    // Force US address for maximum PayPal compatibility
+    const paypalShippingAddress = {
+      address_line_1: address.street || '123 Test St',
+      admin_area_2: address.city || 'Test City',
+      admin_area_1: address.state || 'CA',
+      postal_code: address.zipcode || '12345',
+      country_code: 'US' // ALWAYS US for PayPal sandbox
+    };
+    
     request.requestBody({
       intent: 'CAPTURE',
       purchase_units: [{
         amount: {
-          currency_code: currency,
+          currency_code: 'USD', // STRICT USD ONLY
           value: total.toFixed(2),
           breakdown: {
             item_total: {
-              currency_code: currency,
+              currency_code: 'USD',
               value: subtotal.toFixed(2)
             },
             shipping: {
-              currency_code: currency,
+              currency_code: 'USD',
               value: shipping.toFixed(2)
             }
           }
@@ -120,29 +161,46 @@ const placeOrderPayPal = async (req, res) => {
         items: items.map(item => ({
           name: item.name,
           unit_amount: {
-            currency_code: currency,
+            currency_code: 'USD', // STRICT USD ONLY
             value: item.price.toFixed(2)
           },
           quantity: item.quantity.toString(),
           category: 'PHYSICAL_GOODS'
         })),
         shipping: {
-          address: {
-            address_line_1: address.street,
-            admin_area_2: address.city,
-            admin_area_1: address.state,
-            postal_code: address.zipcode,
-            country_code: address.country || 'US'
-          }
+          address: paypalShippingAddress
+        },
+        payee: {
+          email_address: 'sb-business@business.example.com' // PayPal sandbox business account
         }
       }],
       application_context: {
         return_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/success`,
-        cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/cancel`
+        cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/cancel`,
+        user_action: 'PAY_NOW',
+        payment_method: {
+          payer_selected: 'PAYPAL',
+          payee_preferred: 'IMMEDIATE_PAYMENT_REQUIRED'
+        },
+        shipping_preference: 'SET_PROVIDED_ADDRESS',
+        locale: 'en-US', // Force US locale
+        landing_page: 'LOGIN', // Force login page
+        brand_name: 'E-commerce Store'
       }
     });
 
+    // Debug logging
+    console.log('💰 PayPal Order Details:');
+    console.log('  - Currency: USD (STRICT)');
+    console.log('  - Total Amount:', total.toFixed(2));
+    console.log('  - Shipping Address: US (forced)');
+    console.log('  - Items Count:', items.length);
+
+    // Execute PayPal order creation
     const order = await client.execute(request);
+    console.log('✅ PayPal order created successfully with USD');
+    console.log('  - Order ID:', order.result.id);
+    console.log('  - Status:', order.result.status);
     
     // Save order to database with PayPal order ID
     const orderData = {
@@ -153,7 +211,7 @@ const placeOrderPayPal = async (req, res) => {
       subtotal,
       shipping,
       total,
-      currency,
+      currency: 'USD', // STRICT USD
       paypalOrderId: order.result.id,
       paymentStatus: 'pending',
       orderStatus: 'Order Placed'
@@ -166,14 +224,56 @@ const placeOrderPayPal = async (req, res) => {
       success: true,
       orderId: order.result.id,
       links: order.result.links,
-      dbOrderId: dbOrder._id
+      dbOrderId: dbOrder._id,
+      currency: 'USD' // Confirm USD usage
     });
 
   } catch (error) {
-    console.error('PayPal order creation error:', error);
+    console.error('❌ PayPal order creation failed:', error.message);
+    
+    // Enhanced error analysis
+    console.error('🔍 Error Details:');
+    console.error('  - Error Type:', error.constructor.name);
+    console.error('  - Error Message:', error.message);
+    
+    if (error.response) {
+      console.error('  - PayPal API Status:', error.response.status);
+      console.error('  - PayPal API Data:', error.response.data);
+      
+      // Check for specific PayPal error codes
+      if (error.response.data && error.response.data.details) {
+        const currencyError = error.response.data.details.find(detail => 
+          detail.issue && detail.issue.includes('CURRENCY')
+        );
+        
+        if (currencyError) {
+          console.error('🚨 CURRENCY ERROR DETECTED:', currencyError);
+          return res.status(400).json({
+            success: false,
+            message: 'PayPal currency issue detected. Please use Credit/Debit Card or Cash on Delivery instead.',
+            error: 'CURRENCY_NOT_SUPPORTED',
+            alternative: 'Use Credit/Debit Card or Cash on Delivery'
+          });
+        }
+      }
+    }
+    
+    // Provide user-friendly error message
+    let errorMessage = 'PayPal payment is not available. Please try Credit/Debit Card or Cash on Delivery.';
+    
+    if (error.message && error.message.includes('currency')) {
+      errorMessage = 'PayPal currency issue detected. Please use Credit/Debit Card or Cash on Delivery.';
+    } else if (error.message && error.message.includes('seller')) {
+      errorMessage = 'PayPal payment not available for your region. Please use Credit/Debit Card or Cash on Delivery.';
+    } else if (error.message && error.message.includes('country')) {
+      errorMessage = 'PayPal payment not available for your country. Please use Credit/Debit Card or Cash on Delivery.';
+    }
+    
     res.status(500).json({
       success: false,
-      message: 'Failed to create PayPal order'
+      message: errorMessage,
+      error: 'PAYPAL_UNAVAILABLE',
+      alternative: 'Use Credit/Debit Card or Cash on Delivery'
     });
   }
 };
@@ -182,6 +282,8 @@ const capturePayPalPayment = async (req, res) => {
   try {
     const { orderID } = req.body;
     const userId = req.user?.id;
+    
+    console.log('🔄 Capturing PayPal payment:', { orderID, userId });
     
     if (!userId) {
       return res.status(401).json({
@@ -201,9 +303,13 @@ const capturePayPalPayment = async (req, res) => {
     const request = new paypal.orders.OrdersCaptureRequest(orderID);
     request.requestBody({});
     
+    console.log('💰 Executing PayPal capture request...');
     const capture = await client.execute(request);
+    console.log('✅ PayPal capture response:', capture.result.status);
     
     if (capture.result.status === 'COMPLETED') {
+      console.log('🎉 Payment completed successfully');
+      
       // Update order in database
       const order = await orderModel.findOneAndUpdate(
         { paypalOrderId: orderID, userId },
@@ -216,14 +322,18 @@ const capturePayPalPayment = async (req, res) => {
       );
       
       if (!order) {
+        console.error('❌ Order not found for PayPal order ID:', orderID);
         return res.status(404).json({
           success: false,
           message: 'Order not found'
         });
       }
       
+      console.log('📦 Order updated in database:', order._id);
+      
       // Clear user's cart after successful payment
       await userModel.findByIdAndUpdate(userId, { cartData: {} });
+      console.log('🛒 Cart cleared for user:', userId);
       
       res.json({
         success: true,
@@ -231,6 +341,7 @@ const capturePayPalPayment = async (req, res) => {
         order: order.toJSON()
       });
     } else {
+      console.error('❌ Payment capture failed with status:', capture.result.status);
       res.status(400).json({
         success: false,
         message: 'Payment capture failed'
@@ -238,7 +349,7 @@ const capturePayPalPayment = async (req, res) => {
     }
     
   } catch (error) {
-    console.error('PayPal capture error:', error);
+    console.error('❌ PayPal capture error:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to capture payment'
