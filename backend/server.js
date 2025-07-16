@@ -14,12 +14,18 @@ import mongoSanitize from 'express-mongo-sanitize';
 import compression from 'compression';
 import { handleMulterError } from './middleware/multer.js';
 import addressRouter from './routes/addressRoute.js';
+import { createServer } from 'http';
+import socketService from './services/socketService.js';
 
 //App config
 const app = express();
+const server = createServer(app);
 const port = process.env.PORT || 3001
 connectDB()
 connectCloudinary();
+
+// Initialize WebSocket service
+socketService.initialize(server);
 
 // Security middleware
 app.use(helmet({
@@ -98,6 +104,15 @@ app.use('/api/cart', cartRouter);
 app.use('/api/address', addressRouter);
 app.use('/api/orders', orderRouter);
 
+// WebSocket status endpoint
+app.get('/api/socket/status', (req, res) => {
+  res.json({
+    success: true,
+    connectedUsers: socketService.getConnectedUsersCount(),
+    status: 'WebSocket server is running'
+  });
+});
+
 // Multer error handling middleware
 app.use(handleMulterError);
 
@@ -146,4 +161,4 @@ app.use('*', (req, res) => {
   });
 });
 
-app.listen(port, () => console.log('Server started on PORT: ' + port))
+server.listen(port, () => console.log('Server started on PORT: ' + port))

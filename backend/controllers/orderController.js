@@ -2,6 +2,7 @@ import paypal from '@paypal/checkout-server-sdk';
 import dotenv from 'dotenv';
 import orderModel from '../models/orderModel.js';
 import userModel from '../models/userModel.js';
+import socketService from '../services/socketService.js';
 
 dotenv.config();
 
@@ -72,6 +73,15 @@ const placeOrder = async (req, res) => {
       $push: { orders: order._id },
       cartData: {} 
     });
+
+    // Send real-time notifications
+    const orderWithUser = await orderModel.findById(order._id).populate('userId', 'name email');
+    
+    // Send new order notification to admin
+    socketService.sendNewOrderToAdmin(orderWithUser.toJSON());
+    
+    // Send order update to user
+    socketService.sendOrderUpdateToUser(userId, orderWithUser.toJSON());
     
     res.json({
       success: true,
@@ -352,6 +362,15 @@ const capturePayPalPayment = async (req, res) => {
       await userModel.findByIdAndUpdate(userId, { cartData: {} });
       console.log('🛒 Cart cleared for user:', userId);
       
+      // Send real-time notifications
+      const orderWithUser = await orderModel.findById(order._id).populate('userId', 'name email');
+      
+      // Send payment status update to user
+      socketService.sendPaymentStatusUpdate(orderWithUser.toJSON());
+      
+      // Send order status update to admin
+      socketService.sendOrderUpdateToAdmin(orderWithUser.toJSON());
+      
       res.json({
         success: true,
         message: 'Payment captured successfully',
@@ -422,6 +441,12 @@ const updateStatus = async (req, res) => {
         message: 'Order not found'
       });
     }
+    
+    // Send real-time notifications
+    const orderWithUser = await orderModel.findById(orderId).populate('userId', 'name email');
+    
+    // Send order status update to all relevant parties
+    socketService.sendOrderStatusUpdate(orderWithUser.toJSON());
     
     res.json({
       success: true,

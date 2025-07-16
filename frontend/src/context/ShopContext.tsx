@@ -6,6 +6,7 @@ import {
 import { useAuth } from "../hooks/useAuth";
 import { useCart } from "../hooks/useCart";
 import { useProducts } from "../hooks/useProducts";
+import { useWebSocket } from "../hooks/useWebSocket";
 
 // Create the context with a default value to avoid `undefined` issues
 export const ShopContext = createContext<ShopContextType | null>(null);
@@ -28,6 +29,39 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
   const auth = useAuth();
   const products = useProducts(auth.token);
   const cart = useCart(auth.token, auth.user?.id);
+
+  // WebSocket handlers
+  const handleOrderUpdate = (data: any) => {
+    console.log('📦 Order update in context:', data);
+    // Refresh orders if user is on orders page
+    // This will be handled by individual components
+  };
+
+  const handleNewOrder = (data: any) => {
+    console.log('🆕 New order in context:', data);
+    // Handle new order notification
+  };
+
+  const handlePaymentUpdate = (data: any) => {
+    console.log('💳 Payment update in context:', data);
+    // Handle payment status updates
+  };
+
+  const handleShippingUpdate = (data: any) => {
+    console.log('🚚 Shipping update in context:', data);
+    // Handle shipping status updates
+  };
+
+  // WebSocket hook
+  const webSocket = useWebSocket({
+    token: auth.token,
+    userId: auth.user?.id,
+    userRole: auth.user?.role,
+    onOrderUpdate: handleOrderUpdate,
+    onNewOrder: handleNewOrder,
+    onPaymentUpdate: handlePaymentUpdate,
+    onShippingUpdate: handleShippingUpdate
+  });
 
   // Navigation helper
   const navigateTo = (path: string) => {
@@ -123,6 +157,9 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
     loadCartFromDatabase: cart.loadCartFromDatabase,
     syncCartOnAuth: cart.syncCartOnAuth,
     loadAndSyncCart,
+    
+    // WebSocket related
+    webSocket
   };
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;

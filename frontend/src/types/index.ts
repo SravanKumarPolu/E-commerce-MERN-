@@ -135,6 +135,21 @@ export interface ShopContextType {
   loadCartFromDatabase: () => Promise<void>;
   syncCartOnAuth: () => Promise<void>;
   loadAndSyncCart: (userId: string) => Promise<boolean>;
+  
+  // WebSocket related
+  webSocket: {
+    isConnected: boolean;
+    connectionError: string | null;
+    connect: () => void;
+    disconnect: () => void;
+    joinOrderRoom: (orderId: string) => void;
+    leaveOrderRoom: (orderId: string) => void;
+    adminJoinOrder: (orderId: string) => void;
+    adminLeaveOrder: (orderId: string) => void;
+    sendTyping: (orderId: string) => void;
+    sendStopTyping: (orderId: string) => void;
+    socket: any;
+  };
 }
 
 // Admin related types
