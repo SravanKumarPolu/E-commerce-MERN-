@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import orderModel from '../models/orderModel.js';
 import userModel from '../models/userModel.js';
 import socketService from '../services/socketService.js';
+import { UserActivity, ProductPerformance } from '../models/analyticsModel.js';
 
 dotenv.config();
 
@@ -67,6 +68,26 @@ const placeOrder = async (req, res) => {
     // Save order to database
     const order = new orderModel(orderData);
     await order.save();
+
+    // Track user activity
+    try {
+      await UserActivity.trackActivity({
+        userId,
+        action: 'purchase',
+        sessionId: req.session?.id
+      });
+
+      // Track product metrics for each item
+      for (const item of items) {
+        await ProductPerformance.updateProductMetrics(item.productId, {
+          purchaseCount: item.quantity,
+          revenue: item.price * item.quantity
+        });
+      }
+    } catch (analyticsError) {
+      console.error('Analytics tracking error:', analyticsError);
+      // Don't fail the order if analytics tracking fails
+    }
 
     // Add order to user's orders array
     await userModel.findByIdAndUpdate(userId, { 

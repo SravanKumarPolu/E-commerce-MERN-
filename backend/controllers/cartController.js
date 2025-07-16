@@ -1,4 +1,5 @@
 import userModel from '../models/userModel.js';
+import { UserActivity, ProductPerformance } from '../models/analyticsModel.js';
 
 const addToCart = async (req, res) => {
   try {
@@ -31,6 +32,23 @@ const addToCart = async (req, res) => {
     
     // Update user's cart data in database
     await userModel.findByIdAndUpdate(userId, { cartData });
+
+    // Track add to cart analytics
+    try {
+      await UserActivity.trackActivity({
+        userId,
+        action: 'add_to_cart',
+        productId: itemId,
+        sessionId: req.session?.id
+      });
+
+      await ProductPerformance.updateProductMetrics(itemId, {
+        addToCartCount: 1
+      });
+    } catch (analyticsError) {
+      console.error('Add to cart analytics tracking error:', analyticsError);
+      // Don't fail the request if analytics tracking fails
+    }
     
     res.json({
       success: true,
@@ -67,6 +85,7 @@ const updateCart = async (req, res) => {
     }
 
     let cartData = userData.cartData || {};
+    const previousQuantity = cartData[itemId]?.[color] || 0;
     
     if (quantity <= 0) {
       // Remove item if quantity is 0 or negative
@@ -75,6 +94,20 @@ const updateCart = async (req, res) => {
         // Remove product entry if no colors left
         if (Object.keys(cartData[itemId]).length === 0) {
           delete cartData[itemId];
+        }
+      }
+
+      // Track remove from cart analytics
+      if (previousQuantity > 0) {
+        try {
+          await UserActivity.trackActivity({
+            userId,
+            action: 'remove_from_cart',
+            productId: itemId,
+            sessionId: req.session?.id
+          });
+        } catch (analyticsError) {
+          console.error('Remove from cart analytics tracking error:', analyticsError);
         }
       }
     } else {

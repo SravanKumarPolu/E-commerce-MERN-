@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from 'cloudinary';
 import productModel from "../models/productModel.js";
+import { UserActivity, ProductPerformance, SearchAnalytics } from '../models/analyticsModel.js';
 
 // Add Product
 const addProduct = async (req, res, next) => {
@@ -144,6 +145,7 @@ const removeProduct = async (req, res, next) => {
 const listProducts = async (req, res, next) => {
   try {
     const { page = 1, limit = 10, category, subCategory, inStock, bestseller, search } = req.query;
+    const userId = req.user?.id;
 
     // Build query object
     const query = {};
@@ -174,6 +176,24 @@ const listProducts = async (req, res, next) => {
     // Get total count for pagination
     const total = await productModel.countDocuments(query);
 
+    // Track search analytics if search query provided
+    if (search && userId) {
+      try {
+        await UserActivity.trackActivity({
+          userId,
+          action: 'search',
+          searchQuery: search,
+          category: category || null,
+          sessionId: req.session?.id
+        });
+
+        await SearchAnalytics.trackSearch(search, total, category);
+      } catch (analyticsError) {
+        console.error('Search analytics tracking error:', analyticsError);
+        // Don't fail the request if analytics tracking fails
+      }
+    }
+
     res.json({
       success: true,
       products,
@@ -196,6 +216,7 @@ const listProducts = async (req, res, next) => {
 const singleProduct = async (req, res, next) => {
   try {
     const { productId } = req.body;
+    const userId = req.user?.id;
 
     const product = await productModel.findById(productId);
     
@@ -204,6 +225,26 @@ const singleProduct = async (req, res, next) => {
         success: false,
         message: "Product not found"
       });
+    }
+
+    // Track product view analytics
+    if (userId) {
+      try {
+        await UserActivity.trackActivity({
+          userId,
+          action: 'view_product',
+          productId: productId,
+          category: product.category,
+          sessionId: req.session?.id
+        });
+
+        await ProductPerformance.updateProductMetrics(productId, {
+          views: 1
+        });
+      } catch (analyticsError) {
+        console.error('Product view analytics tracking error:', analyticsError);
+        // Don't fail the request if analytics tracking fails
+      }
     }
 
     res.json({
