@@ -348,25 +348,55 @@ export const editUserAddress = async (req, res) => {
   }
 };
 
-// Delete an address
+// Route to delete user address
 export const deleteUserAddress = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { addressId } = req.body;
+    const { addressId } = req.params;
+    
     const user = await userModel.findById(userId);
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found.' });
     }
-    const address = user.addresses.id(addressId);
-    if (!address) {
+    
+    const addressIndex = user.addresses.findIndex(addr => addr._id.toString() === addressId);
+    if (addressIndex === -1) {
       return res.status(404).json({ success: false, message: 'Address not found.' });
     }
-    address.remove();
+    
+    user.addresses.splice(addressIndex, 1);
     await user.save();
-    res.json({ success: true, message: 'Address deleted.', addresses: user.addresses });
+    
+    res.json({ success: true, message: 'Address deleted successfully.' });
   } catch (error) {
     console.error('Delete user address error:', error);
     res.status(500).json({ success: false, message: 'Server error.' });
+  }
+};
+
+// Debug endpoint to check users
+export const debugUsers = async (req, res) => {
+  try {
+    const users = await userModel.find({ isActive: true }).select('name email createdAt lastLogin');
+    
+    res.json({
+      success: true,
+      totalUsers: users.length,
+      users: users.map(user => ({
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        createdAt: user.createdAt,
+        lastLogin: user.lastLogin
+      }))
+    });
+    
+  } catch (error) {
+    console.error('Debug users error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
   }
 };
 

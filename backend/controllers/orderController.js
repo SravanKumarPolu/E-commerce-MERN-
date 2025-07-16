@@ -425,18 +425,59 @@ const userOrders = async (req, res) => {
   try {
     const userId = req.user?.id;
     
+    console.log('🔍 UserOrders Debug:');
+    console.log('  - User ID from token:', userId);
+    console.log('  - Request method:', req.method);
+    console.log('  - Request body:', req.body);
+    console.log('  - Request query:', req.query);
+    
     if (!userId) {
+      console.log('❌ No user ID found in token');
       return res.status(401).json({
         success: false,
         message: 'User authentication required'
       });
     }
     
-    const orders = await orderModel.find({ userId }).sort({ createdAt: -1 });
+    // Get pagination and filtering parameters from request body (POST) or query (GET)
+    const { page = 1, limit = 10, status } = req.method === 'POST' ? req.body : req.query;
+    const skip = (page - 1) * limit;
+    
+    console.log('  - Pagination params:', { page, limit, status, skip });
+    
+    // Build query
+    let query = { userId, isActive: true };
+    if (status) {
+      query.orderStatus = status;
+    }
+    
+    console.log('  - Database query:', query);
+    
+    // Get total count for pagination
+    const totalOrders = await orderModel.countDocuments(query);
+    const totalPages = Math.ceil(totalOrders / limit);
+    
+    console.log('  - Total orders found:', totalOrders);
+    console.log('  - Total pages:', totalPages);
+    
+    // Get orders with pagination
+    const orders = await orderModel.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit));
+    
+    console.log('  - Orders returned:', orders.length);
     
     res.json({
       success: true,
-      orders: orders.map(order => order.toJSON())
+      orders: orders.map(order => order.toJSON()),
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages,
+        totalOrders,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1
+      }
     });
     
   } catch (error) {
@@ -466,6 +507,34 @@ const allOrders = async (req, res) => {
   }
 };
 
+// Debug endpoint to check orders
+const debugOrders = async (req, res) => {
+  try {
+    const totalOrders = await orderModel.countDocuments();
+    const recentOrders = await orderModel.find().sort({ createdAt: -1 }).limit(5);
+    
+    res.json({
+      success: true,
+      totalOrders,
+      recentOrders: recentOrders.map(order => ({
+        _id: order._id,
+        userId: order.userId,
+        paymentStatus: order.paymentStatus,
+        orderStatus: order.orderStatus,
+        total: order.total,
+        createdAt: order.createdAt
+      }))
+    });
+    
+  } catch (error) {
+    console.error('Debug orders error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
 export { 
   placeOrder, 
   placeOrderPayPal,
@@ -473,5 +542,6 @@ export {
   handlePayPalWebhook,
   updateStatus, 
   userOrders, 
-  allOrders 
+  allOrders,
+  debugOrders
 };
