@@ -67,8 +67,11 @@ const placeOrder = async (req, res) => {
     const order = new orderModel(orderData);
     await order.save();
 
-    // Clear user's cart after successful order
-    await userModel.findByIdAndUpdate(userId, { cartData: {} });
+    // Add order to user's orders array
+    await userModel.findByIdAndUpdate(userId, { 
+      $push: { orders: order._id },
+      cartData: {} 
+    });
     
     res.json({
       success: true,
@@ -219,6 +222,20 @@ const placeOrderPayPal = async (req, res) => {
 
     const dbOrder = new orderModel(orderData);
     await dbOrder.save();
+    
+    console.log('📦 Order saved to database:', dbOrder._id);
+    
+    // Add order to user's orders array
+    try {
+      await userModel.findByIdAndUpdate(
+        userId,
+        { $push: { orders: dbOrder._id } }
+      );
+      console.log('👤 Order added to user:', userId);
+    } catch (userUpdateError) {
+      console.error('❌ Error adding order to user:', userUpdateError);
+      // Don't fail the order creation if user update fails
+    }
     
     res.json({
       success: true,
@@ -513,6 +530,11 @@ const debugOrders = async (req, res) => {
     const totalOrders = await orderModel.countDocuments();
     const recentOrders = await orderModel.find().sort({ createdAt: -1 }).limit(5);
     
+    // Get users with orders
+    const usersWithOrders = await userModel.find({ 
+      orders: { $exists: true, $ne: [] } 
+    }).select('name email orders').populate('orders', '_id paymentStatus orderStatus total createdAt');
+    
     res.json({
       success: true,
       totalOrders,
@@ -523,6 +545,13 @@ const debugOrders = async (req, res) => {
         orderStatus: order.orderStatus,
         total: order.total,
         createdAt: order.createdAt
+      })),
+      usersWithOrders: usersWithOrders.map(user => ({
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        orderCount: user.orders.length,
+        orders: user.orders
       }))
     });
     

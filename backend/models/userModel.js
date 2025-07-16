@@ -36,6 +36,10 @@ const userSchema = new mongoose.Schema({
     type: Object,
     default: {}
   },
+  orders: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'order'
+  }],
   addresses: [
     {
       firstName: { type: String, required: true, trim: true },
