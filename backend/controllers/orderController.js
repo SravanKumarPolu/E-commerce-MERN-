@@ -508,11 +508,130 @@ const userOrders = async (req, res) => {
 
 const allOrders = async (req, res) => {
   try {
-    const orders = await orderModel.find().sort({ createdAt: -1 });
+    // Get filtering and pagination parameters
+    const { 
+      page = 1, 
+      limit = 20, 
+      status, 
+      paymentStatus, 
+      userEmail,
+      startDate,
+      endDate,
+      sortBy = 'createdAt',
+      sortOrder = 'desc'
+    } = req.query;
+    
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    
+    // Build query
+    let query = { isActive: true };
+    
+    if (status) {
+      query.orderStatus = status;
+    }
+    
+    if (paymentStatus) {
+      query.paymentStatus = paymentStatus;
+    }
+    
+    // Date range filtering
+    if (startDate || endDate) {
+      query.createdAt = {};
+      if (startDate) {
+        query.createdAt.$gte = new Date(startDate);
+      }
+      if (endDate) {
+        query.createdAt.$lte = new Date(endDate + 'T23:59:59.999Z');
+      }
+    }
+    
+    // User email filtering (will be handled after population)
+    let userEmailFilter = null;
+    if (userEmail) {
+      userEmailFilter = userEmail.toLowerCase();
+    }
+    
+    // Build sort object
+    const sortObject = {};
+    sortObject[sortBy] = sortOrder === 'desc' ? -1 : 1;
+    
+    // Get total count for pagination
+    const totalOrders = await orderModel.countDocuments(query);
+    const totalPages = Math.ceil(totalOrders / parseInt(limit));
+    
+    // Get orders with population and filtering
+    let orders = await orderModel.find(query)
+      .populate('userId', 'name email')
+      .sort(sortObject)
+      .skip(skip)
+      .limit(parseInt(limit));
+    
+    // Apply user email filter after population
+    if (userEmailFilter) {
+      orders = orders.filter(order => 
+        order.userId && 
+        order.userId.email && 
+        order.userId.email.toLowerCase().includes(userEmailFilter)
+      );
+    }
+    
+    // Get unique users for filtering dropdown
+    const uniqueUsers = await orderModel.aggregate([
+      { $match: { isActive: true } },
+      { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'user' } },
+      { $unwind: '$user' },
+      { $group: { _id: '$user._id', name: { $first: '$user.name' }, email: { $first: '$user.email' } } },
+      { $sort: { name: 1 } }
+    ]);
+    
+    // Get order statistics
+    const stats = await orderModel.aggregate([
+      { $match: { isActive: true } },
+      {
+        $group: {
+          _id: null,
+          totalOrders: { $sum: 1 },
+          totalRevenue: { $sum: '$total' },
+          pendingOrders: { $sum: { $cond: [{ $eq: ['$orderStatus', 'Order Placed'] }, 1, 0] } },
+          completedOrders: { $sum: { $cond: [{ $eq: ['$orderStatus', 'Delivered'] }, 1, 0] } },
+          pendingPayments: { $sum: { $cond: [{ $eq: ['$paymentStatus', 'pending'] }, 1, 0] } },
+          completedPayments: { $sum: { $cond: [{ $eq: ['$paymentStatus', 'completed'] }, 1, 0] } }
+        }
+      }
+    ]);
     
     res.json({
       success: true,
-      orders: orders.map(order => order.toJSON())
+      orders: orders.map(order => {
+        const orderObj = order.toJSON();
+        // Ensure user data is properly structured
+        if (orderObj.userId && typeof orderObj.userId === 'object') {
+          orderObj.user = orderObj.userId;
+          delete orderObj.userId;
+        }
+        return orderObj;
+      }),
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages,
+        totalOrders,
+        hasNextPage: parseInt(page) < totalPages,
+        hasPrevPage: parseInt(page) > 1,
+        limit: parseInt(limit)
+      },
+      filters: {
+        users: uniqueUsers,
+        orderStatuses: ['Order Placed', 'Packing', 'Shipped', 'Out for delivery', 'Delivered', 'Cancelled'],
+        paymentStatuses: ['pending', 'completed', 'failed', 'refunded']
+      },
+      stats: stats[0] || {
+        totalOrders: 0,
+        totalRevenue: 0,
+        pendingOrders: 0,
+        completedOrders: 0,
+        pendingPayments: 0,
+        completedPayments: 0
+      }
     });
     
   } catch (error) {
