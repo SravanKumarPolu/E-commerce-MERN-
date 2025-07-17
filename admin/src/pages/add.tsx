@@ -88,31 +88,32 @@ const Add: React.FC<AddProps> = ({ token }) => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-heading-1 font-bold text-neutral-900 mb-2">Add New Product</h1>
-        <p className="text-body text-neutral-600">Create a new product listing for your store</p>
+    <div className="max-w-5xl mx-auto">
+      {/* Enhanced Header */}
+      <div className="mb-10">
+        <h1 className="text-heading-1 font-bold gradient-text mb-3">Add New Product</h1>
+        <p className="text-body-large text-neutral-600 font-medium">Create a new product listing for your store with comprehensive details</p>
       </div>
 
-      <form onSubmit={onSubmitHandler} className="space-y-8">
-        {/* Image Upload Section */}
-        <div className="card-modern p-6">
-          <h2 className="text-heading-4 font-semibold text-neutral-900 mb-4">Product Images</h2>
-          <div className="flex flex-wrap gap-4">
+      <form onSubmit={onSubmitHandler} className="space-y-10">
+        {/* Enhanced Image Upload Section */}
+        <div className="card-elevated p-8">
+          <h2 className="text-heading-3 font-bold text-neutral-900 mb-6">Product Images</h2>
+          <p className="text-body text-neutral-600 mb-6">Upload up to 4 high-quality images to showcase your product</p>
+          <div className="flex flex-wrap gap-6">
             {[image1, image2, image3, image4].map((img, i) => (
               <label
                 key={i}
                 htmlFor={`image${i + 1}`}
-                className="relative w-28 h-28 border-2 border-dashed border-neutral-300 rounded-xl cursor-pointer flex items-center justify-center overflow-hidden hover:border-primary-400 hover:shadow-md transition-smooth group"
+                className="relative w-32 h-32 border-2 border-dashed border-neutral-300 rounded-2xl cursor-pointer flex items-center justify-center overflow-hidden hover:border-primary-400 hover:shadow-lg hover:scale-105 transition-all duration-300 group bg-gradient-to-br from-neutral-50 to-neutral-100"
               >
                 <img
                   src={img ? URL.createObjectURL(img) : assets.upload_area}
                   alt={`upload ${i + 1}`}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-smooth flex items-center justify-center">
-                  <svg className="w-6 h-6 text-neutral-400 group-hover:text-white transition-smooth" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                  <svg className="w-8 h-8 text-neutral-400 group-hover:text-white transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
                 </div>
@@ -134,12 +135,12 @@ const Add: React.FC<AddProps> = ({ token }) => {
           </div>
         </div>
 
-        {/* Basic Information */}
-        <div className="card-modern p-6">
-          <h2 className="text-heading-4 font-semibold text-neutral-900 mb-6">Basic Information</h2>
-          <div className="space-y-6">
+        {/* Enhanced Basic Information */}
+        <div className="card-elevated p-8">
+          <h2 className="text-heading-3 font-bold text-neutral-900 mb-6">Basic Information</h2>
+          <div className="space-y-8">
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">Product Name</label>
+              <label className="block text-sm font-bold text-neutral-700 mb-3">Product Name</label>
               <input
                 type="text"
                 value={name}
@@ -151,24 +152,24 @@ const Add: React.FC<AddProps> = ({ token }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">Product Description</label>
+              <label className="block text-sm font-bold text-neutral-700 mb-3">Product Description</label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Write a detailed product description"
-                className="input-modern max-w-lg min-h-[100px] resize-none"
+                className="input-modern max-w-lg min-h-[120px] resize-none"
                 required
               />
             </div>
           </div>
         </div>
 
-        {/* Category and Pricing */}
-        <div className="card-modern p-6">
-          <h2 className="text-heading-4 font-semibold text-neutral-900 mb-6">Category & Pricing</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Enhanced Category and Pricing */}
+        <div className="card-elevated p-8">
+          <h2 className="text-heading-3 font-bold text-neutral-900 mb-6">Category & Pricing</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">Category</label>
+              <label className="block text-sm font-bold text-neutral-700 mb-3">Category</label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
@@ -183,7 +184,7 @@ const Add: React.FC<AddProps> = ({ token }) => {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">Sub Category</label>
+              <label className="block text-sm font-bold text-neutral-700 mb-3">Sub Category</label>
               <select
                 value={subCategory}
                 onChange={(e) => setSubCategory(e.target.value)}
@@ -198,7 +199,7 @@ const Add: React.FC<AddProps> = ({ token }) => {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">Price ($)</label>
+              <label className="block text-sm font-bold text-neutral-700 mb-3">Price ($)</label>
               <input
                 type="number"
                 placeholder="0.00"
@@ -213,11 +214,11 @@ const Add: React.FC<AddProps> = ({ token }) => {
           </div>
         </div>
 
-        {/* Inventory */}
-        <div className="card-modern p-6">
-          <h2 className="text-heading-4 font-semibold text-neutral-900 mb-6">Inventory</h2>
+        {/* Enhanced Inventory */}
+        <div className="card-elevated p-8">
+          <h2 className="text-heading-3 font-bold text-neutral-900 mb-6">Inventory Management</h2>
           <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-2">Stock Quantity</label>
+            <label className="block text-sm font-bold text-neutral-700 mb-3">Stock Quantity</label>
             <input
               type="number"
               placeholder="0"
@@ -230,10 +231,11 @@ const Add: React.FC<AddProps> = ({ token }) => {
           </div>
         </div>
 
-        {/* Color Selection */}
-        <div className="card-modern p-6">
-          <h2 className="text-heading-4 font-semibold text-neutral-900 mb-6">Available Colors</h2>
-          <div className="flex flex-wrap gap-3">
+        {/* Enhanced Color Selection */}
+        <div className="card-elevated p-8">
+          <h2 className="text-heading-3 font-bold text-neutral-900 mb-6">Available Colors</h2>
+          <p className="text-body text-neutral-600 mb-6">Select all available colors for this product</p>
+          <div className="flex flex-wrap gap-4">
             {colorOptions.map((col) => (
               <button
                 key={col}
@@ -243,10 +245,10 @@ const Add: React.FC<AddProps> = ({ token }) => {
                     prev.includes(col) ? prev.filter((c) => c !== col) : [...prev, col]
                   )
                 }
-                className={`px-4 py-2 rounded-lg border text-sm font-medium transition-smooth ${
+                className={`px-6 py-3 rounded-xl border-2 text-sm font-bold transition-all duration-300 hover:scale-105 ${
                   color.includes(col)
-                    ? 'bg-primary-600 text-white border-primary-600 shadow-md'
-                    : 'bg-white text-neutral-700 border-neutral-300 hover:border-primary-400 hover:bg-primary-50'
+                    ? 'bg-gradient-to-r from-primary-600 to-primary-700 text-white border-primary-600 shadow-lg shadow-primary-500/30'
+                    : 'bg-white text-neutral-700 border-neutral-300 hover:border-primary-400 hover:bg-primary-50 hover:shadow-md'
                 }`}
               >
                 {col}
@@ -255,28 +257,28 @@ const Add: React.FC<AddProps> = ({ token }) => {
           </div>
         </div>
 
-        {/* Bestseller Checkbox */}
-        <div className="card-modern p-6">
-          <div className="flex items-center space-x-3">
+        {/* Enhanced Bestseller Checkbox */}
+        <div className="card-elevated p-8">
+          <div className="flex items-center space-x-4">
             <input
               type="checkbox"
               id="bestseller"
               checked={bestseller}
               onChange={() => setBestseller((prev) => !prev)}
-              className="w-5 h-5 text-primary-600 border-neutral-300 rounded focus:ring-primary-500 focus:ring-2"
+              className="w-6 h-6 text-primary-600 border-neutral-300 rounded-lg focus:ring-primary-500 focus:ring-2 focus:ring-offset-2"
             />
-            <label htmlFor="bestseller" className="text-body font-medium text-neutral-700 cursor-pointer">
+            <label htmlFor="bestseller" className="text-body font-bold text-neutral-700 cursor-pointer">
               Mark as Bestseller
             </label>
           </div>
         </div>
 
-        {/* Submit Button */}
+        {/* Enhanced Submit Button */}
         <div className="flex justify-end">
           <button
             type="submit"
             disabled={isSubmitting}
-            className="btn-modern btn-primary px-8"
+            className="btn-modern btn-primary px-10 py-4 text-lg font-bold"
           >
             {isSubmitting ? (
               <>
@@ -285,7 +287,7 @@ const Add: React.FC<AddProps> = ({ token }) => {
               </>
             ) : (
               <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
                 <span>Add Product</span>
