@@ -3,10 +3,12 @@ import ProductItems from "../components/ProductItems";
 import Title from "../components/Title";
 import { assets } from "../assets/assets";
 import { useShopContext } from "../context/ShopContext";
+import useCategories from "../hooks/useCategories";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Collection = () => {
   const { products, search, showSearch, refreshProducts, isLoading } = useShopContext();
+  const { categories, loading: categoriesLoading, error: categoriesError } = useCategories();
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [sortType, setSortType] = useState<string>('relevant');
 
@@ -75,6 +77,11 @@ const Collection = () => {
   }
 
   const activeFiltersCount = category.length + subCategory.length;
+
+  // Get all unique subcategories from all categories
+  const allSubCategories = categories.flatMap(cat => 
+    cat.subCategories.filter(sub => sub.isActive).map(sub => sub.name)
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -170,68 +177,99 @@ const Collection = () => {
                         <div className="w-6 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"></div>
                         Categories
                       </h3>
-                      <div className="space-y-3">
-                        {['iPhone', 'iPad', 'Laptop', 'Watch', 'Airpods', 'TV'].map((cat) => (
-                          <motion.label
-                            key={cat}
-                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-200"
-                            whileHover={{ x: 4 }}
-                          >
-                            <input
-                              type="checkbox"
-                              value={cat}
-                              onChange={toggleCategory}
-                              checked={category.includes(cat)}
-                              className="w-4 h-4 text-blue-600 bg-gray-100 border border-gray-300 rounded focus:ring-blue-500"
-                            />
-                            <span className="text-sm font-medium text-gray-700">
-                              {cat}
-                              {category.includes(cat) && (
-                                <motion.div
-                                  initial={{ scale: 0 }}
-                                  animate={{ scale: 1 }}
-                                  className="w-2 h-2 bg-blue-600 rounded-full ml-2"
-                                />
-                              )}
-                            </span>
-                          </motion.label>
-                        ))}
-                      </div>
+                      {categoriesLoading ? (
+                        <div className="space-y-3">
+                          {[1, 2, 3, 4, 5, 6].map((i) => (
+                            <div key={i} className="flex items-center gap-3 p-2">
+                              <div className="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
+                              <div className="h-4 bg-gray-200 rounded animate-pulse flex-1"></div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : categoriesError ? (
+                        <div className="text-red-500 text-sm">Failed to load categories</div>
+                      ) : (
+                        <div className="space-y-3">
+                          {categories
+                            .filter(cat => cat.isActive)
+                            .sort((a, b) => a.sortOrder - b.sortOrder)
+                            .map((cat) => (
+                            <motion.label
+                              key={cat._id}
+                              className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-200"
+                              whileHover={{ x: 4 }}
+                            >
+                              <input
+                                type="checkbox"
+                                value={cat.name}
+                                onChange={toggleCategory}
+                                checked={category.includes(cat.name)}
+                                className="w-4 h-4 text-blue-600 bg-gray-100 border border-gray-300 rounded focus:ring-blue-500"
+                              />
+                              <span className="text-sm font-medium text-gray-700">
+                                {cat.name}
+                                {category.includes(cat.name) && (
+                                  <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    className="w-2 h-2 bg-blue-600 rounded-full ml-2"
+                                  />
+                                )}
+                              </span>
+                            </motion.label>
+                          ))}
+                        </div>
+                      )}
                     </div>
 
-                    {/* Type Filter */}
+                    {/* Sub Categories Filter */}
                     <div className="mb-6">
                       <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4">
                         <div className="w-6 h-1 bg-gradient-to-r from-green-600 to-blue-600 rounded-full"></div>
-                        Type
+                        Sub Categories
                       </h3>
-                      <div className="space-y-3">
-                        {['Pro', 'Plus', 'Ultra'].map((type) => (
-                          <motion.label
-                            key={type}
-                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-200"
-                            whileHover={{ x: 4 }}
-                          >
-                            <input
-                              type="checkbox"
-                              value={type}
-                              onChange={toggleSubCategory}
-                              checked={subCategory.includes(type)}
-                              className="w-4 h-4 text-green-600 bg-gray-100 border border-gray-300 rounded focus:ring-green-500"
-                            />
-                            <span className="text-sm font-medium text-gray-700">
-                              {type}
-                              {subCategory.includes(type) && (
-                                <motion.div
-                                  initial={{ scale: 0 }}
-                                  animate={{ scale: 1 }}
-                                  className="w-2 h-2 bg-green-600 rounded-full ml-2"
-                                />
-                              )}
-                            </span>
-                          </motion.label>
-                        ))}
-                      </div>
+                      {categoriesLoading ? (
+                        <div className="space-y-3">
+                          {[1, 2, 3, 4, 5, 6].map((i) => (
+                            <div key={i} className="flex items-center gap-3 p-2">
+                              <div className="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
+                              <div className="h-4 bg-gray-200 rounded animate-pulse flex-1"></div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : categoriesError ? (
+                        <div className="text-red-500 text-sm">Failed to load subcategories</div>
+                      ) : (
+                        <div className="space-y-3">
+                          {allSubCategories
+                            .filter((value, index, self) => self.indexOf(value) === index) // Remove duplicates
+                            .map((subCat) => (
+                            <motion.label
+                              key={subCat}
+                              className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-200"
+                              whileHover={{ x: 4 }}
+                            >
+                              <input
+                                type="checkbox"
+                                value={subCat}
+                                onChange={toggleSubCategory}
+                                checked={subCategory.includes(subCat)}
+                                className="w-4 h-4 text-green-600 bg-gray-100 border border-gray-300 rounded focus:ring-green-500"
+                              />
+                              <span className="text-sm font-medium text-gray-700">
+                                {subCat}
+                                {subCategory.includes(subCat) && (
+                                  <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    className="w-2 h-2 bg-green-600 rounded-full ml-2"
+                                  />
+                                )}
+                              </span>
+                            </motion.label>
+                          ))}
+                        </div>
+                      )}
                     </div>
 
                     {/* Clear Filters Button */}

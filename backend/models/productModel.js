@@ -41,20 +41,12 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Product category is required'],
     trim: true,
-    enum: {
-      values: ['iPhone', 'iPad', 'Mac', 'Watch', 'AirPods', 'Accessories'],
-      message: 'Category must be one of: iPhone, iPad, Mac, Watch, AirPods, Accessories'
-    },
     index: true // For filtering by category
   },
   subCategory: {
     type: String,
     required: [true, 'Product sub-category is required'],
     trim: true,
-    enum: {
-      values: ['Pro', 'Air', 'Mini', 'Standard', 'Max', 'Ultra'],
-      message: 'Sub-category must be one of: Pro, Air, Mini, Standard, Max, Ultra'
-    },
     index: true // For filtering by sub-category
   },
   color: {
