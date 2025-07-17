@@ -46,10 +46,11 @@ const BestSeller: React.FC = () => {
 
 
       {/* Product Grid */}
-      <div className=" grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 px-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
         {bestSeller.map((item, index) => (
            <motion.div
            key={item._id}
+           className="h-full min-h-[500px] flex"
            initial={{ opacity: 0, y: 20 }}
            whileInView={{ opacity: 1, y: 0 }}
            viewport={{ once: true }}
