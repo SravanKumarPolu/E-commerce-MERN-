@@ -474,10 +474,133 @@
 /* Enhanced Active States */
 .active {
   background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
-  color: white;
+  color: white !important;
   box-shadow: var(--shadow-lg);
   transform: scale(1.02);
   border: 1px solid var(--primary-500);
+}
+
+/* Enhanced Button Active States */
+.btn-modern:active,
+.btn-modern.active {
+  transform: translateY(1px);
+  box-shadow: var(--shadow-sm);
+  color: inherit !important;
+}
+
+.btn-primary:active,
+.btn-primary.active {
+  background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%);
+  color: white !important;
+  transform: translateY(1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:active,
+.btn-secondary.active {
+  background: var(--neutral-100);
+  color: var(--neutral-900) !important;
+  transform: translateY(1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-ghost:active,
+.btn-ghost.active {
+  background: var(--neutral-200);
+  color: var(--neutral-900) !important;
+  transform: translateY(1px);
+}
+
+.btn-success:active,
+.btn-success.active {
+  background: linear-gradient(135deg, var(--success-700) 0%, var(--success-800) 100%);
+  color: white !important;
+  transform: translateY(1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Enhanced Focus States for Buttons */
+.btn-modern:focus {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+  color: inherit !important;
+}
+
+/* Ensure text visibility in all button states */
+.btn-modern *,
+.btn-modern span,
+.btn-modern svg {
+  color: inherit;
+  transition: color var(--transition-normal);
+}
+
+/* Active state text visibility - Fixed for sidebar navigation */
+.active,
+.active *,
+.active span,
+.active svg,
+.active div {
+  color: white !important;
+  fill: white !important;
+  stroke: white !important;
+}
+
+/* Specific fix for sidebar navigation active states */
+aside .active {
+  color: white !important;
+}
+
+aside .active *,
+aside .active span,
+aside .active svg,
+aside .active div {
+  color: white !important;
+  fill: white !important;
+  stroke: white !important;
+}
+
+/* Ensure icon containers in active state maintain white color */
+aside .active div[class*="p-3"] {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+aside .active div[class*="p-3"] svg {
+  color: white !important;
+  fill: white !important;
+  stroke: white !important;
+}
+
+/* Override Tailwind classes for active sidebar navigation */
+aside a.active,
+aside a.active span,
+aside a.active svg,
+aside a.active div,
+aside a.active * {
+  color: white !important;
+  fill: white !important;
+  stroke: white !important;
+}
+
+/* Force white text for all elements in active sidebar links */
+aside a[class*="text-white"] span,
+aside a[class*="text-white"] svg,
+aside a[class*="text-white"] div,
+aside a[class*="text-white"] * {
+  color: white !important;
+  fill: white !important;
+  stroke: white !important;
+}
+
+/* Additional specificity for NavLink active states */
+aside .NavLink.active,
+aside .NavLink.active span,
+aside .NavLink.active svg,
+aside .NavLink.active div,
+aside .NavLink.active * {
+  color: white !important;
+  fill: white !important;
+  stroke: white !important;
 }
 
 /* Enhanced Scrollbar */
@@ -499,6 +622,33 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--neutral-400);
+}
+
+/* Sidebar-specific scrollbar styling */
+aside nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+aside nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+aside nav::-webkit-scrollbar-thumb {
+  background: var(--neutral-300);
+  border-radius: var(--radius-lg);
+  opacity: 0.5;
+}
+
+aside nav::-webkit-scrollbar-thumb:hover {
+  background: var(--neutral-400);
+  opacity: 1;
+}
+
+/* Smooth scrolling for sidebar */
+aside nav {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--neutral-300) transparent;
 }
 
 /* Enhanced Focus Styles */

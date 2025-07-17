@@ -5,18 +5,18 @@ function Sidebar() {
   const linkClasses = ({ isActive }: { isActive: boolean }) =>
     `flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-300 font-semibold text-sm group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:ring-offset-2 focus:ring-offset-white ${
       isActive
-        ? 'bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 text-white shadow-xl shadow-primary-500/30 transform scale-[1.02] border border-primary-400/20 backdrop-blur-sm'
+        ? 'active bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 text-white shadow-xl shadow-primary-500/30 transform scale-[1.02] border border-primary-400/20 backdrop-blur-sm'
         : 'text-neutral-700 hover:bg-gradient-to-r hover:from-neutral-50 hover:to-neutral-100 hover:text-neutral-900 hover:shadow-lg hover:shadow-neutral-900/5 hover:transform hover:scale-[1.02] hover:border hover:border-neutral-200/60 hover:backdrop-blur-sm'
     }`;
 
   return (
-    <aside className="w-80 min-h-screen bg-white/95 backdrop-blur-xl border-r border-neutral-200/60 hidden lg:block shadow-2xl shadow-neutral-900/5 relative">
+    <aside className="w-80 h-screen bg-white/95 backdrop-blur-xl border-r border-neutral-200/60 hidden lg:block shadow-2xl shadow-neutral-900/5 relative flex flex-col">
       {/* Enhanced gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/30 to-white/50 pointer-events-none"></div>
       
-      <div className="p-8 h-full flex flex-col relative z-10">
-        {/* Enhanced Logo/Brand Section */}
-        <div className="mb-12">
+      <div className="p-8 h-full flex flex-col relative z-10 overflow-hidden">
+        {/* Enhanced Logo/Brand Section - Fixed at top */}
+        <div className="mb-12 flex-shrink-0">
           <div className="flex items-center gap-4 mb-6">
             <div className="w-14 h-14 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-2xl flex items-center justify-center shadow-xl shadow-primary-500/30 border border-primary-400/20 hover:scale-105 transition-transform duration-300">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,8 +41,8 @@ function Sidebar() {
           </div>
         </div>
 
-        {/* Enhanced Navigation */}
-        <nav className="flex-1 space-y-8">
+        {/* Enhanced Navigation - Scrollable area */}
+        <nav className="flex-1 space-y-8 overflow-y-auto overflow-x-hidden pr-2">
           {/* Main Navigation */}
           <div className="space-y-3">
             <h2 className="text-caption text-neutral-400 font-bold uppercase tracking-wider mb-6 px-2 flex items-center gap-2">
@@ -140,8 +140,8 @@ function Sidebar() {
           </div>
         </nav>
 
-        {/* Enhanced Footer */}
-        <div className="mt-auto pt-8">
+        {/* Enhanced Footer - Fixed at bottom */}
+        <div className="mt-8 pt-8 flex-shrink-0">
           <div className="p-6 bg-gradient-to-r from-neutral-50 via-white to-neutral-50 rounded-2xl border border-neutral-200/60 shadow-xl shadow-neutral-900/5 backdrop-blur-sm hover:shadow-2xl hover:shadow-neutral-900/10 transition-all duration-300">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
