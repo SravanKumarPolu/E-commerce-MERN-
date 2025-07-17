@@ -20,16 +20,16 @@ const ProductItems: React.FC<ProductItemsProps> = ({ id, image, name, price }) =
   return (
     <Link
       to={`/product/${id}`}
-      className="group block focus:outline-none"
+      className="group block focus:outline-none h-full"
       aria-label={`View details for ${name}`}
     >
       <motion.div 
-        className="card-modern overflow-hidden h-full"
+        className="card-modern overflow-hidden h-full flex flex-col"
         whileHover={{ y: -8 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
       >
-        {/* Product Image Container */}
-        <div className="relative overflow-hidden aspect-square">
+        {/* Product Image Container - Fixed aspect ratio */}
+        <div className="relative overflow-hidden aspect-square w-full">
           <motion.img
             src={image[0]}
             alt={name || 'Product image'}
@@ -93,17 +93,17 @@ const ProductItems: React.FC<ProductItemsProps> = ({ id, image, name, price }) =
           </div>
         </div>
 
-        {/* Product Info */}
-        <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
+        {/* Product Info - Flex grow to fill remaining space */}
+        <div className="p-3 sm:p-4 space-y-2 sm:space-y-3 flex-1 flex flex-col">
           {/* Product Name */}
-          <h3 className="text-sm sm:text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition-colors duration-200 line-clamp-2 leading-tight">
+          <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition-colors duration-200 line-clamp-2 leading-tight flex-1">
             {name}
           </h3>
           
           {/* Price with enhanced styling */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1 sm:gap-2">
-              <span className="text-lg sm:text-2xl font-bold text-gray-900">
+              <span className="text-base sm:text-lg lg:text-xl font-bold text-gray-900">
                 {currency}{price}
               </span>
               <span className="text-xs sm:text-sm text-gray-500 line-through">
@@ -129,7 +129,7 @@ const ProductItems: React.FC<ProductItemsProps> = ({ id, image, name, price }) =
 
           {/* Quick add to cart button */}
           <motion.button
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 px-3 sm:px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 text-sm sm:text-base"
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 px-3 sm:px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 text-sm sm:text-base mt-auto"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={(e) => {

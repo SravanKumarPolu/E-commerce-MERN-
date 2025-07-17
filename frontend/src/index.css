@@ -93,6 +93,8 @@
     @apply transition-all duration-300 ease-out;
     @apply hover:shadow-xl hover:-translate-y-1;
     @apply border border-gray-100;
+    @apply min-h-[400px] sm:min-h-[450px] lg:min-h-[480px];
+    @apply flex flex-col;
   }
   
   /* Input Enhancements */

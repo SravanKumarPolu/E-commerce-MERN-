@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-
 import ProductItems from "../components/ProductItems";
 import Title from "../components/Title";
-import { assets } from "../assets/assets"
+import { assets } from "../assets/assets";
 import { useShopContext } from "../context/ShopContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Collection = () => {
   const { products, search, showSearch, refreshProducts, isLoading } = useShopContext();
   const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [sortType, setSortType] = useState<string>('relavent');
+  const [sortType, setSortType] = useState<string>('relevant');
 
   const [filterProducts, setFilterProducts] = useState<typeof products>([]);
   const [category, setCategory] = useState<string[]>([]);
@@ -34,7 +34,7 @@ const Collection = () => {
   const applyFilter = () => {
     let productsCopy = products.slice()
     if (showSearch && search) {
-      productsCopy = productsCopy.filter(item => item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+      productsCopy = productsCopy.filter(item => item.name.toLowerCase().includes(search.toLowerCase()))
     }
     if (category.length > 0) {
       productsCopy = productsCopy.filter(item => category.includes(item.category))
@@ -44,6 +44,7 @@ const Collection = () => {
     }
     setFilterProducts(productsCopy)
   }
+  
   useEffect(() => {
     applyFilter();
   }, [category, search, showSearch, subCategory, products])
@@ -67,165 +68,306 @@ const Collection = () => {
     sortProduct()
   }, [sortType])
 
+  const clearFilters = () => {
+    setCategory([]);
+    setSubCategory([]);
+    setSortType('relevant');
+  }
+
+  const activeFiltersCount = category.length + subCategory.length;
+
   return (
-    <div className="flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t">
-      {/* Filter Options */}
-      <div className="min-w-60">
-        <p
-          onClick={() => setShowFilter(!showFilter)}
-          className="my-2 text-xl flex items-center cursor-pointer gap-2"
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+        {/* Page Header */}
+        <motion.div 
+          className="mb-8 sm:mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
         >
-          FILTERS
-          <img
-            className={`h-3 sm:hidden ${showFilter ? 'rotate-90' : ''}`}
-            src={assets.dropdown_icon}
-            alt=""
-          />
-        </p>
-
-        {/* Category Filter */}
-        <div className={`border border-gray-300 pl-5 py-3 mt-6 ${showFilter ? '' : 'hidden'} sm:block`}>
-          <p className="mb-3 text-sm font-medium">CATEGORIES</p>
-          <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
-            <p className="flex gap-2">
-              <input
-                className="w-3"
-                type="checkbox"
-                value="iPhone"
-                onChange={toggleCategory}
-              />
-              iPhone
-            </p>
-            <p className="flex gap-2">
-              <input
-                className="w-3"
-                type="checkbox"
-                value="iPad"
-                onChange={toggleCategory}
-              />
-              iPad
-            </p>
-            <p className="flex gap-2">
-              <input
-                className="w-3"
-                type="checkbox"
-                value="Laptop"
-                onChange={toggleCategory}
-              />
-              Laptop
-            </p>
-            <p className="flex gap-2">
-              <input
-                className="w-3"
-                type="checkbox"
-                value="Watch"
-                onChange={toggleCategory}
-              />
-              Watch
-            </p>
-            <p className="flex gap-2">
-              <input
-                className="w-3"
-                type="checkbox"
-                value="Airpods"
-                onChange={toggleCategory}
-              />
-              Airpods
-            </p>
-            <p className="flex gap-2">
-              <input
-                className="w-3"
-                type="checkbox"
-                value="TV"
-                onChange={toggleCategory}
-              />
-              TV
-            </p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
+            <div>
+              <Title text1="All" text2="Products" />
+              <p className="text-sm sm:text-base text-gray-600 mt-2">
+                Discover our premium collection of Apple products
+              </p>
+            </div>
+            
+            {/* Active Filters Display */}
+            {activeFiltersCount > 0 && (
+              <motion.div 
+                className="flex items-center gap-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                <span className="text-sm text-gray-600">
+                  {activeFiltersCount} filter{activeFiltersCount !== 1 ? 's' : ''} active
+                </span>
+                <button
+                  onClick={clearFilters}
+                  className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                >
+                  Clear all
+                </button>
+              </motion.div>
+            )}
           </div>
+        </motion.div>
+
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+          {/* Filter Sidebar */}
+          <motion.div 
+            className="lg:w-64"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            {/* Mobile Filter Toggle */}
+            <div className="lg:hidden mb-4">
+              <motion.button
+                onClick={() => setShowFilter(!showFilter)}
+                className="w-full flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border border-gray-200 transition-all duration-300 hover:shadow-md"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className="flex items-center gap-3">
+                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                  </svg>
+                  <span className="font-semibold text-gray-800">
+                    Filters
+                    {activeFiltersCount > 0 && (
+                      <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full ml-2">
+                        {activeFiltersCount}
+                      </span>
+                    )}
+                  </span>
+                </div>
+                <motion.img
+                  className={`w-4 h-4 transition-transform duration-300 ${showFilter ? 'rotate-180' : ''}`}
+                  src={assets.dropdown_icon}
+                  alt="Toggle filters"
+                />
+              </motion.button>
+            </div>
+
+            {/* Filter Content */}
+            <AnimatePresence>
+              {(showFilter || window.innerWidth >= 1024) && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="lg:block"
+                >
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    {/* Categories Filter */}
+                    <div className="mb-6">
+                      <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4">
+                        <div className="w-6 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"></div>
+                        Categories
+                      </h3>
+                      <div className="space-y-3">
+                        {['iPhone', 'iPad', 'Laptop', 'Watch', 'Airpods', 'TV'].map((cat) => (
+                          <motion.label
+                            key={cat}
+                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-200"
+                            whileHover={{ x: 4 }}
+                          >
+                            <input
+                              type="checkbox"
+                              value={cat}
+                              onChange={toggleCategory}
+                              checked={category.includes(cat)}
+                              className="w-4 h-4 text-blue-600 bg-gray-100 border border-gray-300 rounded focus:ring-blue-500"
+                            />
+                            <span className="text-sm font-medium text-gray-700">
+                              {cat}
+                              {category.includes(cat) && (
+                                <motion.div
+                                  initial={{ scale: 0 }}
+                                  animate={{ scale: 1 }}
+                                  className="w-2 h-2 bg-blue-600 rounded-full ml-2"
+                                />
+                              )}
+                            </span>
+                          </motion.label>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Type Filter */}
+                    <div className="mb-6">
+                      <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4">
+                        <div className="w-6 h-1 bg-gradient-to-r from-green-600 to-blue-600 rounded-full"></div>
+                        Type
+                      </h3>
+                      <div className="space-y-3">
+                        {['Pro', 'Plus', 'Ultra'].map((type) => (
+                          <motion.label
+                            key={type}
+                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-200"
+                            whileHover={{ x: 4 }}
+                          >
+                            <input
+                              type="checkbox"
+                              value={type}
+                              onChange={toggleSubCategory}
+                              checked={subCategory.includes(type)}
+                              className="w-4 h-4 text-green-600 bg-gray-100 border border-gray-300 rounded focus:ring-green-500"
+                            />
+                            <span className="text-sm font-medium text-gray-700">
+                              {type}
+                              {subCategory.includes(type) && (
+                                <motion.div
+                                  initial={{ scale: 0 }}
+                                  animate={{ scale: 1 }}
+                                  className="w-2 h-2 bg-green-600 rounded-full ml-2"
+                                />
+                              )}
+                            </span>
+                          </motion.label>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Clear Filters Button */}
+                    {activeFiltersCount > 0 && (
+                      <motion.button
+                        onClick={clearFilters}
+                        className="w-full py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors duration-200"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        Clear All Filters
+                      </motion.button>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Main Content */}
+          <motion.div 
+            className="flex-1"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            {/* Controls Bar */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">
+                    {filterProducts.length} products
+                  </span>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <motion.button
+                    onClick={refreshProducts}
+                    disabled={isLoading}
+                    className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium shadow-md hover:shadow-lg"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {isLoading ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        Refreshing...
+                      </div>
+                    ) : (
+                      'Refresh'
+                    )}
+                  </motion.button>
+                  
+                  <select
+                    onChange={(e) => setSortType(e.target.value)}
+                    value={sortType}
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white shadow-sm"
+                  >
+                    <option value="relevant">Sort by: Relevant</option>
+                    <option value="low-high">Sort by: Low to High</option>
+                    <option value="high-low">Sort by: High to Low</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Loading State */}
+            {isLoading && (
+              <motion.div 
+                className="text-center py-12"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+              >
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
+                <p className="mt-4 text-gray-600 font-medium">Loading products...</p>
+              </motion.div>
+            )}
+
+            {/* Products Grid */}
+            {!isLoading && (
+              <motion.div 
+                className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6 }}
+              >
+                {filterProducts.map((item, index) => (
+                  <motion.div
+                    key={item._id}
+                    className="h-full"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                  >
+                    <ProductItems 
+                      id={item._id} 
+                      image={item.image} 
+                      name={item.name} 
+                      price={item.price} 
+                    />
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+
+            {/* No Products Message */}
+            {!isLoading && filterProducts.length === 0 && (
+              <motion.div 
+                className="text-center py-16"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <div className="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+                  <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12H3" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">No products found</h3>
+                <p className="text-gray-600 mb-6">Try adjusting your filters or search terms</p>
+                <motion.button
+                  onClick={clearFilters}
+                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Clear Filters
+                </motion.button>
+              </motion.div>
+            )}
+          </motion.div>
         </div>
-
-        {/* SubCategory Filter */}
-        <div className={`border border-gray-300 pl-5 py-3 my-5 ${showFilter ? '' : 'hidden'} sm:block`}>
-          <p className="mb-3 text-sm font-medium">TYPE</p>
-          <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
-            <p className="flex gap-2">
-              <input
-                className="w-3"
-                type="checkbox"
-                value="Pro"
-                onChange={toggleSubCategory}
-              />
-              Pro
-            </p>
-            <p className="flex gap-2">
-              <input
-                className="w-3"
-                type="checkbox"
-                value="Plus"
-                onChange={toggleSubCategory}
-              />
-              Plus
-            </p>
-            <p className="flex gap-2">
-              <input
-                className="w-3"
-                type="checkbox"
-                value="Ultra"
-                onChange={toggleSubCategory}
-              />
-              Ultra
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Right Side */}
-      <div className="flex-1">
-        <div className="flex justify-between items-center text-base sm:text-2xl mb-4">
-          <Title text1="All" text2="Collection" />
-          <div className="flex items-center gap-3">
-            <button
-              onClick={refreshProducts}
-              disabled={isLoading}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-            >
-              {isLoading ? 'Refreshing...' : 'Refresh'}
-            </button>
-            <select
-              onChange={(e) => setSortType(e.target.value)}
-              className="select select-bordered text-sm"
-            >
-              <option value="relavent">Sort by: Relevant</option>
-              <option value="low-high">Sort by: Low to High</option>
-              <option value="high-low">Sort by: High to Low</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Loading Indicator */}
-        {isLoading && (
-          <div className="text-center py-8">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-            <p className="mt-2 text-gray-600">Loading products...</p>
-          </div>
-        )}
-
-        {/* Products Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6">
-          {filterProducts.map((item) => (
-            <ProductItems key={item._id} id={item._id} image={item.image} name={item.name} price={item.price} />
-          ))}
-        </div>
-
-        {/* No Products Message */}
-        {!isLoading && filterProducts.length === 0 && (
-          <div className="text-center py-8 text-gray-500">
-            <p>No products found matching your criteria.</p>
-          </div>
-        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Collection
+export default Collection; 
