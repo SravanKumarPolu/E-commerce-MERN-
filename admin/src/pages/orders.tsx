@@ -173,34 +173,34 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Order Placed':
-        return 'bg-blue-100 text-blue-800';
+        return 'badge-info';
       case 'Packing':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'badge-warning';
       case 'Shipped':
-        return 'bg-purple-100 text-purple-800';
+        return 'badge-info';
       case 'Out for delivery':
-        return 'bg-orange-100 text-orange-800';
+        return 'badge-warning';
       case 'Delivered':
-        return 'bg-green-100 text-green-800';
+        return 'badge-success';
       case 'Cancelled':
-        return 'bg-red-100 text-red-800';
+        return 'badge-error';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'badge';
     }
   };
 
   const getPaymentStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'bg-green-100 text-green-800';
+        return 'badge-success';
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'badge-warning';
       case 'failed':
-        return 'bg-red-100 text-red-800';
+        return 'badge-error';
       case 'refunded':
-        return 'bg-gray-100 text-gray-800';
+        return 'badge';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'badge';
     }
   };
 
@@ -223,66 +223,113 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="loading-spinner mx-auto mb-8"></div>
+          <p className="text-neutral-600 font-semibold text-lg mb-2">Loading orders...</p>
+          <p className="text-caption text-neutral-500">Please wait while we fetch your order data</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header with Stats */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">Order Management</h1>
-          <div className="text-sm text-gray-600">
-            Total Orders: {stats?.totalOrders || 0}
+    <div className="space-y-12">
+      {/* Enhanced Header with Stats */}
+      <div className="card-elevated p-10">
+        <div className="flex justify-between items-center mb-10">
+          <div>
+            <h1 className="text-heading-1 font-bold gradient-text mb-4">Order Management</h1>
+            <p className="text-body-large text-neutral-600 font-medium">Manage and track all customer orders</p>
+          </div>
+          <div className="text-right">
+            <p className="text-caption text-neutral-500 font-semibold mb-2">Total Orders</p>
+            <p className="text-heading-2 font-bold text-neutral-900">{stats?.totalOrders || 0}</p>
           </div>
         </div>
         
-        {/* Statistics Cards */}
+        {/* Enhanced Statistics Cards */}
         {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600">{formatCurrency(stats.totalRevenue)}</div>
-              <div className="text-sm text-blue-600">Total Revenue</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="card-modern p-8 hover-lift">
+              <div className="flex items-center">
+                <div className="p-5 bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl shadow-lg shadow-primary-500/20">
+                  <svg className="w-9 h-9 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                  </svg>
+                </div>
+                <div className="ml-6">
+                  <p className="text-caption text-neutral-500 mb-3 font-semibold">Total Revenue</p>
+                  <p className="text-heading-2 font-bold text-neutral-900">{formatCurrency(stats.totalRevenue)}</p>
+                </div>
+              </div>
             </div>
-            <div className="bg-yellow-50 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-yellow-600">{stats.pendingOrders}</div>
-              <div className="text-sm text-yellow-600">Pending Orders</div>
+            <div className="card-modern p-8 hover-lift">
+              <div className="flex items-center">
+                <div className="p-5 bg-gradient-to-br from-warning-100 to-warning-200 rounded-2xl shadow-lg shadow-warning-500/20">
+                  <svg className="w-9 h-9 text-warning-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div className="ml-6">
+                  <p className="text-caption text-neutral-500 mb-3 font-semibold">Pending Orders</p>
+                  <p className="text-heading-2 font-bold text-neutral-900">{stats.pendingOrders}</p>
+                </div>
+              </div>
             </div>
-            <div className="bg-green-50 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-green-600">{stats.completedOrders}</div>
-              <div className="text-sm text-green-600">Completed Orders</div>
+            <div className="card-modern p-8 hover-lift">
+              <div className="flex items-center">
+                <div className="p-5 bg-gradient-to-br from-success-100 to-success-200 rounded-2xl shadow-lg shadow-success-500/20">
+                  <svg className="w-9 h-9 text-success-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div className="ml-6">
+                  <p className="text-caption text-neutral-500 mb-3 font-semibold">Completed Orders</p>
+                  <p className="text-heading-2 font-bold text-neutral-900">{stats.completedOrders}</p>
+                </div>
+              </div>
             </div>
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-purple-600">{stats.pendingPayments}</div>
-              <div className="text-sm text-purple-600">Pending Payments</div>
+            <div className="card-modern p-8 hover-lift">
+              <div className="flex items-center">
+                <div className="p-5 bg-gradient-to-br from-error-100 to-error-200 rounded-2xl shadow-lg shadow-error-500/20">
+                  <svg className="w-9 h-9 text-error-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div className="ml-6">
+                  <p className="text-caption text-neutral-500 mb-3 font-semibold">Pending Payments</p>
+                  <p className="text-heading-2 font-bold text-neutral-900">{stats.pendingPayments}</p>
+                </div>
+              </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* Advanced Filters */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
+      {/* Enhanced Advanced Filters */}
+      <div className="card-elevated p-10">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-heading-2 font-bold text-neutral-900">Filters</h2>
           <button
             onClick={clearFilters}
-            className="text-sm text-blue-600 hover:text-blue-800"
+            className="btn-modern btn-ghost hover:bg-error-50 hover:border-error-200 hover:text-error-700"
           >
-            Clear All Filters
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            <span className="font-semibold">Clear All Filters</span>
           </button>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {/* Order Status Filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Order Status</label>
+          <div className="form-group">
+            <label className="form-label">Order Status</label>
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="select-modern"
             >
               <option value="">All Statuses</option>
               {filters?.orderStatuses.map((status: string) => (
@@ -292,12 +339,12 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
           </div>
 
           {/* Payment Status Filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Payment Status</label>
+          <div className="form-group">
+            <label className="form-label">Payment Status</label>
             <select
               value={selectedPaymentStatus}
               onChange={(e) => setSelectedPaymentStatus(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="select-modern"
             >
               <option value="">All Payment Statuses</option>
               {filters?.paymentStatuses.map((status: string) => (
@@ -307,24 +354,24 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
           </div>
 
           {/* User Email Filter */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">User Email</label>
+          <div className="form-group">
+            <label className="form-label">User Email</label>
             <input
               type="email"
               value={userEmail}
               onChange={(e) => setUserEmail(e.target.value)}
               placeholder="Filter by user email"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="input-modern"
             />
           </div>
 
           {/* Sort By */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+          <div className="form-group">
+            <label className="form-label">Sort By</label>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="select-modern"
             >
               <option value="createdAt">Date Created</option>
               <option value="total">Order Total</option>
@@ -334,12 +381,12 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
           </div>
 
           {/* Sort Order */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Sort Order</label>
+          <div className="form-group">
+            <label className="form-label">Sort Order</label>
             <select
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="select-modern"
             >
               <option value="desc">Newest First</option>
               <option value="asc">Oldest First</option>
@@ -347,116 +394,130 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
           </div>
 
           {/* Date Range */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+          <div className="form-group">
+            <label className="form-label">Start Date</label>
             <input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="input-modern"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+          <div className="form-group">
+            <label className="form-label">End Date</label>
             <input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="input-modern"
             />
           </div>
         </div>
       </div>
 
-      {/* Pagination Info */}
+      {/* Enhanced Pagination Info */}
       {pagination && (
-        <div className="flex justify-between items-center text-sm text-gray-600">
-          <div>
+        <div className="flex justify-between items-center p-6 bg-gradient-to-r from-neutral-50 via-white to-neutral-50 rounded-2xl border border-neutral-200/60 shadow-sm">
+          <div className="text-body-small text-neutral-600 font-medium">
             Showing {((pagination.currentPage - 1) * pagination.limit) + 1} to {Math.min(pagination.currentPage * pagination.limit, pagination.totalOrders)} of {pagination.totalOrders} orders
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <button
               onClick={() => setCurrentPage(pagination.currentPage - 1)}
               disabled={!pagination.hasPrevPage}
-              className="px-3 py-1 border border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              className="btn-modern btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Previous
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              <span>Previous</span>
             </button>
-            <span className="px-3 py-1">
+            <span className="px-4 py-2 bg-neutral-100 rounded-lg text-sm font-semibold text-neutral-700 flex items-center">
               Page {pagination.currentPage} of {pagination.totalPages}
             </span>
             <button
               onClick={() => setCurrentPage(pagination.currentPage + 1)}
               disabled={!pagination.hasNextPage}
-              className="px-3 py-1 border border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              className="btn-modern btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Next
+              <span>Next</span>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </button>
           </div>
         </div>
       )}
 
-      {/* Orders List */}
+      {/* Enhanced Orders List */}
       {orders.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-lg shadow">
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No orders found</h3>
-          <p className="text-gray-500">There are no orders matching your filters.</p>
+        <div className="card-elevated p-16 text-center">
+          <div className="w-24 h-24 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-8">
+            <svg className="w-12 h-12 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <h3 className="text-heading-3 font-bold text-neutral-900 mb-4">No orders found</h3>
+          <p className="text-body text-neutral-500">There are no orders matching your filters.</p>
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-8">
           {orders.map((order) => (
-            <div key={order._id} className="bg-white rounded-lg shadow-md overflow-hidden">
-              {/* Order Header */}
-              <div className="bg-gray-50 px-6 py-4 border-b">
-                <div className="flex flex-wrap justify-between items-start gap-4">
+            <div key={order._id} className="card-elevated overflow-hidden">
+              {/* Enhanced Order Header */}
+              <div className="bg-gradient-to-r from-neutral-50 via-white to-neutral-50 px-8 py-6 border-b border-neutral-200/60">
+                <div className="flex flex-wrap justify-between items-start gap-6">
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3 className="text-heading-3 font-bold text-neutral-900 mb-2">
                       Order #{order._id.slice(-8).toUpperCase()}
                     </h3>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-body-small text-neutral-600 mb-3">
                       Placed on {formatDate(order.createdAt)}
                     </p>
                     {order.user && (
-                      <div className="mt-1">
-                        <p className="text-sm text-gray-600">
-                          <span className="font-medium">Customer:</span> {order.user.name} ({order.user.email})
+                      <div className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <p className="text-body-small text-neutral-600 font-medium">
+                          {order.user.name} ({order.user.email})
                         </p>
                       </div>
                     )}
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.orderStatus)}`}>
+                  <div className="flex flex-wrap gap-3">
+                    <span className={`badge ${getStatusColor(order.orderStatus)}`}>
                       {order.orderStatus}
                     </span>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPaymentStatusColor(order.paymentStatus)}`}>
+                    <span className={`badge ${getPaymentStatusColor(order.paymentStatus)}`}>
                       {order.paymentStatus.charAt(0).toUpperCase() + order.paymentStatus.slice(1)}
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Order Items */}
-              <div className="p-6">
-                <div className="space-y-4">
+              {/* Enhanced Order Items */}
+              <div className="p-8">
+                <div className="space-y-6">
                   {order.items.map((item, index) => (
-                    <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                    <div key={index} className="flex items-center gap-6 p-6 bg-gradient-to-r from-neutral-50 via-white to-neutral-50 rounded-2xl border border-neutral-200/60 hover:shadow-md transition-all duration-300">
                       <img
                         src={item.image}
                         alt={item.name}
-                        className="w-16 h-16 object-cover rounded-md"
+                        className="w-20 h-20 object-cover rounded-xl shadow-sm"
                       />
                       <div className="flex-1">
-                        <h4 className="font-medium text-gray-900">{item.name}</h4>
-                        <p className="text-sm text-gray-600">
+                        <h4 className="font-bold text-neutral-900 text-lg mb-2">{item.name}</h4>
+                        <p className="text-body-small text-neutral-600 mb-2">
                           Color: {item.color} | Quantity: {item.quantity}
                         </p>
-                        <p className="text-sm font-medium text-gray-900">
+                        <p className="text-body font-semibold text-neutral-900">
                           {formatCurrency(item.price)} each
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold text-gray-900">
+                        <p className="text-heading-3 font-bold text-neutral-900">
                           {formatCurrency(item.price * item.quantity)}
                         </p>
                       </div>
@@ -464,59 +525,76 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
                   ))}
                 </div>
 
-                {/* Order Summary */}
-                <div className="mt-6 pt-6 border-t border-gray-200">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-gray-600">Subtotal:</span>
-                    <span className="font-medium">{formatCurrency(order.subtotal)}</span>
+                {/* Enhanced Order Summary */}
+                <div className="mt-8 pt-8 border-t border-neutral-200/60">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-body text-neutral-600">Subtotal:</span>
+                    <span className="text-body font-semibold">{formatCurrency(order.subtotal)}</span>
                   </div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-gray-600">Shipping:</span>
-                    <span className="font-medium">{formatCurrency(order.shipping)}</span>
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-body text-neutral-600">Shipping:</span>
+                    <span className="text-body font-semibold">{formatCurrency(order.shipping)}</span>
                   </div>
-                  <div className="flex justify-between items-center text-lg font-semibold">
+                  <div className="flex justify-between items-center text-heading-2 font-bold border-t border-neutral-200/60 pt-4">
                     <span>Total:</span>
                     <span>{formatCurrency(order.total)}</span>
                   </div>
                 </div>
 
-                {/* Payment and Shipping Info */}
-                <div className="mt-6 pt-6 border-t border-gray-200 grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-medium text-gray-900 mb-2">Shipping Address</h4>
-                    <div className="text-sm text-gray-600">
-                      <p>{order.address.firstName} {order.address.lastName}</p>
+                {/* Enhanced Payment and Shipping Info */}
+                <div className="mt-8 pt-8 border-t border-neutral-200/60 grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="card-modern p-6">
+                    <h4 className="font-bold text-neutral-900 mb-4 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      Shipping Address
+                    </h4>
+                    <div className="text-body-small text-neutral-600 space-y-1">
+                      <p className="font-semibold">{order.address.firstName} {order.address.lastName}</p>
                       <p>{order.address.street}</p>
                       <p>{order.address.city}, {order.address.state} {order.address.zipcode}</p>
                       <p>{order.address.country}</p>
-                      <p className="mt-1">Phone: {order.address.phone}</p>
+                      <p className="mt-2 font-medium">Phone: {order.address.phone}</p>
                     </div>
                   </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900 mb-2">Payment Information</h4>
-                    <div className="text-sm text-gray-600">
-                      <p>Method: {order.paymentMethod}</p>
+                  <div className="card-modern p-6">
+                    <h4 className="font-bold text-neutral-900 mb-4 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                      </svg>
+                      Payment Information
+                    </h4>
+                    <div className="text-body-small text-neutral-600 space-y-2">
+                      <p><span className="font-semibold">Method:</span> {order.paymentMethod}</p>
                       {order.paypalTransactionId && (
-                        <p>Transaction ID: {order.paypalTransactionId}</p>
+                        <p><span className="font-semibold">Transaction ID:</span> {order.paypalTransactionId}</p>
                       )}
-                      <p>Status: {order.paymentStatus.charAt(0).toUpperCase() + order.paymentStatus.slice(1)}</p>
+                      <p><span className="font-semibold">Status:</span> {order.paymentStatus.charAt(0).toUpperCase() + order.paymentStatus.slice(1)}</p>
                     </div>
                   </div>
                 </div>
 
-                {/* Admin Actions */}
-                <div className="mt-6 pt-6 border-t border-gray-200">
-                  <h4 className="font-medium text-gray-900 mb-3">Update Order Status</h4>
-                  <div className="flex flex-wrap gap-2">
+                {/* Enhanced Admin Actions */}
+                <div className="mt-8 pt-8 border-t border-neutral-200/60">
+                  <h4 className="font-bold text-neutral-900 mb-6 flex items-center gap-2">
+                    <svg className="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Update Order Status
+                  </h4>
+                  <div className="flex flex-wrap gap-3">
                     {filters?.orderStatuses.map((status: string) => (
                       <button
                         key={status}
                         onClick={() => updateOrderStatus(order._id, status)}
                         disabled={order.orderStatus === status}
-                        className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                        className={`btn-modern ${
                           order.orderStatus === status
-                            ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                            : 'bg-blue-600 text-white hover:bg-blue-700'
+                            ? 'btn-ghost opacity-50 cursor-not-allowed'
+                            : 'btn-primary'
                         }`}
                       >
                         {status}

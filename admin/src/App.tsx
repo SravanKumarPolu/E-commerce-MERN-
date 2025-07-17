@@ -37,7 +37,7 @@ const App = () => {
         draggable
         pauseOnHover
         theme="light"
-        toastClassName="!bg-white !text-neutral-800 !border !border-neutral-200 !shadow-lg !rounded-lg"
+        toastClassName="!bg-white !text-neutral-800 !border !border-neutral-200 !shadow-lg !rounded-xl"
       />
       
       {token === '' ? (
@@ -54,7 +54,7 @@ const App = () => {
 
             {/* Content */}
             <main className="flex-1 overflow-y-auto bg-gradient-to-br from-neutral-50 via-white to-neutral-100">
-              <div className="max-w-7xl mx-auto px-6 py-8">
+              <div className="max-w-7xl mx-auto px-8 py-10">
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/dashboard" element={<Dashboard />} />

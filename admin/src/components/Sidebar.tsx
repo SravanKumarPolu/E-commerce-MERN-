@@ -17,14 +17,14 @@ function Sidebar() {
       <div className="p-8 h-full flex flex-col relative z-10 overflow-hidden">
         {/* Enhanced Logo/Brand Section - Fixed at top */}
         <div className="mb-12 flex-shrink-0">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-14 h-14 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-2xl flex items-center justify-center shadow-xl shadow-primary-500/30 border border-primary-400/20 hover:scale-105 transition-transform duration-300">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-16 h-16 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-2xl flex items-center justify-center shadow-xl shadow-primary-500/30 border border-primary-400/20 hover:scale-105 transition-transform duration-300">
+              <svg className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
             </div>
             <div>
-              <h1 className="text-heading-2 font-bold bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 bg-clip-text text-transparent">
+              <h1 className="text-heading-2 font-bold bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 bg-clip-text text-transparent mb-1">
                 Admin Panel
               </h1>
               <p className="text-caption text-neutral-500 font-semibold tracking-wide">E-commerce Management</p>
@@ -32,26 +32,26 @@ function Sidebar() {
           </div>
           
           {/* Enhanced status indicator */}
-          <div className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-success-50 via-white to-success-50 rounded-xl border border-success-200/60 shadow-sm">
-            <div className="w-2.5 h-2.5 bg-success-500 rounded-full animate-pulse shadow-lg shadow-success-500/50"></div>
+          <div className="flex items-center gap-3 px-5 py-4 bg-gradient-to-r from-success-50 via-white to-success-50 rounded-xl border border-success-200/60 shadow-sm hover:shadow-md transition-all duration-300">
+            <div className="w-3 h-3 bg-success-500 rounded-full animate-pulse shadow-lg shadow-success-500/50"></div>
             <span className="text-sm font-semibold text-success-700">System Online</span>
             <div className="ml-auto">
-              <span className="text-xs text-neutral-400 bg-neutral-100 px-2 py-1 rounded-lg font-medium">v1.0</span>
+              <span className="text-xs text-neutral-400 bg-neutral-100 px-3 py-1.5 rounded-lg font-medium">v1.0</span>
             </div>
           </div>
         </div>
 
         {/* Enhanced Navigation - Scrollable area */}
-        <nav className="flex-1 space-y-8 overflow-y-auto overflow-x-hidden pr-2">
+        <nav className="flex-1 space-y-10 overflow-y-auto overflow-x-hidden pr-2">
           {/* Main Navigation */}
-          <div className="space-y-3">
-            <h2 className="text-caption text-neutral-400 font-bold uppercase tracking-wider mb-6 px-2 flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-gradient-to-r from-neutral-300 to-neutral-400 rounded-full"></div>
+          <div className="space-y-4">
+            <h2 className="text-caption text-neutral-400 font-bold uppercase tracking-wider mb-8 px-2 flex items-center gap-3">
+              <div className="w-2 h-2 bg-gradient-to-r from-neutral-300 to-neutral-400 rounded-full"></div>
               Main Navigation
             </h2>
             
             <NavLink to="/dashboard" className={linkClasses}>
-              <div className={`p-3 rounded-xl transition-all duration-300 ${
+              <div className={`p-3.5 rounded-xl transition-all duration-300 ${
                 'bg-white/20 shadow-lg shadow-white/20 border border-white/10 backdrop-blur-sm'
               }`}>
                 <DashboardIcon />
@@ -61,7 +61,7 @@ function Sidebar() {
             </NavLink>
             
             <NavLink to="/add" className={linkClasses}>
-              <div className={`p-3 rounded-xl transition-all duration-300 ${
+              <div className={`p-3.5 rounded-xl transition-all duration-300 ${
                 'bg-white/20 shadow-lg shadow-white/20 border border-white/10 backdrop-blur-sm'
               }`}>
                 <AddIcon />
@@ -71,7 +71,7 @@ function Sidebar() {
             </NavLink>
             
             <NavLink to="/list" className={linkClasses}>
-              <div className={`p-3 rounded-xl transition-all duration-300 ${
+              <div className={`p-3.5 rounded-xl transition-all duration-300 ${
                 'bg-white/20 shadow-lg shadow-white/20 border border-white/10 backdrop-blur-sm'
               }`}>
                 <ListIcon />
@@ -81,7 +81,7 @@ function Sidebar() {
             </NavLink>
             
             <NavLink to="/orders" className={linkClasses}>
-              <div className={`p-3 rounded-xl transition-all duration-300 ${
+              <div className={`p-3.5 rounded-xl transition-all duration-300 ${
                 'bg-white/20 shadow-lg shadow-white/20 border border-white/10 backdrop-blur-sm'
               }`}>
                 <OrdersIcon />
@@ -92,14 +92,14 @@ function Sidebar() {
           </div>
 
           {/* Analytics Section */}
-          <div className="space-y-3 pt-8 border-t border-neutral-200/60">
-            <h2 className="text-caption text-neutral-400 font-bold uppercase tracking-wider mb-6 px-2 flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-gradient-to-r from-neutral-300 to-neutral-400 rounded-full"></div>
+          <div className="space-y-4 pt-10 border-t border-neutral-200/60">
+            <h2 className="text-caption text-neutral-400 font-bold uppercase tracking-wider mb-8 px-2 flex items-center gap-3">
+              <div className="w-2 h-2 bg-gradient-to-r from-neutral-300 to-neutral-400 rounded-full"></div>
               Analytics & Insights
             </h2>
             
             <NavLink to="/analytics/sales" className={linkClasses}>
-              <div className={`p-3 rounded-xl transition-all duration-300 ${
+              <div className={`p-3.5 rounded-xl transition-all duration-300 ${
                 'bg-white/20 shadow-lg shadow-white/20 border border-white/10 backdrop-blur-sm'
               }`}>
                 <SalesIcon />
@@ -109,7 +109,7 @@ function Sidebar() {
             </NavLink>
             
             <NavLink to="/analytics/products" className={linkClasses}>
-              <div className={`p-3 rounded-xl transition-all duration-300 ${
+              <div className={`p-3.5 rounded-xl transition-all duration-300 ${
                 'bg-white/20 shadow-lg shadow-white/20 border border-white/10 backdrop-blur-sm'
               }`}>
                 <ProductsIcon />
@@ -119,7 +119,7 @@ function Sidebar() {
             </NavLink>
             
             <NavLink to="/analytics/users" className={linkClasses}>
-              <div className={`p-3 rounded-xl transition-all duration-300 ${
+              <div className={`p-3.5 rounded-xl transition-all duration-300 ${
                 'bg-white/20 shadow-lg shadow-white/20 border border-white/10 backdrop-blur-sm'
               }`}>
                 <UsersIcon />
@@ -129,7 +129,7 @@ function Sidebar() {
             </NavLink>
             
             <NavLink to="/analytics/search" className={linkClasses}>
-              <div className={`p-3 rounded-xl transition-all duration-300 ${
+              <div className={`p-3.5 rounded-xl transition-all duration-300 ${
                 'bg-white/20 shadow-lg shadow-white/20 border border-white/10 backdrop-blur-sm'
               }`}>
                 <SearchIcon />
@@ -141,14 +141,14 @@ function Sidebar() {
         </nav>
 
         {/* Enhanced Footer - Fixed at bottom */}
-        <div className="mt-8 pt-8 flex-shrink-0">
+        <div className="mt-10 pt-8 flex-shrink-0">
           <div className="p-6 bg-gradient-to-r from-neutral-50 via-white to-neutral-50 rounded-2xl border border-neutral-200/60 shadow-xl shadow-neutral-900/5 backdrop-blur-sm hover:shadow-2xl hover:shadow-neutral-900/10 transition-all duration-300">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-2.5 h-2.5 bg-success-500 rounded-full animate-pulse shadow-lg shadow-success-500/50"></div>
+                <div className="w-3 h-3 bg-success-500 rounded-full animate-pulse shadow-lg shadow-success-500/50"></div>
                 <span className="text-caption font-semibold text-success-600">System Online</span>
               </div>
-              <span className="text-caption text-neutral-400 bg-neutral-100 px-2 py-1 rounded-lg font-medium">v1.0</span>
+              <span className="text-caption text-neutral-400 bg-neutral-100 px-3 py-1.5 rounded-lg font-medium">v1.0</span>
             </div>
             <p className="text-caption text-neutral-500 text-center font-semibold mb-4">
               E-commerce Admin Panel
@@ -156,15 +156,15 @@ function Sidebar() {
             <div className="pt-4 border-t border-neutral-200/60">
               <div className="flex items-center justify-center gap-6 text-xs text-neutral-400">
                 <span className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 bg-gradient-to-r from-success-400 to-success-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-gradient-to-r from-success-400 to-success-500 rounded-full"></div>
                   <span className="font-medium">Secure</span>
                 </span>
                 <span className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 bg-gradient-to-r from-primary-400 to-primary-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-gradient-to-r from-primary-400 to-primary-500 rounded-full"></div>
                   <span className="font-medium">Fast</span>
                 </span>
                 <span className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 bg-gradient-to-r from-warning-400 to-warning-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-gradient-to-r from-warning-400 to-warning-500 rounded-full"></div>
                   <span className="font-medium">Reliable</span>
                 </span>
               </div>
