@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { assets } from '../assets/assets';
 import { useShopContext } from '../context/ShopContext';
@@ -11,6 +11,8 @@ const NavBar = () => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const { setShowSearch, getCartCount, isLoggedIn, logoutUser } = useShopContext();
   const profileDropdownRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+  const isCollectionPage = location.pathname === '/collection';
 
   // Handle scroll effect for navbar
   useEffect(() => {
@@ -103,19 +105,21 @@ const NavBar = () => {
           {/* Right Icons with enhanced interactions */}
           <div className="flex items-center gap-3 sm:gap-4">
             {/* Search with enhanced animation */}
-            <motion.button
-              onClick={() => setShowSearch(true)}
-              className="p-3 rounded-xl hover:bg-gray-100 transition-all duration-300"
-              whileHover={{ scale: 1.1, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              aria-label="Search"
-            >
-              <img
-                src={assets.search_icon}
-                className="w-5 h-5 sm:w-6 sm:h-6"
-                alt="Search"
-              />
-            </motion.button>
+            {isCollectionPage && (
+              <motion.button
+                onClick={() => setShowSearch(true)}
+                className="p-3 rounded-xl hover:bg-gray-100 transition-all duration-300"
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="Search"
+              >
+                <img
+                  src={assets.search_icon}
+                  className="w-5 h-5 sm:w-6 sm:h-6"
+                  alt="Search"
+                />
+              </motion.button>
+            )}
 
             {/* Profile Dropdown with enhanced UX */}
             <div className="relative" ref={profileDropdownRef}>

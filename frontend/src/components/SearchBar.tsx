@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { assets } from '../assets/assets';
 import { useShopContext } from '../context/ShopContext';
 import { useDebounce } from '../hooks/useDebounce';
@@ -10,19 +9,11 @@ const SearchBar = () => {
   const [localSearch, setLocalSearch] = useState(search);
   const [isFocused, setIsFocused] = useState(false);
   const debouncedSearch = useDebounce(localSearch, 300); // 300ms delay
-  const location = useLocation();
 
   // Update the context search when debounced value changes
   useEffect(() => {
     setSearch(debouncedSearch);
   }, [debouncedSearch, setSearch]);
-
-  // Hide search bar when not on collection page
-  useEffect(() => {
-    if (location.pathname !== '/collection') {
-      setShowSearch(false);
-    }
-  }, [location.pathname, setShowSearch]);
 
   // Sync local search with context search
   useEffect(() => {

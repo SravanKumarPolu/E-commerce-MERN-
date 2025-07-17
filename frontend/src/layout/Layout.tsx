@@ -1,5 +1,6 @@
 // src/layout/Layout.tsx
 import React, { ReactNode } from "react";
+import { useLocation } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import SearchBar from "../components/SearchBar";
@@ -13,6 +14,9 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const location = useLocation();
+  const isCollectionPage = location.pathname === '/collection';
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       {/* Navigation */}
@@ -33,8 +37,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         toastClassName="rounded-lg shadow-lg"
       />
       
-      {/* Search Bar */}
-      <SearchBar />
+      {/* Search Bar - Only render on Collection page */}
+      {isCollectionPage && <SearchBar />}
       
       {/* Main Content */}
       <motion.main 
