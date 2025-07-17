@@ -12,7 +12,7 @@ const LatestCollection: React.FC = () => {
 
   if (!context) {
     return (
-      <section className="py-16 px-4 text-center text-gray-500">
+      <section className="py-12 sm:py-16 px-4 text-center text-gray-500">
         No latest products available.
       </section>
     );
@@ -28,15 +28,15 @@ const LatestCollection: React.FC = () => {
   }, [products]);
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8">
-      <div className="text-center mb-10">
+    <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
+      <div className="text-center mb-8 sm:mb-10">
         <Title text1="Latest" text2="Collection" />
-        <p className="w-full sm:w-3/4 lg:w-2/3 mx-auto text-sm sm:text-base text-gray-500 mt-2 leading-relaxed">
+        <p className="w-full sm:w-3/4 lg:w-2/3 mx-auto text-sm sm:text-base text-gray-500 mt-2 sm:mt-3 leading-relaxed">
           Check out our freshest drops—hand-picked just for you!
         </p>
         <button
           onClick={refreshProducts}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+          className="mt-4 sm:mt-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
         >
           Refresh Products
         </button>
@@ -45,7 +45,7 @@ const LatestCollection: React.FC = () => {
       {latestProducts.length === 0 ? (
         <p className="text-center text-gray-500">No new products found.</p>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
           {latestProducts.map((item, index) => (
             <motion.div
               key={item._id}
@@ -65,7 +65,7 @@ const LatestCollection: React.FC = () => {
         </div>
       )}
 
-      <div className="text-center mt-12">
+      <div className="text-center mt-8 sm:mt-12">
         <button
           onClick={() => navigate('/collection')}
           className="px-6 py-2 border border-gray-800 text-gray-800 rounded-md hover:bg-gray-100 transition duration-300 font-medium"

@@ -4,6 +4,7 @@ import { lazy, Suspense } from "react";
 import Layout from "./layout/Layout";
 import ScrollToTop from "./utils/ScrollToTop";
 import LoadingSpinner from "./components/LoadingSpinner";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 // Lazy-loaded pages
 const Home = lazy(() => import("./pages/Home"));
@@ -20,7 +21,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
   return (
-    <>
+    <ErrorBoundary>
       <ScrollToTop />
       <Suspense fallback={<LoadingSpinner size="lg" message="Loading page..." className="py-20" />}>
         <Routes>
@@ -114,7 +115,7 @@ function App() {
           />
         </Routes>
       </Suspense>
-    </>
+    </ErrorBoundary>
   );
 }
 
