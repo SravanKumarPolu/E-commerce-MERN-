@@ -20,11 +20,11 @@ const ProductItems: React.FC<ProductItemsProps> = ({ id, image, name, price }) =
   return (
     <Link
       to={`/product/${id}`}
-      className="group block focus:outline-none h-full"
+      className="group block focus:outline-none h-full w-full"
       aria-label={`View details for ${name}`}
     >
       <motion.div 
-        className="card-modern h-full flex flex-col bg-white group"
+        className="card-modern h-full w-full flex flex-col bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden group"
         whileHover={{ y: -8 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
         initial={{ opacity: 0, y: 20 }}
@@ -32,7 +32,7 @@ const ProductItems: React.FC<ProductItemsProps> = ({ id, image, name, price }) =
         viewport={{ once: true }}
       >
         {/* Product Image Container */}
-        <div className="relative overflow-hidden aspect-square w-full bg-gray-50">
+        <div className="relative overflow-hidden aspect-square w-full bg-gray-50 flex-shrink-0">
           <motion.img
             src={image[0]}
             alt={name || 'Product image'}
@@ -97,9 +97,9 @@ const ProductItems: React.FC<ProductItemsProps> = ({ id, image, name, price }) =
         </div>
 
         {/* Product Info */}
-        <div className="p-4 space-y-3 flex-1 flex flex-col">
+        <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
           {/* Product Name */}
-          <h3 className="text-base font-semibold text-gray-800 group-hover:text-blue-600 transition-colors duration-300 line-clamp-2 leading-tight flex-1 font-display">
+          <h3 className="text-base font-semibold text-gray-800 group-hover:text-blue-600 transition-colors duration-300 line-clamp-2 leading-tight font-display">
             {name}
           </h3>
           
@@ -132,7 +132,7 @@ const ProductItems: React.FC<ProductItemsProps> = ({ id, image, name, price }) =
 
           {/* Quick add to cart button */}
           <motion.button
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 text-sm mt-auto"
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 text-sm"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={(e) => {
