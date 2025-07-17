@@ -42,7 +42,7 @@ function Sidebar() {
         </div>
 
         {/* Enhanced Navigation - Scrollable area */}
-        <nav className="flex-1 space-y-10 overflow-y-auto overflow-x-hidden pr-2">
+        <nav className="flex-1 space-y-10 overflow-y-auto overflow-x-hidden px-2">
           {/* Main Navigation */}
           <div className="space-y-4">
             <h2 className="text-caption text-neutral-400 font-bold uppercase tracking-wider mb-8 px-2 flex items-center gap-3">
@@ -57,7 +57,7 @@ function Sidebar() {
                 <DashboardIcon />
               </div>
               <span className="font-semibold">Dashboard</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-primary-400/0 to-primary-400/0 group-hover:from-primary-400/5 group-hover:to-primary-400/10 transition-all duration-300 rounded-2xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary-400/0 to-primary-400/0 group-hover:from-primary-400/5 group-hover:to-primary-400/10 transition-all duration-300 rounded-2xl pointer-events-none"></div>
             </NavLink>
             
             <NavLink to="/add" className={linkClasses}>
@@ -67,7 +67,7 @@ function Sidebar() {
                 <AddIcon />
               </div>
               <span className="font-semibold">Add Products</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-success-400/0 to-success-400/0 group-hover:from-success-400/5 group-hover:to-success-400/10 transition-all duration-300 rounded-2xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-success-400/0 to-success-400/0 group-hover:from-success-400/5 group-hover:to-success-400/10 transition-all duration-300 rounded-2xl pointer-events-none"></div>
             </NavLink>
             
             <NavLink to="/list" className={linkClasses}>
@@ -77,7 +77,7 @@ function Sidebar() {
                 <ListIcon />
               </div>
               <span className="font-semibold">Product List</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-warning-400/0 to-warning-400/0 group-hover:from-warning-400/5 group-hover:to-warning-400/10 transition-all duration-300 rounded-2xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-warning-400/0 to-warning-400/0 group-hover:from-warning-400/5 group-hover:to-warning-400/10 transition-all duration-300 rounded-2xl pointer-events-none"></div>
             </NavLink>
             
             <NavLink to="/orders" className={linkClasses}>
@@ -87,7 +87,7 @@ function Sidebar() {
                 <OrdersIcon />
               </div>
               <span className="font-semibold">Orders</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-error-400/0 to-error-400/0 group-hover:from-error-400/5 group-hover:to-error-400/10 transition-all duration-300 rounded-2xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-error-400/0 to-error-400/0 group-hover:from-error-400/5 group-hover:to-error-400/10 transition-all duration-300 rounded-2xl pointer-events-none"></div>
             </NavLink>
           </div>
 
@@ -105,7 +105,7 @@ function Sidebar() {
                 <SalesIcon />
               </div>
               <span className="font-semibold">Sales Analytics</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-primary-400/0 to-primary-400/0 group-hover:from-primary-400/5 group-hover:to-primary-400/10 transition-all duration-300 rounded-2xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary-400/0 to-primary-400/0 group-hover:from-primary-400/5 group-hover:to-primary-400/10 transition-all duration-300 rounded-2xl pointer-events-none"></div>
             </NavLink>
             
             <NavLink to="/analytics/products" className={linkClasses}>
@@ -115,7 +115,7 @@ function Sidebar() {
                 <ProductsIcon />
               </div>
               <span className="font-semibold">Product Performance</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-success-400/0 to-success-400/0 group-hover:from-success-400/5 group-hover:to-success-400/10 transition-all duration-300 rounded-2xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-success-400/0 to-success-400/0 group-hover:from-success-400/5 group-hover:to-success-400/10 transition-all duration-300 rounded-2xl pointer-events-none"></div>
             </NavLink>
             
             <NavLink to="/analytics/users" className={linkClasses}>
@@ -125,7 +125,7 @@ function Sidebar() {
                 <UsersIcon />
               </div>
               <span className="font-semibold">User Behavior</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-warning-400/0 to-warning-400/0 group-hover:from-warning-400/5 group-hover:to-warning-400/10 transition-all duration-300 rounded-2xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-warning-400/0 to-warning-400/0 group-hover:from-warning-400/5 group-hover:to-warning-400/10 transition-all duration-300 rounded-2xl pointer-events-none"></div>
             </NavLink>
             
             <NavLink to="/analytics/search" className={linkClasses}>
@@ -135,7 +135,7 @@ function Sidebar() {
                 <SearchIcon />
               </div>
               <span className="font-semibold">Search Analytics</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-error-400/0 to-error-400/0 group-hover:from-error-400/5 group-hover:to-error-400/10 transition-all duration-300 rounded-2xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-error-400/0 to-error-400/0 group-hover:from-error-400/5 group-hover:to-error-400/10 transition-all duration-300 rounded-2xl pointer-events-none"></div>
             </NavLink>
           </div>
         </nav>

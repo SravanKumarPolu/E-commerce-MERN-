@@ -529,6 +529,7 @@ aside .active {
   color: white !important;
   box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.25) !important;
   transform: scale(1.02) !important;
+  border-radius: 1.5rem !important; /* Match rounded-2xl (1.5rem) */
 }
 
 aside .active *,
@@ -553,6 +554,7 @@ aside .NavLink.active {
   color: white !important;
   box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.25) !important;
   transform: scale(1.02) !important;
+  border-radius: 1.5rem !important; /* Match rounded-2xl (1.5rem) */
 }
 
 aside a[class*="text-white"] span,
@@ -566,6 +568,7 @@ aside .NavLink.active {
   color: white !important;
   box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.25) !important;
   transform: scale(1.02) !important;
+  border-radius: 1.5rem !important; /* Match rounded-2xl (1.5rem) */
 }
 
 /* Enhanced Scrollbar Styles */
