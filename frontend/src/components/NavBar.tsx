@@ -53,21 +53,21 @@ const NavBar = () => {
   return (
     <>
       <motion.nav 
-        className={`sticky top-0 z-50 transition-all duration-300 ${
+        className={`sticky top-0 z-50 transition-all duration-500 ${
           scrolled 
-            ? 'glass backdrop-blur-md bg-white/90 shadow-lg' 
+            ? 'glass backdrop-blur-xl bg-white/90 shadow-xl' 
             : 'bg-white border-b border-gray-100'
         }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.6 }}
       >
-        <div className="font-outfit flex items-center justify-between py-3 px-4 sm:py-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="font-ui flex items-center justify-between py-4 px-4 sm:py-5 sm:px-6 lg:px-8 max-w-7xl mx-auto">
           {/* Logo with enhanced animation */}
           <Link to="/" aria-label="Go to homepage" className="group">
             <motion.img 
               src={assets.logo} 
-              className="w-8 sm:w-10 transition-transform duration-300 group-hover:scale-110" 
+              className="w-10 sm:w-12 transition-transform duration-300 group-hover:scale-110" 
               alt="Logo"
               whileHover={{ rotate: 5 }}
               whileTap={{ scale: 0.95 }}
@@ -75,7 +75,7 @@ const NavBar = () => {
           </Link>
 
           {/* Desktop Navigation with enhanced styling */}
-          <div role="tablist" className="tabs tabs-lifted hidden sm:flex text-sm text-gray-900">
+          <div role="tablist" className="hidden sm:flex text-sm text-gray-900 gap-1">
             {navLinks.map((navItem, index) => (
               <motion.div
                 key={navItem.path}
@@ -87,32 +87,32 @@ const NavBar = () => {
                   to={navItem.path}
                   role="tab"
                   className={({ isActive }) =>
-                    `tab flex-col items-center gap-1 px-4 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-300 ${
+                    `nav-link px-6 py-3 rounded-xl transition-all duration-300 font-medium ${
                       isActive 
-                        ? 'tab-active bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' 
-                        : 'hover:bg-gray-100 hover:scale-105'
+                        ? 'text-blue-600 bg-blue-50 shadow-sm' 
+                        : 'hover:text-blue-600 hover:bg-gray-50'
                     }`
                   }
                 >
-                  <p className="font-medium text-sm sm:text-base">{navItem.label}</p>
+                  {navItem.label}
                 </NavLink>
               </motion.div>
             ))}
           </div>
 
           {/* Right Icons with enhanced interactions */}
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             {/* Search with enhanced animation */}
             <motion.button
               onClick={() => setShowSearch(true)}
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
-              whileHover={{ scale: 1.1 }}
+              className="p-3 rounded-xl hover:bg-gray-100 transition-all duration-300"
+              whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.95 }}
               aria-label="Search"
             >
               <img
                 src={assets.search_icon}
-                className="w-4 h-4 sm:w-5 sm:h-5"
+                className="w-5 h-5 sm:w-6 sm:h-6"
                 alt="Search"
               />
             </motion.button>
@@ -123,17 +123,17 @@ const NavBar = () => {
                 <>
                   <motion.button
                     onClick={toggleProfileDropdown}
-                    className={`p-2 rounded-full transition-colors duration-200 ${
-                      showProfileDropdown ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-100'
+                    className={`p-3 rounded-xl transition-all duration-300 ${
+                      showProfileDropdown ? 'bg-blue-100 text-blue-600 shadow-md' : 'hover:bg-gray-100'
                     }`}
-                    whileHover={{ scale: 1.1 }}
+                    whileHover={{ scale: 1.1, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     aria-label="Profile"
                     aria-expanded={showProfileDropdown}
                   >
                     <img
                       src={assets.profile_icon}
-                      className="w-4 h-4 sm:w-5 sm:h-5"
+                      className="w-5 h-5 sm:w-6 sm:h-6"
                       alt="Profile"
                     />
                   </motion.button>
@@ -141,13 +141,13 @@ const NavBar = () => {
                   <AnimatePresence>
                     {showProfileDropdown && (
                       <motion.div 
-                        className="absolute right-0 pt-2 sm:pt-4 z-40"
+                        className="absolute right-0 pt-4 z-40"
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <div className="glass backdrop-blur-md bg-white/95 shadow-xl rounded-xl p-2 min-w-[160px] border border-gray-200">
+                        <div className="glass backdrop-blur-xl bg-white/95 shadow-2xl rounded-2xl p-3 min-w-[180px] border border-gray-200">
                           {userMenuLinks.map((link, index) => (
                             <motion.div
                               key={link.path}
@@ -158,7 +158,7 @@ const NavBar = () => {
                               <Link 
                                 to={link.path} 
                                 onClick={() => setShowProfileDropdown(false)}
-                                className="block px-3 sm:px-4 py-2 text-sm text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
+                                className="block px-4 py-3 text-sm text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-300 font-medium"
                               >
                                 {link.label}
                               </Link>
@@ -167,7 +167,7 @@ const NavBar = () => {
                           <hr className="my-2 border-gray-200" />
                           <motion.button 
                             onClick={handleLogout}
-                            className="w-full text-left px-3 sm:px-4 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200"
+                            className="w-full text-left px-4 py-3 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl transition-all duration-300 font-medium"
                             whileHover={{ x: 5 }}
                           >
                             Logout
@@ -180,14 +180,14 @@ const NavBar = () => {
               ) : (
                 <Link to="/login">
                   <motion.button
-                    className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
-                    whileHover={{ scale: 1.1 }}
+                    className="p-3 rounded-xl hover:bg-gray-100 transition-all duration-300"
+                    whileHover={{ scale: 1.1, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     aria-label="Login"
                   >
                     <img
                       src={assets.profile_icon}
-                      className="w-4 h-4 sm:w-5 sm:h-5"
+                      className="w-5 h-5 sm:w-6 sm:h-6"
                       alt="Login"
                     />
                   </motion.button>
@@ -198,91 +198,79 @@ const NavBar = () => {
             {/* Cart with enhanced badge */}
             <Link to="/cart" className="relative group" aria-label="Cart">
               <motion.div
-                className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
-                whileHover={{ scale: 1.1 }}
+                className="p-3 rounded-xl hover:bg-gray-100 transition-all duration-300"
+                whileHover={{ scale: 1.1, y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <img src={assets.cart_icon} alt="Cart" className="w-4 h-4 sm:w-5 sm:h-5" />
-                <AnimatePresence>
-                  {getCartCount() > 0 && (
-                    <motion.span 
-                      className="absolute -right-1 -top-1 w-4 h-4 sm:w-5 sm:h-5 text-center bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full flex items-center justify-center font-semibold shadow-lg"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      exit={{ scale: 0 }}
-                      key={getCartCount()}
-                    >
-                      {getCartCount()}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
+                <img
+                  src={assets.cart_icon}
+                  className="w-5 h-5 sm:w-6 sm:h-6"
+                  alt="Cart"
+                />
+                
+                {/* Enhanced Cart Badge */}
+                {getCartCount() > 0 && (
+                  <motion.div
+                    className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-lg"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  >
+                    {getCartCount()}
+                  </motion.div>
+                )}
               </motion.div>
             </Link>
 
-            {/* Mobile Menu Icon with enhanced animation */}
+            {/* Mobile Menu Button */}
             <motion.button
-              onClick={() => setVisible(true)}
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 sm:hidden"
+              className="sm:hidden p-3 rounded-xl hover:bg-gray-100 transition-all duration-300"
+              onClick={() => setVisible(!visible)}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              aria-label="Open menu"
+              aria-label="Toggle menu"
             >
-              <img
-                src={assets.menu_icon}
-                alt="Menu"
-                className="w-4 h-4 sm:w-5 sm:h-5"
-              />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                {visible ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
             </motion.button>
           </div>
         </div>
-      </motion.nav>
 
-      {/* Enhanced Backdrop */}
-      <AnimatePresence>
-        {visible && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setVisible(false)}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 sm:hidden"
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Enhanced Mobile Sidebar */}
-      <AnimatePresence>
-        {visible && (
-          <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl z-50 sm:hidden"
-          >
-            <div className="flex flex-col h-full">
-              {/* Header */}
-              <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200">
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Menu</h2>
-                <motion.button
-                  onClick={() => setVisible(false)}
-                  className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  aria-label="Close menu"
-                >
-                  <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </motion.button>
-              </div>
-
-              {/* Navigation Links */}
-              <div className="flex-1 overflow-y-auto py-4">
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {visible && (
+            <motion.div
+              className="sm:hidden bg-white border-t border-gray-100 shadow-xl"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="px-4 py-6 space-y-4">
                 {navLinks.map((navItem, index) => (
                   <motion.div
                     key={navItem.path}
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
                   >
@@ -290,9 +278,9 @@ const NavBar = () => {
                       to={navItem.path}
                       onClick={() => setVisible(false)}
                       className={({ isActive }) =>
-                        `block px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg font-medium transition-all duration-200 ${
+                        `block px-4 py-3 text-base font-medium rounded-xl transition-all duration-300 ${
                           isActive 
-                            ? 'text-blue-600 bg-blue-50 border-r-4 border-blue-600' 
+                            ? 'text-blue-600 bg-blue-50' 
                             : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
                         }`
                       }
@@ -302,56 +290,10 @@ const NavBar = () => {
                   </motion.div>
                 ))}
               </div>
-
-              {/* Authentication Section */}
-              <div className="border-t border-gray-200 p-4 sm:p-6">
-                {isLoggedIn ? (
-                  <div className="space-y-2">
-                    <p className="text-sm text-gray-500 mb-4">Account</p>
-                    {userMenuLinks.map((link, index) => (
-                      <motion.div
-                        key={link.path}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                      >
-                        <Link 
-                          to={link.path} 
-                          onClick={() => setVisible(false)}
-                          className="block px-3 sm:px-4 py-2 sm:py-3 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
-                        >
-                          {link.label}
-                        </Link>
-                      </motion.div>
-                    ))}
-                    <motion.button 
-                      onClick={handleLogout}
-                      className="w-full text-left px-3 sm:px-4 py-2 sm:py-3 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200"
-                      whileHover={{ x: 5 }}
-                    >
-                      Logout
-                    </motion.button>
-                  </div>
-                ) : (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                  >
-                    <Link 
-                      to="/login" 
-                      onClick={() => setVisible(false)}
-                      className="block w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center py-3 px-6 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
-                    >
-                      Login
-                    </Link>
-                  </motion.div>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.nav>
     </>
   );
 };
