@@ -29,7 +29,10 @@ const BestSeller: React.FC = () => {
 
   useEffect(() => {
     if (products.length > 0) {
-      setBestSeller(products.slice(0, 5));
+      // Filter products that are marked as bestsellers
+      const bestsellerProducts = products.filter(product => product.bestseller === true);
+      // Take up to 5 bestseller products
+      setBestSeller(bestsellerProducts.slice(0, 5));
     }
   }, [products]);
 
@@ -46,25 +49,38 @@ const BestSeller: React.FC = () => {
 
 
       {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
-        {bestSeller.map((item, index) => (
-           <motion.div
-           key={item._id}
-           className="h-full min-h-[500px] flex"
-           initial={{ opacity: 0, y: 20 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           viewport={{ once: true }}
-           transition={{ duration: 0.4, delay: index * 0.1 }}
-         >
-           <ProductItems
-             id={item._id}
-             image={item.image}
-             name={item.name}
-             price={item.price}
-           />
-         </motion.div>
-        ))}
-      </div>
+      {bestSeller.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
+          {bestSeller.map((item, index) => (
+             <motion.div
+             key={item._id}
+             className="h-full min-h-[500px] flex"
+             initial={{ opacity: 0, y: 20 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+             transition={{ duration: 0.4, delay: index * 0.1 }}
+           >
+             <ProductItems
+               id={item._id}
+               image={item.image}
+               name={item.name}
+               price={item.price}
+               bestseller={item.bestseller}
+             />
+           </motion.div>
+          ))}
+        </div>
+      ) : (
+        <motion.div 
+          className="text-center py-12"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          <p className="text-gray-500 text-lg">No bestseller products available at the moment.</p>
+          <p className="text-gray-400 text-sm mt-2">Check back soon for our featured products!</p>
+        </motion.div>
+      )}
     </section>
   );
 };

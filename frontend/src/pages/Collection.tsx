@@ -33,6 +33,8 @@ const Collection = () => {
     }
   }
 
+  const [showBestsellers, setShowBestsellers] = useState<boolean>(false);
+
   const applyFilter = () => {
     let productsCopy = products.slice()
     if (showSearch && search) {
@@ -44,12 +46,15 @@ const Collection = () => {
     if (subCategory.length > 0) {
       productsCopy = productsCopy.filter(item => subCategory.includes(item.subCategory))
     }
+    if (showBestsellers) {
+      productsCopy = productsCopy.filter(item => item.bestseller === true)
+    }
     setFilterProducts(productsCopy)
   }
   
   useEffect(() => {
     applyFilter();
-  }, [category, search, showSearch, subCategory, products])
+  }, [category, search, showSearch, subCategory, showBestsellers, products])
 
   const sortProduct = () => {
     let fpCopy = filterProducts.slice()
@@ -73,10 +78,11 @@ const Collection = () => {
   const clearFilters = () => {
     setCategory([]);
     setSubCategory([]);
+    setShowBestsellers(false);
     setSortType('relevant');
   }
 
-  const activeFiltersCount = category.length + subCategory.length;
+  const activeFiltersCount = category.length + subCategory.length + (showBestsellers ? 1 : 0);
 
   // Get all unique subcategories from all categories
   const allSubCategories = categories.flatMap(cat => 
@@ -272,6 +278,35 @@ const Collection = () => {
                       )}
                     </div>
 
+                    {/* Bestsellers Filter */}
+                    <div className="mb-6">
+                      <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4">
+                        <div className="w-6 h-1 bg-gradient-to-r from-red-600 to-orange-600 rounded-full"></div>
+                        Bestsellers
+                      </h3>
+                      <motion.label
+                        className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-200"
+                        whileHover={{ x: 4 }}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={showBestsellers}
+                          onChange={(e) => setShowBestsellers(e.target.checked)}
+                          className="w-4 h-4 text-red-600 bg-gray-100 border border-gray-300 rounded focus:ring-red-500"
+                        />
+                        <span className="text-sm font-medium text-gray-700">
+                          Show only bestsellers
+                        </span>
+                        {showBestsellers && (
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="w-2 h-2 bg-red-600 rounded-full ml-2"
+                          />
+                        )}
+                      </motion.label>
+                    </div>
+
                     {/* Clear Filters Button */}
                     {activeFiltersCount > 0 && (
                       <motion.button
@@ -369,6 +404,7 @@ const Collection = () => {
                       image={item.image} 
                       name={item.name} 
                       price={item.price} 
+                      bestseller={item.bestseller}
                     />
                   </motion.div>
                 ))}

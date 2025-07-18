@@ -36,6 +36,7 @@ const RelatedProducts: React.FC<RelatedProductsProps> = ({ category, subCategory
             name={item.name}
             price={item.price}
             image={item.image}
+            bestseller={item.bestseller}
           />
         ))}
       </div>

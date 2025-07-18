@@ -95,6 +95,7 @@ const LatestCollection: React.FC = () => {
                 image={item.image}
                 name={item.name}
                 price={item.price}
+                bestseller={item.bestseller}
               />
             </motion.div>
           ))}

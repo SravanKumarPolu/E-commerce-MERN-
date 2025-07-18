@@ -8,9 +8,10 @@ interface ProductItemsProps {
   image: string[];
   name: string;
   price: number;
+  bestseller?: boolean;
 }
 
-const ProductItems: React.FC<ProductItemsProps> = ({ id, image, name, price }) => {
+const ProductItems: React.FC<ProductItemsProps> = ({ id, image, name, price, bestseller = false }) => {
   const context = useContext(ShopContext);
 
   if (!context) return null;
@@ -83,8 +84,17 @@ const ProductItems: React.FC<ProductItemsProps> = ({ id, image, name, price }) =
             </span>
           </div>
 
+          {/* Bestseller Badge */}
+          {bestseller && (
+            <div className="absolute top-3 right-3">
+              <span className="badge badge-warning shadow-md">
+                Bestseller
+              </span>
+            </div>
+          )}
+
           {/* Rating stars */}
-          <div className="absolute top-3 right-3 flex items-center gap-1">
+          <div className={`absolute ${bestseller ? 'top-12' : 'top-3'} right-3 flex items-center gap-1`}>
             <div className="flex">
               {[...Array(5)].map((_, i) => (
                 <svg key={i} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
