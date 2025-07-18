@@ -16,7 +16,7 @@ function Sidebar() {
       
       <div className="h-full flex flex-col relative z-10">
         {/* Professional Logo/Brand Section - Fixed at top */}
-        <div className="p-8 pb-4 flex-shrink-0">
+        <div className="p-8 pb-10 flex-shrink-0">
           <div className="flex items-center gap-4 mb-8">
             <div className="w-16 h-16 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-2xl flex items-center justify-center shadow-xl shadow-primary-500/30 border border-primary-400/20 hover:scale-105 transition-transform duration-300 hover:shadow-2xl hover:shadow-primary-500/40">
               <svg className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -42,7 +42,8 @@ function Sidebar() {
         </div>
 
         {/* Professional Navigation - Scrollable area with proper bottom spacing */}
-        <nav className="flex-1 px-8 overflow-y-auto overflow-x-hidden min-h-0">
+        <nav className="flex-3 px-8 overflow-y-auto overflow-x-hidden min-h-0">
+
           <div className="space-y-10 pb-6">
             {/* Main Navigation */}
             <div className="space-y-4">
@@ -140,11 +141,12 @@ function Sidebar() {
               </NavLink>
             </div>
           </div>
+
         </nav>
 
         {/* Enhanced Footer - Fixed at Bottom */}
-        <div className="mt-auto p-6 bg-gradient-to-t from-white/70 to-transparent ">
-          <div className="card-elevated p-6 bg-white/95 backdrop-blur-sm border border-neutral-200/60 shadow-xl shadow-neutral-900/10 rounded-2xl hover:shadow-2xl hover:shadow-neutral-900/20 transition-all duration-300 hover:scale-[1.02]">
+        <div className=" flex-2 mt-auto p-6 bg-gradient-to-t from-black/70 to-transparent border-t border-neutral-100/60 ">
+          <div className="card-elevated p-2 bg-white/95 backdrop-blur-sm border border-neutral-200/60 shadow-xl shadow-neutral-900/10 rounded-2xl hover:shadow-2xl hover:shadow-neutral-900/20 transition-all duration-300 hover:scale-[1.02]">
             
             {/* System Status Row */}
             <div className="flex items-center justify-between mb-4">
