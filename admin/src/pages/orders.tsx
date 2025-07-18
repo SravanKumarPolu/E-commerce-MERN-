@@ -262,9 +262,9 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
                   <p className="text-caption text-neutral-500 mb-3 font-semibold">Total Revenue</p>
                   <div 
                     className="tooltip" 
-                    data-tooltip={formatCurrency(stats.totalRevenue)}
+                    data-tip={formatCurrency(stats.totalRevenue)}
                   >
-                    <p className="text-heading-2 font-bold text-neutral-900 break-words leading-tight">
+                    <p className="text-heading-2 font-bold text-neutral-900 break-words leading-tight min-w-0">
                       {formatCurrency(stats.totalRevenue)}
                     </p>
                   </div>
@@ -526,9 +526,9 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
                       <div className="text-right">
                         <div 
                           className="tooltip" 
-                          data-tooltip={formatCurrency(item.price * item.quantity)}
+                          data-tip={formatCurrency(item.price * item.quantity)}
                         >
-                          <p className="text-heading-3 font-bold text-neutral-900 break-words leading-tight">
+                          <p className="text-heading-3 font-bold text-neutral-900 break-words leading-tight min-w-0">
                             {formatCurrency(item.price * item.quantity)}
                           </p>
                         </div>
@@ -551,9 +551,9 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
                     <span>Total:</span>
                     <div 
                       className="tooltip" 
-                      data-tooltip={formatCurrency(order.total)}
+                      data-tip={formatCurrency(order.total)}
                     >
-                      <span className="break-words leading-tight">{formatCurrency(order.total)}</span>
+                      <span className="break-words leading-tight min-w-0">{formatCurrency(order.total)}</span>
                     </div>
                   </div>
                 </div>
