@@ -12,6 +12,12 @@ const Collection = () => {
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [sortType, setSortType] = useState<string>('relevant');
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalProducts, setTotalProducts] = useState<number>(0);
+  const [productsPerPage] = useState<number>(12); // Show 12 products per page
+
   const [filterProducts, setFilterProducts] = useState<typeof products>([]);
   const [category, setCategory] = useState<string[]>([]);
   const toggleCategory = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,12 +55,20 @@ const Collection = () => {
     if (showBestsellers) {
       productsCopy = productsCopy.filter(item => item.bestseller === true)
     }
-    setFilterProducts(productsCopy)
+    
+    // Update total count and pages
+    setTotalProducts(productsCopy.length);
+    setTotalPages(Math.ceil(productsCopy.length / productsPerPage));
+    
+    // Apply pagination
+    const startIndex = (currentPage - 1) * productsPerPage;
+    const endIndex = startIndex + productsPerPage;
+    setFilterProducts(productsCopy.slice(startIndex, endIndex));
   }
   
   useEffect(() => {
     applyFilter();
-  }, [category, search, showSearch, subCategory, showBestsellers, products])
+  }, [category, search, showSearch, subCategory, showBestsellers, products, currentPage])
 
   const sortProduct = () => {
     let fpCopy = filterProducts.slice()
@@ -80,6 +94,7 @@ const Collection = () => {
     setSubCategory([]);
     setShowBestsellers(false);
     setSortType('relevant');
+    setCurrentPage(1); // Reset to first page when clearing filters
   }
 
   const activeFiltersCount = category.length + subCategory.length + (showBestsellers ? 1 : 0);
@@ -88,6 +103,60 @@ const Collection = () => {
   const allSubCategories = categories.flatMap(cat => 
     cat.subCategories.filter(sub => sub.isActive).map(sub => sub.name)
   );
+
+  // Pagination handlers
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      handlePageChange(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      handlePageChange(currentPage + 1);
+    }
+  };
+
+  // Generate page numbers for pagination
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) {
+          pages.push(i);
+        }
+        pages.push('...');
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1);
+        pages.push('...');
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push('...');
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pages.push(i);
+        }
+        pages.push('...');
+        pages.push(totalPages);
+      }
+    }
+    
+    return pages;
+  };
 
   return (
     <div className="space-y-16 sm:space-y-20 lg:space-y-24">
@@ -336,8 +405,13 @@ const Collection = () => {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-600">
-                    {filterProducts.length} products
+                    Showing {filterProducts.length} of {totalProducts} products
                   </span>
+                  {totalPages > 1 && (
+                    <span className="text-sm text-gray-500">
+                      (Page {currentPage} of {totalPages})
+                    </span>
+                  )}
                 </div>
                 
                 <div className="flex items-center gap-3">
@@ -408,6 +482,68 @@ const Collection = () => {
                     />
                   </motion.div>
                 ))}
+              </motion.div>
+            )}
+
+            {/* Pagination */}
+            {!isLoading && totalPages > 1 && (
+              <motion.div 
+                className="flex justify-center mt-12"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <div className="flex items-center gap-2 bg-white rounded-xl shadow-sm border border-gray-200 p-2">
+                  {/* Previous Button */}
+                  <motion.button
+                    onClick={handlePrevPage}
+                    disabled={currentPage === 1}
+                    className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </motion.button>
+
+                  {/* Page Numbers */}
+                  <div className="flex items-center gap-1">
+                    {getPageNumbers().map((page, index) => (
+                      <div key={index}>
+                        {page === '...' ? (
+                          <span className="px-3 py-2 text-sm text-gray-500">...</span>
+                        ) : (
+                          <motion.button
+                            onClick={() => handlePageChange(page as number)}
+                            className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                              currentPage === page
+                                ? 'bg-blue-600 text-white'
+                                : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                            }`}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            {page}
+                          </motion.button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Next Button */}
+                  <motion.button
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </motion.button>
+                </div>
               </motion.div>
             )}
 

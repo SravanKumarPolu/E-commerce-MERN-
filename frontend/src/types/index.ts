@@ -118,8 +118,16 @@ export interface ShopContextType {
   navigate: (path: string) => void;
   refreshProducts: () => void;
   forceRefreshProducts: () => Promise<void>;
+  fetchProductsWithPagination: (filters: ProductFilters) => Promise<ProductResponse | null>;
   isLoading: boolean;
   isInitializing: boolean;
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalProducts: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  } | null;
   
   // Authentication related
   token: string;

@@ -140,8 +140,10 @@ const ShopContextProvider: React.FC<ShopContextProviderProps> = ({ children }) =
     navigate: navigateTo,
     refreshProducts: products.refreshProducts,
     forceRefreshProducts: products.forceRefreshProducts,
+    fetchProductsWithPagination: products.fetchProductsWithPagination,
     isLoading: products.isLoading || auth.isLoading,
     isInitializing,
+    pagination: products.pagination,
     
     // Authentication related
     token: auth.token,

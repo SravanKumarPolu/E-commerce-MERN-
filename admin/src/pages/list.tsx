@@ -20,13 +20,31 @@ const List: React.FC<ListProps> = ({ token }) => {
   const [list, setList] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalProducts, setTotalProducts] = useState<number>(0);
+  const [productsPerPage] = useState<number>(20); // Show 20 products per page for admin
 
-  const fetchList = async () => {
+  const fetchList = async (page: number = 1) => {
     try {
       setLoading(true);
-      const response = await axios.get(`${backendUrl}/api/product/list`);
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: productsPerPage.toString()
+      });
+      
+      const response = await axios.get(`${backendUrl}/api/product/list?${params}`);
       if (response.data.success) {
         setList(response.data.products);
+        
+        // Update pagination info
+        if (response.data.pagination) {
+          setCurrentPage(response.data.pagination.currentPage);
+          setTotalPages(response.data.pagination.totalPages);
+          setTotalProducts(response.data.pagination.totalProducts);
+        }
       } else {
         toast.error(response.data.message);
       }
@@ -47,7 +65,12 @@ const List: React.FC<ListProps> = ({ token }) => {
       );
       if (response.data.success) {
         toast.success(response.data.message);
-        fetchList();
+        // Refresh current page, but if it's the last page and we're deleting the last item, go to previous page
+        if (list.length === 1 && currentPage > 1) {
+          fetchList(currentPage - 1);
+        } else {
+          fetchList(currentPage);
+        }
       } else {
         toast.error(response.data.message);
       }
@@ -59,8 +82,63 @@ const List: React.FC<ListProps> = ({ token }) => {
   };
 
   useEffect(() => {
-    fetchList();
+    fetchList(1);
   }, []);
+
+  // Pagination handlers
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    fetchList(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      handlePageChange(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      handlePageChange(currentPage + 1);
+    }
+  };
+
+  // Generate page numbers for pagination
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 7;
+    
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 4) {
+        for (let i = 1; i <= 5; i++) {
+          pages.push(i);
+        }
+        pages.push('...');
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 3) {
+        pages.push(1);
+        pages.push('...');
+        for (let i = totalPages - 4; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push('...');
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pages.push(i);
+        }
+        pages.push('...');
+        pages.push(totalPages);
+      }
+    }
+    
+    return pages;
+  };
 
   if (loading) {
     return (
@@ -83,10 +161,15 @@ const List: React.FC<ListProps> = ({ token }) => {
         </div>
         <div className="flex items-center gap-3">
           <span className="text-caption text-neutral-500">
-            {list.length} product{list.length !== 1 ? 's' : ''}
+            Showing {list.length} of {totalProducts} products
+            {totalPages > 1 && (
+              <span className="ml-2 text-neutral-400">
+                (Page {currentPage} of {totalPages})
+              </span>
+            )}
           </span>
           <button
-            onClick={fetchList}
+            onClick={() => fetchList(currentPage)}
             className="btn-modern btn-secondary"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,92 +197,145 @@ const List: React.FC<ListProps> = ({ token }) => {
           </button>
         </div>
       ) : (
-        <div className="card-modern overflow-hidden">
-          {/* Desktop Header */}
-          <div className="hidden lg:grid grid-cols-[80px_2fr_1fr_1fr_100px] items-center py-4 px-6 bg-neutral-50 border-b border-neutral-200">
-            <span className="text-caption font-semibold text-neutral-600">Image</span>
-            <span className="text-caption font-semibold text-neutral-600">Product Name</span>
-            <span className="text-caption font-semibold text-neutral-600">Category</span>
-            <span className="text-caption font-semibold text-neutral-600">Price</span>
-            <span className="text-caption font-semibold text-neutral-600 text-center">Actions</span>
-          </div>
+        <>
+          <div className="card-modern overflow-hidden">
+            {/* Desktop Header */}
+            <div className="hidden lg:grid grid-cols-[80px_2fr_1fr_1fr_100px] items-center py-4 px-6 bg-neutral-50 border-b border-neutral-200">
+              <span className="text-caption font-semibold text-neutral-600">Image</span>
+              <span className="text-caption font-semibold text-neutral-600">Product Name</span>
+              <span className="text-caption font-semibold text-neutral-600">Category</span>
+              <span className="text-caption font-semibold text-neutral-600">Price</span>
+              <span className="text-caption font-semibold text-neutral-600 text-center">Actions</span>
+            </div>
 
-          {/* Product List */}
-          <div className="divide-y divide-neutral-200">
-            {list.map((item) => (
-              <div
-                key={item._id}
-                className="grid grid-cols-1 lg:grid-cols-[80px_2fr_1fr_1fr_100px] items-center p-4 lg:p-6 hover:bg-neutral-50 transition-smooth"
-              >
-                {/* Mobile Layout */}
-                <div className="lg:hidden flex items-center gap-4 mb-4">
-                  <img 
-                    src={item.image[0]} 
-                    alt={item.name} 
-                    className="w-16 h-16 object-cover rounded-lg border border-neutral-200" 
-                  />
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-neutral-900 mb-1">{item.name}</h3>
-                    <p className="text-body-small text-neutral-600 mb-2">{item.category}</p>
+            {/* Product List */}
+            <div className="divide-y divide-neutral-200">
+              {list.map((item) => (
+                <div
+                  key={item._id}
+                  className="grid grid-cols-1 lg:grid-cols-[80px_2fr_1fr_1fr_100px] items-center p-4 lg:p-6 hover:bg-neutral-50 transition-smooth"
+                >
+                  {/* Mobile Layout */}
+                  <div className="lg:hidden flex items-center gap-4 mb-4">
+                    <img 
+                      src={item.image[0]} 
+                      alt={item.name} 
+                      className="w-16 h-16 object-cover rounded-lg border border-neutral-200" 
+                    />
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-neutral-900 mb-1">{item.name}</h3>
+                      <p className="text-body-small text-neutral-600 mb-2">{item.category}</p>
+                      <p className="text-heading-4 font-bold text-primary-600">
+                        {currency}{item.price.toFixed(2)}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => removeProduct(item._id)}
+                      disabled={deletingId === item._id}
+                      className="p-2 text-error-500 hover:text-error-600 hover:bg-error-50 rounded-lg transition-smooth disabled:opacity-50"
+                      aria-label="Delete product"
+                    >
+                      {deletingId === item._id ? (
+                        <div className="loading-spinner w-5 h-5"></div>
+                      ) : (
+                        <DeleteIcon />
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Desktop Layout */}
+                  <div className="hidden lg:flex items-center">
+                    <img 
+                      src={item.image[0]} 
+                      alt={item.name} 
+                      className="w-12 h-12 object-cover rounded-lg border border-neutral-200" 
+                    />
+                  </div>
+                  
+                  <div className="hidden lg:block">
+                    <h3 className="font-semibold text-neutral-900">{item.name}</h3>
+                  </div>
+                  
+                  <div className="hidden lg:block">
+                    <span className="badge badge-info">{item.category}</span>
+                  </div>
+                  
+                  <div className="hidden lg:block">
                     <p className="text-heading-4 font-bold text-primary-600">
                       {currency}{item.price.toFixed(2)}
                     </p>
                   </div>
-                  <button
-                    onClick={() => removeProduct(item._id)}
-                    disabled={deletingId === item._id}
-                    className="p-2 text-error-500 hover:text-error-600 hover:bg-error-50 rounded-lg transition-smooth disabled:opacity-50"
-                    aria-label="Delete product"
-                  >
-                    {deletingId === item._id ? (
-                      <div className="loading-spinner w-5 h-5"></div>
-                    ) : (
-                      <DeleteIcon />
-                    )}
-                  </button>
+                  
+                  <div className="hidden lg:flex justify-center">
+                    <button
+                      onClick={() => removeProduct(item._id)}
+                      disabled={deletingId === item._id}
+                      className="p-2 text-error-500 hover:text-error-600 hover:bg-error-50 rounded-lg transition-smooth disabled:opacity-50"
+                      aria-label="Delete product"
+                    >
+                      {deletingId === item._id ? (
+                        <div className="loading-spinner w-5 h-5"></div>
+                      ) : (
+                        <DeleteIcon />
+                      )}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex justify-center">
+              <div className="flex items-center gap-2 bg-white rounded-xl shadow-sm border border-neutral-200 p-2">
+                {/* Previous Button */}
+                <button
+                  onClick={handlePrevPage}
+                  disabled={currentPage === 1}
+                  className="px-3 py-2 text-sm font-medium text-neutral-500 bg-white border border-neutral-300 rounded-lg hover:bg-neutral-50 hover:text-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+
+                {/* Page Numbers */}
+                <div className="flex items-center gap-1">
+                  {getPageNumbers().map((page, index) => (
+                    <div key={index}>
+                      {page === '...' ? (
+                        <span className="px-3 py-2 text-sm text-neutral-500">...</span>
+                      ) : (
+                        <button
+                          onClick={() => handlePageChange(page as number)}
+                          className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                            currentPage === page
+                              ? 'bg-primary-600 text-white'
+                              : 'text-neutral-700 bg-white border border-neutral-300 hover:bg-neutral-50'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      )}
+                    </div>
+                  ))}
                 </div>
 
-                {/* Desktop Layout */}
-                <div className="hidden lg:flex items-center">
-                  <img 
-                    src={item.image[0]} 
-                    alt={item.name} 
-                    className="w-12 h-12 object-cover rounded-lg border border-neutral-200" 
-                  />
-                </div>
-                
-                <div className="hidden lg:block">
-                  <h3 className="font-semibold text-neutral-900">{item.name}</h3>
-                </div>
-                
-                <div className="hidden lg:block">
-                  <span className="badge badge-info">{item.category}</span>
-                </div>
-                
-                <div className="hidden lg:block">
-                  <p className="text-heading-4 font-bold text-primary-600">
-                    {currency}{item.price.toFixed(2)}
-                  </p>
-                </div>
-                
-                <div className="hidden lg:flex justify-center">
-                  <button
-                    onClick={() => removeProduct(item._id)}
-                    disabled={deletingId === item._id}
-                    className="p-2 text-error-500 hover:text-error-600 hover:bg-error-50 rounded-lg transition-smooth disabled:opacity-50"
-                    aria-label="Delete product"
-                  >
-                    {deletingId === item._id ? (
-                      <div className="loading-spinner w-5 h-5"></div>
-                    ) : (
-                      <DeleteIcon />
-                    )}
-                  </button>
-                </div>
+                {/* Next Button */}
+                <button
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-2 text-sm font-medium text-neutral-500 bg-white border border-neutral-300 rounded-lg hover:bg-neutral-50 hover:text-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

@@ -1,18 +1,41 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'react-toastify';
-import { Product, ProductResponse } from '../types';
+import { Product, ProductResponse, ProductFilters } from '../types';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 
 export const useProducts = (token: string) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [pagination, setPagination] = useState<{
+    currentPage: number;
+    totalPages: number;
+    totalProducts: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  } | null>(null);
 
-  // Fetch products from backend
-  const fetchProducts = useCallback(async () => {
+  // Fetch products from backend with optional pagination
+  const fetchProducts = useCallback(async (filters?: ProductFilters) => {
     try {
       setIsLoading(true);
-      const response = await fetch(`${backendUrl}/api/product/list`, {
+      
+      // Build query parameters
+      const params = new URLSearchParams();
+      if (filters) {
+        Object.entries(filters).forEach(([key, value]) => {
+          if (value !== undefined && value !== null) {
+            params.append(key, value.toString());
+          }
+        });
+      }
+      
+      // If no limit is specified, fetch all products (use a large limit)
+      if (!filters?.limit) {
+        params.append('limit', '1000'); // Large limit to get all products
+      }
+      
+      const response = await fetch(`${backendUrl}/api/product/list?${params}`, {
         headers: token ? { 'token': token } : {},
       });
       
@@ -25,12 +48,54 @@ export const useProducts = (token: string) => {
           stockQuantity: p.stockQuantity
         })));
         setProducts(data.products);
+        
+        // Update pagination info if available
+        if (data.pagination) {
+          setPagination(data.pagination);
+        }
       } else {
         toast.error("Failed to fetch products");
       }
     } catch (error: any) {
       console.error('Error fetching products:', error);
       toast.error(error?.message || "Error fetching products");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [token]);
+
+  // Fetch products with pagination
+  const fetchProductsWithPagination = useCallback(async (filters: ProductFilters) => {
+    try {
+      setIsLoading(true);
+      
+      const params = new URLSearchParams();
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params.append(key, value.toString());
+        }
+      });
+      
+      const response = await fetch(`${backendUrl}/api/product/list?${params}`, {
+        headers: token ? { 'token': token } : {},
+      });
+      
+      const data: ProductResponse = await response.json();
+      
+      if (data.success) {
+        setProducts(data.products);
+        if (data.pagination) {
+          setPagination(data.pagination);
+        }
+        return data;
+      } else {
+        toast.error("Failed to fetch products");
+        return null;
+      }
+    } catch (error: any) {
+      console.error('Error fetching products with pagination:', error);
+      toast.error(error?.message || "Error fetching products");
+      return null;
     } finally {
       setIsLoading(false);
     }
@@ -52,7 +117,9 @@ export const useProducts = (token: string) => {
     products,
     setProducts,
     isLoading,
+    pagination,
     fetchProducts,
+    fetchProductsWithPagination,
     refreshProducts,
     forceRefreshProducts,
   };
