@@ -293,7 +293,7 @@ const List: React.FC<ListProps> = ({ token }) => {
                 <button
                   onClick={handlePrevPage}
                   disabled={currentPage === 1}
-                  className="px-3 py-2 text-sm font-medium text-neutral-500 bg-white border border-neutral-300 rounded-lg hover:bg-neutral-50 hover:text-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-3 py-2 text-sm font-medium text-neutral-600 bg-white border border-neutral-300 rounded-lg hover:bg-neutral-50 hover:text-neutral-900 hover:border-neutral-400 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-neutral-600 disabled:hover:border-neutral-300 transition-all duration-200"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -309,10 +309,10 @@ const List: React.FC<ListProps> = ({ token }) => {
                       ) : (
                         <button
                           onClick={() => handlePageChange(page as number)}
-                          className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                          className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
                             currentPage === page
-                              ? 'bg-primary-600 text-white'
-                              : 'text-neutral-700 bg-white border border-neutral-300 hover:bg-neutral-50'
+                              ? 'bg-blue-600 text-white border border-blue-600 shadow-md hover:bg-blue-700 hover:border-blue-700 cursor-pointer'
+                              : 'text-neutral-700 bg-white border border-neutral-300 hover:bg-neutral-50 hover:border-neutral-400 cursor-pointer hover:text-neutral-900'
                           }`}
                         >
                           {page}
@@ -326,7 +326,7 @@ const List: React.FC<ListProps> = ({ token }) => {
                 <button
                   onClick={handleNextPage}
                   disabled={currentPage === totalPages}
-                  className="px-3 py-2 text-sm font-medium text-neutral-500 bg-white border border-neutral-300 rounded-lg hover:bg-neutral-50 hover:text-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-3 py-2 text-sm font-medium text-neutral-600 bg-white border border-neutral-300 rounded-lg hover:bg-neutral-50 hover:text-neutral-900 hover:border-neutral-400 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-neutral-600 disabled:hover:border-neutral-300 transition-all duration-200"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
