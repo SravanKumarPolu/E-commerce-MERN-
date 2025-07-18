@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 function Sidebar() {
   const linkClasses = ({ isActive }: { isActive: boolean }) =>
-    `flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-300 font-semibold text-sm group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:ring-offset-2 focus:ring-offset-white ${
+    `flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-300 font-semibold text-sm group relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:ring-offset-2 focus:ring-offset-white hover:scale-[1.02] ${
       isActive
         ? 'active bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 text-white shadow-xl shadow-primary-500/30 transform scale-[1.02] border border-primary-400/20 backdrop-blur-sm'
         : 'text-neutral-700 hover:bg-gradient-to-r hover:from-neutral-50 hover:to-neutral-100 hover:text-neutral-900 hover:shadow-lg hover:shadow-neutral-900/5 hover:transform hover:scale-[1.02] hover:border hover:border-neutral-200/60 hover:backdrop-blur-sm'
@@ -18,7 +18,7 @@ function Sidebar() {
         {/* Enhanced Logo/Brand Section - Fixed at top */}
         <div className="mb-12 flex-shrink-0">
           <div className="flex items-center gap-4 mb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-2xl flex items-center justify-center shadow-xl shadow-primary-500/30 border border-primary-400/20 hover:scale-105 transition-transform duration-300">
+            <div className="w-16 h-16 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-2xl flex items-center justify-center shadow-xl shadow-primary-500/30 border border-primary-400/20 hover:scale-105 transition-transform duration-300 hover:shadow-2xl hover:shadow-primary-500/40">
               <svg className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
@@ -32,7 +32,7 @@ function Sidebar() {
           </div>
           
           {/* Enhanced status indicator */}
-          <div className="flex items-center gap-3 px-5 py-4 bg-gradient-to-r from-success-50 via-white to-success-50 rounded-xl border border-success-200/60 shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="flex items-center gap-3 px-5 py-4 bg-gradient-to-r from-success-50 via-white to-success-50 rounded-xl border border-success-200/60 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.02]">
             <div className="w-3 h-3 bg-success-500 rounded-full animate-pulse shadow-lg shadow-success-500/50"></div>
             <span className="text-sm font-semibold text-success-700">System Online</span>
             <div className="ml-auto">
@@ -142,7 +142,7 @@ function Sidebar() {
 
         {/* Enhanced Footer - Fixed at bottom */}
         <div className="mt-10 pt-8 flex-shrink-0">
-          <div className="p-6 bg-gradient-to-r from-neutral-50 via-white to-neutral-50 rounded-2xl border border-neutral-200/60 shadow-xl shadow-neutral-900/5 backdrop-blur-sm hover:shadow-2xl hover:shadow-neutral-900/10 transition-all duration-300">
+          <div className="p-6 bg-gradient-to-r from-neutral-50 via-white to-neutral-50 rounded-2xl border border-neutral-200/60 shadow-xl shadow-neutral-900/5 backdrop-blur-sm hover:shadow-2xl hover:shadow-neutral-900/10 transition-all duration-300 hover:scale-[1.02]">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 bg-success-500 rounded-full animate-pulse shadow-lg shadow-success-500/50"></div>

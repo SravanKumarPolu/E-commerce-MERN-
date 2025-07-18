@@ -236,7 +236,7 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
   return (
     <div className="space-y-12">
       {/* Enhanced Header with Stats */}
-      <div className="card-elevated p-10">
+      <div className="card-elevated p-10 hover:scale-[1.01] transition-all duration-300">
         <div className="flex justify-between items-center mb-10">
           <div>
             <h1 className="text-heading-1 font-bold gradient-text mb-4">Order Management</h1>
@@ -251,22 +251,29 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
         {/* Enhanced Statistics Cards */}
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="card-modern p-8 hover-lift">
+            <div className="card-modern p-8 hover-lift hover:scale-[1.02] transition-all duration-300">
               <div className="flex items-center">
-                <div className="p-5 bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl shadow-lg shadow-primary-500/20">
+                <div className="p-5 bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl shadow-lg shadow-primary-500/20 hover:scale-110 transition-transform duration-300">
                   <svg className="w-9 h-9 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                   </svg>
                 </div>
-                <div className="ml-6">
+                <div className="ml-6 flex-1 min-w-0">
                   <p className="text-caption text-neutral-500 mb-3 font-semibold">Total Revenue</p>
-                  <p className="text-heading-2 font-bold text-neutral-900">{formatCurrency(stats.totalRevenue)}</p>
+                  <div 
+                    className="tooltip" 
+                    data-tooltip={formatCurrency(stats.totalRevenue)}
+                  >
+                    <p className="text-heading-2 font-bold text-neutral-900 break-words leading-tight">
+                      {formatCurrency(stats.totalRevenue)}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="card-modern p-8 hover-lift">
+            <div className="card-modern p-8 hover-lift hover:scale-[1.02] transition-all duration-300">
               <div className="flex items-center">
-                <div className="p-5 bg-gradient-to-br from-warning-100 to-warning-200 rounded-2xl shadow-lg shadow-warning-500/20">
+                <div className="p-5 bg-gradient-to-br from-warning-100 to-warning-200 rounded-2xl shadow-lg shadow-warning-500/20 hover:scale-110 transition-transform duration-300">
                   <svg className="w-9 h-9 text-warning-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -277,9 +284,9 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
                 </div>
               </div>
             </div>
-            <div className="card-modern p-8 hover-lift">
+            <div className="card-modern p-8 hover-lift hover:scale-[1.02] transition-all duration-300">
               <div className="flex items-center">
-                <div className="p-5 bg-gradient-to-br from-success-100 to-success-200 rounded-2xl shadow-lg shadow-success-500/20">
+                <div className="p-5 bg-gradient-to-br from-success-100 to-success-200 rounded-2xl shadow-lg shadow-success-500/20 hover:scale-110 transition-transform duration-300">
                   <svg className="w-9 h-9 text-success-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -290,9 +297,9 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
                 </div>
               </div>
             </div>
-            <div className="card-modern p-8 hover-lift">
+            <div className="card-modern p-8 hover-lift hover:scale-[1.02] transition-all duration-300">
               <div className="flex items-center">
-                <div className="p-5 bg-gradient-to-br from-error-100 to-error-200 rounded-2xl shadow-lg shadow-error-500/20">
+                <div className="p-5 bg-gradient-to-br from-error-100 to-error-200 rounded-2xl shadow-lg shadow-error-500/20 hover:scale-110 transition-transform duration-300">
                   <svg className="w-9 h-9 text-error-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -308,12 +315,12 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
       </div>
 
       {/* Enhanced Advanced Filters */}
-      <div className="card-elevated p-10">
+      <div className="card-elevated p-10 hover:scale-[1.01] transition-all duration-300">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-heading-2 font-bold text-neutral-900">Filters</h2>
           <button
             onClick={clearFilters}
-            className="btn-modern btn-ghost hover:bg-error-50 hover:border-error-200 hover:text-error-700"
+            className="btn-modern btn-ghost hover:bg-error-50 hover:border-error-200 hover:text-error-700 hover:scale-105 transition-all duration-300"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -329,7 +336,7 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="select-modern"
+              className="select-modern hover:scale-[1.02] transition-transform duration-300"
             >
               <option value="">All Statuses</option>
               {filters?.orderStatuses.map((status: string) => (
@@ -344,7 +351,7 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
             <select
               value={selectedPaymentStatus}
               onChange={(e) => setSelectedPaymentStatus(e.target.value)}
-              className="select-modern"
+              className="select-modern hover:scale-[1.02] transition-transform duration-300"
             >
               <option value="">All Payment Statuses</option>
               {filters?.paymentStatuses.map((status: string) => (
@@ -361,7 +368,7 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
               value={userEmail}
               onChange={(e) => setUserEmail(e.target.value)}
               placeholder="Filter by user email"
-              className="input-modern"
+              className="input-modern hover:scale-[1.02] transition-transform duration-300"
             />
           </div>
 
@@ -371,7 +378,7 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="select-modern"
+              className="select-modern hover:scale-[1.02] transition-transform duration-300"
             >
               <option value="createdAt">Date Created</option>
               <option value="total">Order Total</option>
@@ -386,7 +393,7 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
             <select
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}
-              className="select-modern"
+              className="select-modern hover:scale-[1.02] transition-transform duration-300"
             >
               <option value="desc">Newest First</option>
               <option value="asc">Oldest First</option>
@@ -400,7 +407,7 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="input-modern"
+              className="input-modern hover:scale-[1.02] transition-transform duration-300"
             />
           </div>
 
@@ -410,7 +417,7 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="input-modern"
+              className="input-modern hover:scale-[1.02] transition-transform duration-300"
             />
           </div>
         </div>
@@ -418,7 +425,7 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
 
       {/* Enhanced Pagination Info */}
       {pagination && (
-        <div className="flex justify-between items-center p-6 bg-gradient-to-r from-neutral-50 via-white to-neutral-50 rounded-2xl border border-neutral-200/60 shadow-sm">
+        <div className="flex justify-between items-center p-6 bg-gradient-to-r from-neutral-50 via-white to-neutral-50 rounded-2xl border border-neutral-200/60 shadow-sm hover:shadow-md transition-all duration-300">
           <div className="text-body-small text-neutral-600 font-medium">
             Showing {((pagination.currentPage - 1) * pagination.limit) + 1} to {Math.min(pagination.currentPage * pagination.limit, pagination.totalOrders)} of {pagination.totalOrders} orders
           </div>
@@ -426,7 +433,7 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
             <button
               onClick={() => setCurrentPage(pagination.currentPage - 1)}
               disabled={!pagination.hasPrevPage}
-              className="btn-modern btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-modern btn-secondary disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 transition-all duration-300"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -439,7 +446,7 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
             <button
               onClick={() => setCurrentPage(pagination.currentPage + 1)}
               disabled={!pagination.hasNextPage}
-              className="btn-modern btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-modern btn-secondary disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 transition-all duration-300"
             >
               <span>Next</span>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -452,8 +459,8 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
 
       {/* Enhanced Orders List */}
       {orders.length === 0 ? (
-        <div className="card-elevated p-16 text-center">
-          <div className="w-24 h-24 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-8">
+        <div className="card-elevated p-16 text-center hover:scale-[1.01] transition-all duration-300">
+          <div className="w-24 h-24 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-8 hover:scale-110 transition-transform duration-300">
             <svg className="w-12 h-12 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
@@ -464,7 +471,7 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
       ) : (
         <div className="space-y-8">
           {orders.map((order) => (
-            <div key={order._id} className="card-elevated overflow-hidden">
+            <div key={order._id} className="card-elevated overflow-hidden hover:scale-[1.01] transition-all duration-300">
               {/* Enhanced Order Header */}
               <div className="bg-gradient-to-r from-neutral-50 via-white to-neutral-50 px-8 py-6 border-b border-neutral-200/60">
                 <div className="flex flex-wrap justify-between items-start gap-6">
@@ -501,25 +508,30 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
               <div className="p-8">
                 <div className="space-y-6">
                   {order.items.map((item, index) => (
-                    <div key={index} className="flex items-center gap-6 p-6 bg-gradient-to-r from-neutral-50 via-white to-neutral-50 rounded-2xl border border-neutral-200/60 hover:shadow-md transition-all duration-300">
+                    <div key={index} className="flex items-center gap-6 p-6 bg-gradient-to-r from-neutral-50 via-white to-neutral-50 rounded-2xl border border-neutral-200/60 hover:shadow-md hover:scale-[1.02] transition-all duration-300">
                       <img
                         src={item.image}
                         alt={item.name}
-                        className="w-20 h-20 object-cover rounded-xl shadow-sm"
+                        className="w-20 h-20 object-cover rounded-xl shadow-sm hover:scale-110 transition-transform duration-300"
                       />
                       <div className="flex-1">
                         <h4 className="font-bold text-neutral-900 text-lg mb-2">{item.name}</h4>
                         <p className="text-body-small text-neutral-600 mb-2">
                           Color: {item.color} | Quantity: {item.quantity}
                         </p>
-                        <p className="text-body font-semibold text-neutral-900">
+                        <p className="text-body font-semibold text-neutral-900 break-words">
                           {formatCurrency(item.price)} each
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-heading-3 font-bold text-neutral-900">
-                          {formatCurrency(item.price * item.quantity)}
-                        </p>
+                        <div 
+                          className="tooltip" 
+                          data-tooltip={formatCurrency(item.price * item.quantity)}
+                        >
+                          <p className="text-heading-3 font-bold text-neutral-900 break-words leading-tight">
+                            {formatCurrency(item.price * item.quantity)}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -529,21 +541,26 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
                 <div className="mt-8 pt-8 border-t border-neutral-200/60">
                   <div className="flex justify-between items-center mb-3">
                     <span className="text-body text-neutral-600">Subtotal:</span>
-                    <span className="text-body font-semibold">{formatCurrency(order.subtotal)}</span>
+                    <span className="text-body font-semibold break-words">{formatCurrency(order.subtotal)}</span>
                   </div>
                   <div className="flex justify-between items-center mb-4">
                     <span className="text-body text-neutral-600">Shipping:</span>
-                    <span className="text-body font-semibold">{formatCurrency(order.shipping)}</span>
+                    <span className="text-body font-semibold break-words">{formatCurrency(order.shipping)}</span>
                   </div>
                   <div className="flex justify-between items-center text-heading-2 font-bold border-t border-neutral-200/60 pt-4">
                     <span>Total:</span>
-                    <span>{formatCurrency(order.total)}</span>
+                    <div 
+                      className="tooltip" 
+                      data-tooltip={formatCurrency(order.total)}
+                    >
+                      <span className="break-words leading-tight">{formatCurrency(order.total)}</span>
+                    </div>
                   </div>
                 </div>
 
                 {/* Enhanced Payment and Shipping Info */}
                 <div className="mt-8 pt-8 border-t border-neutral-200/60 grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="card-modern p-6">
+                  <div className="card-modern p-6 hover:scale-[1.02] transition-all duration-300">
                     <h4 className="font-bold text-neutral-900 mb-4 flex items-center gap-2">
                       <svg className="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -559,7 +576,7 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
                       <p className="mt-2 font-medium">Phone: {order.address.phone}</p>
                     </div>
                   </div>
-                  <div className="card-modern p-6">
+                  <div className="card-modern p-6 hover:scale-[1.02] transition-all duration-300">
                     <h4 className="font-bold text-neutral-900 mb-4 flex items-center gap-2">
                       <svg className="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
@@ -595,7 +612,7 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
                           order.orderStatus === status
                             ? 'btn-ghost opacity-50 cursor-not-allowed'
                             : 'btn-primary'
-                        }`}
+                        } hover:scale-105 transition-all duration-300`}
                       >
                         {status}
                       </button>
