@@ -247,8 +247,8 @@ const Add: React.FC<AddProps> = ({ token }) => {
                 }
                 className={`px-6 py-3 rounded-xl border-2 text-sm font-bold transition-all duration-300 hover:scale-105 ${
                   color.includes(col)
-                    ? 'bg-gradient-to-r from-primary-600 to-primary-700 text-white border-primary-600 shadow-lg shadow-primary-500/30'
-                    : 'bg-white text-neutral-700 border-neutral-300 hover:border-primary-400 hover:bg-primary-50 hover:shadow-md'
+                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white border-blue-600 shadow-lg shadow-blue-500/30'
+                    : 'bg-white text-neutral-700 border-neutral-300 hover:border-blue-400 hover:bg-blue-50 hover:shadow-md'
                 }`}
               >
                 {col}
