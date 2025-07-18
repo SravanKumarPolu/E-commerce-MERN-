@@ -103,6 +103,12 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
     try {
       setLoading(true);
       
+      // Check if token exists
+      if (!token) {
+        toast.error('No authentication token found. Please login again.');
+        return;
+      }
+      
       // Build query parameters
       const params = new URLSearchParams({
         page: currentPage.toString(),
@@ -117,6 +123,9 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
       if (startDate) params.append('startDate', startDate);
       if (endDate) params.append('endDate', endDate);
 
+      console.log('🔍 Fetching orders with token:', token.substring(0, 20) + '...');
+      console.log('🔍 Request URL:', `${backendUrl}/api/orders/all?${params}`);
+
       const response = await axios.get<OrdersResponse>(`${backendUrl}/api/orders/all?${params}`, {
         headers: { token }
       });
@@ -129,9 +138,26 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
       } else {
         toast.error('Failed to fetch orders');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching orders:', error);
-      toast.error('Failed to fetch orders');
+      
+      // Handle specific error cases
+      if (error.response) {
+        const { status, data } = error.response;
+        
+        if (status === 401) {
+          toast.error('Authentication failed. Please login again.');
+          console.error('401 Error Details:', data);
+        } else if (status === 403) {
+          toast.error('Access denied. Admin privileges required.');
+        } else {
+          toast.error(data?.message || 'Failed to fetch orders');
+        }
+      } else if (error.request) {
+        toast.error('Network error. Please check your connection.');
+      } else {
+        toast.error('Failed to fetch orders');
+      }
     } finally {
       setLoading(false);
     }
