@@ -8,7 +8,6 @@ import { assets } from "../assets/assets";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
-import { useNavigate } from "react-router-dom";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 
@@ -22,7 +21,7 @@ const validateEmail = (email: string) => /.+@.+\..+/.test(email);
 const validatePhone = (phone: string) => /^\d{7,15}$/.test(phone);
 
 const PlaceOrder = () => {
-  const { token, isLoggedIn, getCartAmount, delivery_fee, setCartItems } = useShopContext();
+  const { token, isLoggedIn, getCartAmount, delivery_fee } = useShopContext();
   const [method, setMethod] = useState("cod");
   const [showPayPalPayment, setShowPayPalPayment] = useState(false);
   const [formData, setFormData] = useState({
@@ -41,7 +40,6 @@ const PlaceOrder = () => {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [mode, setMode] = useState<'add' | 'edit' | 'view'>('add');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   // Calculate total amount
   const subtotal = getCartAmount();
@@ -152,18 +150,10 @@ const PlaceOrder = () => {
     }
   };
 
-  const handlePayPalSuccess = (orderData: any) => {
-    toast.success("Payment completed! Order placed successfully.");
-    setShowPayPalPayment(false);
-    
-    // Clear cart in frontend context
-    setCartItems({});
-    
-    // Clear localStorage cart as well
-    localStorage.removeItem('cartItems');
-    
-    // Redirect to orders page to show the new order
-    navigate('/orders');
+  const handlePayPalSuccess = () => {
+    // Handle successful PayPal payment
+    console.log('PayPal payment successful');
+    // You can add additional logic here if needed
   };
 
   const handlePayPalError = (error: any) => {

@@ -23,7 +23,6 @@ interface UseWebSocketProps {
 
 export const useWebSocket = ({
   token,
-  userId,
   userRole,
   onOrderUpdate,
   onNewOrder,

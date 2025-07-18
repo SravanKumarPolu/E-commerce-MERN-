@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
-import CartTotal from "../components/CartTotal";
-import Title from "../components/Title";
-import { assets } from "../assets/assets";
+import { useState, useEffect } from "react";
 import { useShopContext } from "../context/ShopContext";
 import { motion, AnimatePresence } from "framer-motion";
+import CartTotal from "../components/CartTotal";
+import Title from "../components/Title";
 
 interface CartItem {
   _id: string;

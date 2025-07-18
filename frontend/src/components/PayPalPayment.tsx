@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+import { PayPalButtons } from '@paypal/react-paypal-js';
 import { useShopContext } from '../context/ShopContext';
 import { toast } from 'react-toastify';
 

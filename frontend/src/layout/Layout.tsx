@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import SearchBar from "../components/SearchBar";
+import MobileBottomNav from "../components/MobileBottomNav";
 import { ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";
 import { ScrollToTopButton } from "../utils/ScrollToTop";
@@ -42,7 +43,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       
       {/* Main Content */}
       <motion.main 
-        className="flex-1 relative"
+        className="flex-1 relative pb-20 sm:pb-0"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -64,6 +65,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       
       {/* Performance Monitor (Development Only) */}
       <PerformanceMonitor />
+      
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav />
       
       {/* Footer */}
       <Footer />

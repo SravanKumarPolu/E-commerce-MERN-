@@ -5,6 +5,9 @@ import Layout from "./layout/Layout";
 import ScrollToTop from "./utils/ScrollToTop";
 import LoadingSpinner from "./components/LoadingSpinner";
 import ErrorBoundary from "./components/ErrorBoundary";
+import PWARegistration from "./components/PWARegistration";
+import PWAInstallGuide from "./components/PWAInstallGuide";
+import OfflinePage from "./components/OfflinePage";
 
 // Lazy-loaded pages
 const Home = lazy(() => import("./pages/Home"));
@@ -23,6 +26,9 @@ function App() {
   return (
     <ErrorBoundary>
       <ScrollToTop />
+      <PWARegistration />
+      <PWAInstallGuide />
+      <OfflinePage />
       <Suspense fallback={<LoadingSpinner size="lg" message="Loading page..." className="py-20" />}>
         <Routes>
           <Route

@@ -1,15 +1,14 @@
-import { useContext, useEffect, useState } from "react";
-import RelatedProducts from "../components/RelatedProducts";
-import { ShopContext } from "../context/ShopContext";
-import { assets } from "../assets/assets";
-import { toast } from "react-toastify";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { useShopContext } from "../context/ShopContext";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import RelatedProducts from "../components/RelatedProducts";
 import type { Product } from '../types';
 
 const Product: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
-  const context = useContext(ShopContext);
+  const context = useShopContext();
   
   // Ensure context is available
   if (!context) {

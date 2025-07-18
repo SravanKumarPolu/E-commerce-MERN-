@@ -1,27 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import useCategories from '../hooks/useCategories';
 import { motion, AnimatePresence } from 'framer-motion';
 
-interface SubCategory {
-  _id: string;
-  name: string;
-  description: string;
-  isActive: boolean;
-  sortOrder: number;
-}
-
-interface Category {
-  _id: string;
-  name: string;
-  description: string;
-  isActive: boolean;
-  sortOrder: number;
-  subCategories: SubCategory[];
-}
-
 const AdminCategories = () => {
   const { categories, loading, error, refreshCategories } = useCategories();
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
