@@ -37,14 +37,14 @@ const OurPolicy = () => {
   };
 
   return (
-    <section className="section-padding bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
+    <section className=" section-padding bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
       {/* Enhanced Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-br from-green-500 to-blue-600 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2"></div>
       </div>
 
-      <div className="max-width container-padding relative z-10">
+      <div className="max-width  container-padding relative z-10">
         {/* Enhanced Section Header */}
         <motion.div
           className="text-center mb-16"

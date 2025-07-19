@@ -341,7 +341,7 @@
 
   /* Enhanced Layout Utilities */
   .section-padding {
-    @apply py-16 sm:py-20 lg:py-24;
+    @apply py-6 ;
   }
 
   .container-padding {

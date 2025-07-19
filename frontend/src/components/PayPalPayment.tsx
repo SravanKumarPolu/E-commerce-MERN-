@@ -102,14 +102,17 @@ const PayPalPayment: React.FC<PayPalPaymentProps> = ({
       });
 
       const result = await response.json();
+      console.log('📦 Capture response:', result);
       
       if (result.success) {
         console.log('✅ PayPal payment captured successfully');
         console.log('📦 Order details:', result.order);
+        console.log('💰 Capture details:', result.captureDetails);
         toast.success('Payment completed successfully!');
         onSuccess(result.order);
       } else {
         console.error('❌ Payment capture failed:', result.message);
+        console.error('❌ Error details:', result.error);
         throw new Error(result.message || 'Failed to capture payment');
       }
     } catch (error) {

@@ -347,35 +347,60 @@ const capturePayPalPayment = async (req, res) => {
       });
     }
 
+    // First, verify the order exists and is in correct state
+    const existingOrder = await orderModel.findOne({ paypalOrderId: orderID, userId });
+    if (!existingOrder) {
+      console.error('❌ Order not found for PayPal order ID:', orderID);
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found'
+      });
+    }
+
+    if (existingOrder.paymentStatus === 'completed') {
+      console.log('⚠️ Payment already completed for order:', orderID);
+      return res.json({
+        success: true,
+        message: 'Payment already completed',
+        order: existingOrder.toJSON()
+      });
+    }
+
     // Capture the PayPal payment
     const request = new paypal.orders.OrdersCaptureRequest(orderID);
     request.requestBody({});
     
     console.log('💰 Executing PayPal capture request...');
     const capture = await client.execute(request);
-    console.log('✅ PayPal capture response:', capture.result.status);
+    console.log('✅ PayPal capture response status:', capture.result.status);
+    console.log('✅ PayPal capture response:', JSON.stringify(capture.result, null, 2));
     
     if (capture.result.status === 'COMPLETED') {
       console.log('🎉 Payment completed successfully');
+      
+      // Extract capture details
+      const captureId = capture.result.purchase_units[0].payments.captures[0].id;
+      const transactionId = capture.result.purchase_units[0].payments.captures[0].id;
+      const captureAmount = capture.result.purchase_units[0].payments.captures[0].amount.value;
+      
+      console.log('💰 Capture details:', {
+        captureId,
+        transactionId,
+        amount: captureAmount,
+        currency: capture.result.purchase_units[0].payments.captures[0].amount.currency_code
+      });
       
       // Update order in database
       const order = await orderModel.findOneAndUpdate(
         { paypalOrderId: orderID, userId },
         {
           paymentStatus: 'completed',
-          paypalCaptureId: capture.result.purchase_units[0].payments.captures[0].id,
-          paypalTransactionId: capture.result.purchase_units[0].payments.captures[0].id
+          paypalCaptureId: captureId,
+          paypalTransactionId: transactionId,
+          orderStatus: 'Order Placed'
         },
         { new: true }
       );
-      
-      if (!order) {
-        console.error('❌ Order not found for PayPal order ID:', orderID);
-        return res.status(404).json({
-          success: false,
-          message: 'Order not found'
-        });
-      }
       
       console.log('📦 Order updated in database:', order._id);
       
@@ -395,21 +420,36 @@ const capturePayPalPayment = async (req, res) => {
       res.json({
         success: true,
         message: 'Payment captured successfully',
-        order: order.toJSON()
+        order: order.toJSON(),
+        captureDetails: {
+          captureId,
+          transactionId,
+          amount: captureAmount
+        }
       });
     } else {
       console.error('❌ Payment capture failed with status:', capture.result.status);
+      console.error('❌ Full capture response:', JSON.stringify(capture.result, null, 2));
+      
       res.status(400).json({
         success: false,
-        message: 'Payment capture failed'
+        message: `Payment capture failed with status: ${capture.result.status}`,
+        details: capture.result
       });
     }
     
   } catch (error) {
     console.error('❌ PayPal capture error:', error);
+    console.error('❌ Error details:', {
+      message: error.message,
+      stack: error.stack,
+      response: error.response?.data
+    });
+    
     res.status(500).json({
       success: false,
-      message: 'Failed to capture payment'
+      message: 'Failed to capture payment',
+      error: error.message
     });
   }
 };
