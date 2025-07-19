@@ -1,37 +1,41 @@
 /* Modern CSS Custom Properties and Enhanced Styling */
 :root {
-  /* Refined Color Palette */
-  --primary-color: #3B82F6;
-  --primary-dark: #1D4ED8;
-  --primary-light: #60A5FA;
-  --secondary-color: #10B981;
-  --accent-color: #F59E0B;
-  --danger-color: #EF4444;
-  --success-color: #10B981;
-  --warning-color: #F59E0B;
+  /* Refined Color Palette - Premium eCommerce */
+  --primary-color: #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-light: #3b82f6;
+  --primary-50: #eff6ff;
+  --primary-100: #dbeafe;
   
-  /* Neutral Colors */
-  --text-primary: #111827;
-  --text-secondary: #6B7280;
-  --text-tertiary: #9CA3AF;
-  --text-muted: #D1D5DB;
+  --secondary-color: #059669;
+  --accent-color: #f59e0b;
+  --danger-color: #dc2626;
+  --success-color: #059669;
+  --warning-color: #d97706;
   
-  --bg-primary: #FFFFFF;
-  --bg-secondary: #F9FAFB;
-  --bg-tertiary: #F3F4F6;
-  --bg-elevated: #FFFFFF;
+  /* Neutral Colors - Enhanced for better contrast */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --text-muted: #94a3b8;
   
-  --border-color: #E5E7EB;
-  --border-light: #F3F4F6;
-  --border-dark: #D1D5DB;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --bg-elevated: #ffffff;
   
-  /* Enhanced Shadows */
+  --border-color: #e2e8f0;
+  --border-light: #f1f5f9;
+  --border-dark: #cbd5e1;
+  
+  /* Enhanced Shadows - More sophisticated */
   --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --shadow-glow: 0 0 20px rgb(37 99 235 / 0.15);
   
   /* Refined Border Radius */
   --radius-xs: 0.25rem;
@@ -40,6 +44,7 @@
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
   --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
   --radius-full: 9999px;
   
   /* Smooth Transitions */
@@ -47,6 +52,15 @@
   --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: 300ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* Spacing System */
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
 }
 
 /* Enhanced Base Styles */
@@ -69,6 +83,7 @@
     line-height: 1.6;
     color: var(--text-primary);
     background-color: var(--bg-primary);
+    font-family: 'Inter', system-ui, sans-serif;
   }
   
   /* Improved focus styles for accessibility */
@@ -83,77 +98,112 @@
     scroll-padding-top: 100px;
   }
 
-  /* Typography Scale */
+  /* Enhanced Typography Scale */
   h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
     line-height: 1.2;
     letter-spacing: -0.025em;
+    color: var(--text-primary);
   }
 
   h1 {
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 800;
   }
 
   h2 {
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
   }
 
   h3 {
-    font-size: clamp(1.25rem, 3vw, 2rem);
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    font-weight: 600;
+  }
+
+  h4 {
+    font-size: clamp(1.25rem, 3vw, 1.875rem);
+    font-weight: 600;
   }
 
   p {
     line-height: 1.7;
+    color: var(--text-secondary);
+  }
+
+  /* Enhanced link styles */
+  a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  a:hover {
+    color: var(--primary-dark);
   }
 }
 
 /* Modern Component Styles */
 @layer components {
-  /* Enhanced Button Styles */
+  /* Enhanced Button Styles - Premium Design */
   .btn-modern {
     @apply relative overflow-hidden transition-all duration-300 ease-out;
     @apply transform hover:scale-[1.02] active:scale-[0.98];
     @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
     @apply font-semibold tracking-wide;
     @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply rounded-xl;
   }
   
   .btn-primary {
     @apply bg-gradient-to-r from-blue-600 to-blue-700;
     @apply hover:from-blue-700 hover:to-blue-800;
     @apply text-white shadow-lg hover:shadow-xl;
-    @apply focus:ring-blue-500;
+    @apply focus:ring-blue-500 focus:ring-offset-2;
     @apply border-0;
+    @apply px-6 py-3;
   }
   
   .btn-secondary {
     @apply bg-gradient-to-r from-gray-50 to-gray-100;
     @apply hover:from-gray-100 hover:to-gray-200;
     @apply text-gray-800 border border-gray-300;
-    @apply focus:ring-gray-500;
+    @apply focus:ring-gray-500 focus:ring-offset-2;
     @apply shadow-sm hover:shadow-md;
+    @apply px-6 py-3;
   }
 
   .btn-outline {
     @apply bg-transparent border-2 border-blue-600 text-blue-600;
     @apply hover:bg-blue-600 hover:text-white;
-    @apply focus:ring-blue-500;
+    @apply focus:ring-blue-500 focus:ring-offset-2;
     @apply transition-all duration-300;
+    @apply px-6 py-3;
   }
 
   .btn-ghost {
     @apply bg-transparent text-gray-700 hover:bg-gray-100;
-    @apply focus:ring-gray-500;
+    @apply focus:ring-gray-500 focus:ring-offset-2;
     @apply border-0 shadow-none;
+    @apply px-4 py-2;
+  }
+
+  .btn-sm {
+    @apply px-4 py-2 text-sm;
+  }
+
+  .btn-lg {
+    @apply px-8 py-4 text-lg;
   }
   
-  /* Card Enhancements */
+  /* Enhanced Card Styles - Premium Product Cards */
   .card-modern {
     @apply bg-white rounded-2xl shadow-md;
     @apply transition-all duration-500 ease-out;
     @apply hover:shadow-xl hover:-translate-y-2;
     @apply border border-gray-100;
     @apply overflow-hidden;
+    @apply group;
   }
 
   .card-elevated {
@@ -169,8 +219,17 @@
     @apply shadow-xl;
     @apply rounded-2xl;
   }
+
+  .card-product {
+    @apply bg-white rounded-2xl shadow-md;
+    @apply transition-all duration-500 ease-out;
+    @apply hover:shadow-xl hover:-translate-y-3;
+    @apply border border-gray-100;
+    @apply overflow-hidden;
+    @apply h-full;
+  }
   
-  /* Input Enhancements */
+  /* Enhanced Input Styles */
   .input-modern {
     @apply w-full px-4 py-3 rounded-xl border border-gray-300;
     @apply focus:ring-2 focus:ring-blue-500 focus:border-transparent;
@@ -178,6 +237,7 @@
     @apply placeholder-gray-400;
     @apply bg-white;
     @apply shadow-sm;
+    @apply text-gray-900;
   }
 
   .input-floating {
@@ -190,6 +250,7 @@
     @apply transition-all duration-200 ease-out;
     @apply placeholder-transparent;
     @apply peer;
+    @apply bg-white;
   }
 
   .input-floating label {
@@ -202,7 +263,7 @@
     @apply peer-[:not(:placeholder-shown)]:text-sm peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-2;
   }
   
-  /* Loading States */
+  /* Enhanced Loading States */
   .loading-skeleton {
     @apply animate-pulse bg-gray-200 rounded-xl;
   }
@@ -214,18 +275,18 @@
     @apply before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent;
   }
   
-  /* Glassmorphism Effect */
+  /* Enhanced Glassmorphism Effect */
   .glass {
-    @apply backdrop-blur-xl bg-white/80 border border-white/20;
+    @apply backdrop-blur-xl bg-white/90 border border-white/20;
     @apply shadow-xl;
   }
 
   .glass-dark {
-    @apply backdrop-blur-xl bg-gray-900/80 border border-gray-700/20;
+    @apply backdrop-blur-xl bg-gray-900/90 border border-gray-700/20;
     @apply shadow-xl;
   }
   
-  /* Gradient Text */
+  /* Enhanced Gradient Text */
   .gradient-text {
     @apply bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800;
     @apply bg-clip-text text-transparent;
@@ -237,40 +298,40 @@
     @apply bg-clip-text text-transparent;
   }
 
-  /* Badge Styles */
+  /* Enhanced Badge Styles */
   .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
     @apply transition-all duration-200;
+    @apply shadow-sm;
   }
 
   .badge-primary {
-    @apply bg-blue-100 text-blue-800;
+    @apply bg-blue-100 text-blue-800 border border-blue-200;
   }
 
   .badge-success {
-    @apply bg-green-100 text-green-800;
+    @apply bg-green-100 text-green-800 border border-green-200;
   }
 
   .badge-warning {
-    @apply bg-yellow-100 text-yellow-800;
+    @apply bg-yellow-100 text-yellow-800 border border-yellow-200;
   }
 
   .badge-danger {
-    @apply bg-red-100 text-red-800;
+    @apply bg-red-100 text-red-800 border border-red-200;
   }
 
-  /* Navigation Styles */
+  /* Enhanced Navigation Styles */
   .nav-link {
-    @apply relative px-4 py-2 text-gray-700 font-medium;
-    @apply transition-all duration-200 ease-out;
-    @apply hover:text-blue-600;
+    @apply relative px-4 py-2 rounded-xl transition-all duration-300;
+    @apply font-medium text-gray-700 hover:text-blue-600;
+    @apply hover:bg-blue-50;
   }
 
   .nav-link::after {
     @apply content-[''] absolute bottom-0 left-1/2 w-0 h-0.5;
     @apply bg-gradient-to-r from-blue-600 to-purple-600;
-    @apply transition-all duration-300 ease-out;
-    @apply transform -translate-x-1/2;
+    @apply transition-all duration-300 transform -translate-x-1/2;
   }
 
   .nav-link:hover::after,
@@ -278,7 +339,7 @@
     @apply w-full;
   }
 
-  /* Section Styles */
+  /* Enhanced Layout Utilities */
   .section-padding {
     @apply py-16 sm:py-20 lg:py-24;
   }
@@ -291,72 +352,68 @@
     @apply max-w-7xl mx-auto;
   }
 
-  /* Carousel Styles */
+  /* Enhanced Carousel Styles */
   .carousel-container {
     @apply relative overflow-hidden;
-    @apply touch-pan-y;
   }
 
   .carousel-slide {
-    @apply transition-all duration-500 ease-in-out;
+    @apply transition-all duration-500 ease-out;
   }
 
   .carousel-nav-button {
     @apply absolute top-1/2 -translate-y-1/2 z-10;
-    @apply w-12 h-12 sm:w-14 sm:h-14;
-    @apply bg-white rounded-full shadow-lg border border-gray-200;
+    @apply w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full;
+    @apply shadow-lg hover:shadow-xl transition-all duration-300;
     @apply flex items-center justify-center;
-    @apply hover:shadow-xl transition-all duration-300;
+    @apply hover:bg-white hover:scale-110;
     @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
-    @apply disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .carousel-nav-button:hover {
-    @apply shadow-xl scale-105;
+    @apply transform scale-110;
   }
 
   .carousel-nav-button:active {
-    @apply scale-95;
+    @apply transform scale-95;
   }
 
   .carousel-indicator {
     @apply w-3 h-3 rounded-full transition-all duration-300;
-    @apply hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500;
+    @apply cursor-pointer;
   }
 
   .carousel-indicator.active {
-    @apply bg-blue-600 scale-110;
+    @apply bg-blue-600 scale-125;
   }
 
   .carousel-indicator.inactive {
     @apply bg-gray-300 hover:bg-gray-400;
   }
 
-  /* Scrollbar Hide Utility */
+  /* Enhanced Scrollbar */
   .scrollbar-hide {
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-  
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;  /* Safari and Chrome */
-  }
-}
 
-/* Enhanced Animations */
-@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Enhanced Animations */
   .animate-fade-in {
     animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .animate-slide-up {
     animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .animate-scale-in {
     animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
   .animate-bounce-gentle {
     animation: bounceGentle 2s infinite;
   }
@@ -373,9 +430,67 @@
   .animate-pulse-slow {
     animation: pulseSlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
+
+  /* Product Card Specific Enhancements */
+  .product-image-container {
+    @apply relative overflow-hidden aspect-square bg-gray-50;
+    @apply group-hover:bg-gray-100 transition-colors duration-300;
+  }
+
+  .product-image {
+    @apply w-full h-full object-cover transition-transform duration-700;
+    @apply group-hover:scale-110;
+  }
+
+  .product-overlay {
+    @apply absolute inset-0 bg-black/0 group-hover:bg-black/10;
+    @apply transition-all duration-500 flex items-center justify-center;
+  }
+
+  .product-actions {
+    @apply opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0;
+    @apply transition-all duration-500;
+  }
+
+  .product-action-btn {
+    @apply w-12 h-12 bg-white/95 backdrop-blur-sm rounded-full;
+    @apply shadow-lg flex items-center justify-center;
+    @apply hover:bg-white hover:scale-110 transition-all duration-300;
+    @apply text-gray-700 hover:text-blue-600;
+  }
+
+  /* Enhanced Price Display */
+  .price-current {
+    @apply text-xl font-bold text-gray-900;
+  }
+
+  .price-original {
+    @apply text-sm text-gray-500 line-through;
+  }
+
+  .price-discount {
+    @apply text-sm font-semibold text-green-600;
+  }
+
+  /* Enhanced Status Indicators */
+  .status-indicator {
+    @apply w-2 h-2 rounded-full;
+  }
+
+  .status-in-stock {
+    @apply bg-green-500 animate-pulse;
+  }
+
+  .status-low-stock {
+    @apply bg-yellow-500 animate-pulse;
+  }
+
+  .status-out-of-stock {
+    @apply bg-red-500;
+  }
 }
 
-/* Custom Keyframes */
+/* Enhanced Keyframe Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -454,108 +569,77 @@
   }
 }
 
-/* Responsive Design Improvements */
+/* Enhanced Responsive Design */
 @media (max-width: 640px) {
   .nav-link.active {
-    @apply bg-blue-600 text-white rounded-lg;
+    @apply bg-blue-50 text-blue-600;
   }
-  
-  /* Improve touch targets */
+
+  /* Improved touch targets for mobile */
   button, a, [role="button"] {
-    min-height: 44px;
-    min-width: 44px;
+    @apply min-h-[44px] min-w-[44px];
   }
-  
-  /* Better scrolling on mobile */
+
+  /* Better mobile typography */
   html {
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  /* Prevent zoom on input focus */
-  input, textarea, select {
     font-size: 16px;
   }
-  
-  /* Safe area support for devices with notches */
-  .h-safe-area-inset-bottom {
-    height: env(safe-area-inset-bottom);
+
+  /* Enhanced mobile form elements */
+  input, textarea, select {
+    @apply text-base;
   }
-  
+
+  /* Safe area support for mobile */
+  .h-safe-area-inset-bottom {
+    height: calc(100vh - env(safe-area-inset-bottom));
+  }
+
   .pt-safe-area-inset-top {
     padding-top: env(safe-area-inset-top);
   }
-  
+
   .pb-safe-area-inset-bottom {
     padding-bottom: env(safe-area-inset-bottom);
   }
 }
 
-/* PWA-specific styles */
+/* PWA Standalone Mode Enhancements */
 @media (display-mode: standalone) {
-  /* Hide browser UI elements when in standalone mode */
   body {
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-    -webkit-tap-highlight-color: transparent;
+    @apply bg-white;
   }
-  
-  /* Adjust layout for standalone mode */
+
+  /* Ensure proper viewport in standalone mode */
   .min-h-screen {
     min-height: 100vh;
-    min-height: 100dvh; /* Dynamic viewport height */
+    min-height: 100dvh;
   }
 }
 
-/* Dark Mode Support (Future Enhancement) */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-primary: #0F172A;
-    --bg-secondary: #1E293B;
-    --bg-tertiary: #334155;
-    --bg-elevated: #1E293B;
-    --text-primary: #F8FAFC;
-    --text-secondary: #CBD5E1;
-    --text-tertiary: #94A3B8;
-    --text-muted: #64748B;
-    --border-color: #334155;
-    --border-light: #475569;
-    --border-dark: #64748B;
-  }
-}
-
-/* Print Styles */
-@media print {
-  .no-print {
-    display: none !important;
-  }
-}
-
-/* Scrollbar Styling */
+/* Enhanced Scrollbar Styling */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
+  @apply bg-gray-100 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: var(--radius-full);
+  @apply bg-gray-300 rounded-full;
+  @apply hover:bg-gray-400 transition-colors duration-200;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-tertiary);
+  @apply bg-gray-500;
 }
 
-/* Selection Styling */
+/* Enhanced Selection Styling */
 ::selection {
-  background: var(--primary-light);
-  color: white;
+  @apply bg-blue-100 text-blue-900;
 }
 
 ::-moz-selection {
-  background: var(--primary-light);
-  color: white;
+  @apply bg-blue-100 text-blue-900;
 }

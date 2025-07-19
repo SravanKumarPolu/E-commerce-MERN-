@@ -27,18 +27,18 @@ const LatestCollection: React.FC = () => {
   }, [products]);
 
   return (
-    <div className="space-y-12">
-      {/* Section Header */}
+    <div className="space-y-16">
+      {/* Enhanced Section Header */}
       <motion.div
-        className="text-center space-y-4"
+        className="text-center space-y-6"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
       >
-        <div className="flex items-center justify-center gap-3 mb-6">
+        <div className="flex items-center justify-center gap-4 mb-8">
           <div className="w-12 h-[3px] bg-gradient-to-r from-blue-600 to-purple-600 rounded-full" />
-          <span className="uppercase tracking-wider text-sm font-semibold text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+          <span className="uppercase tracking-wider text-sm font-bold text-gray-600 bg-gray-100 px-4 py-2 rounded-full shadow-sm">
             New Arrivals
           </span>
           <div className="w-12 h-[3px] bg-gradient-to-r from-purple-600 to-blue-600 rounded-full" />
@@ -48,14 +48,14 @@ const LatestCollection: React.FC = () => {
           Latest <span className="gradient-text">Collection</span>
         </h2>
         
-        <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed font-body">
+        <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-body">
           Discover our newest arrivals featuring cutting-edge technology and innovative design. 
           Stay ahead with the latest trends in premium electronics.
         </p>
 
         <motion.button
           onClick={refreshProducts}
-          className="btn-modern btn-secondary px-6 py-3 text-base font-semibold rounded-xl mt-4"
+          className="btn-modern btn-secondary px-6 py-3 text-base font-semibold rounded-xl mt-6"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
@@ -63,10 +63,10 @@ const LatestCollection: React.FC = () => {
         </motion.button>
       </motion.div>
 
-      {/* Products Grid */}
+      {/* Enhanced Products Grid */}
       {latestProducts.length === 0 ? (
         <motion.p 
-          className="text-center text-gray-500 text-lg"
+          className="text-center text-gray-600 text-lg font-medium"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -102,9 +102,9 @@ const LatestCollection: React.FC = () => {
         </motion.div>
       )}
 
-      {/* View All Button */}
+      {/* Enhanced View All Button */}
       <motion.div
-        className="text-center pt-8"
+        className="text-center pt-12"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}

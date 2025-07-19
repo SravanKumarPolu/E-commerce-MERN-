@@ -48,7 +48,7 @@ const Hero = () => {
       viewport={{ once: true }}
     >
       <div className="flex flex-col lg:flex-row items-stretch min-h-[500px] sm:min-h-[600px] lg:min-h-[700px]">
-        {/* Left Section - Enhanced Content */}
+        {/* Enhanced Left Section - Content */}
         <motion.div
           className="w-full lg:w-1/2 px-6 sm:px-8 lg:px-12 py-8 sm:py-12 lg:py-16 flex flex-col justify-center relative z-10"
           initial={{ opacity: 0, x: -40 }}
@@ -56,28 +56,28 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          {/* Background Pattern */}
+          {/* Enhanced Background Pattern */}
           <div className="absolute inset-0 opacity-5">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2 w-96 h-96"></div>
           </div>
 
-          {/* Badge with enhanced styling */}
+          {/* Enhanced Badge */}
           <motion.div 
-            className="flex items-center gap-3 mb-6"
+            className="flex items-center gap-3 mb-8"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
             viewport={{ once: true }}
           >
             <div className="w-12 h-[3px] bg-gradient-to-r from-blue-600 to-purple-600 rounded-full" />
-            <span className="uppercase tracking-wider text-sm font-semibold text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+            <span className="uppercase tracking-wider text-sm font-bold text-gray-600 bg-gray-100 px-4 py-2 rounded-full shadow-sm">
               Our Bestseller
             </span>
           </motion.div>
 
           {/* Enhanced Heading */}
           <motion.h1 
-            className="text-4xl sm:text-5xl lg:text-7xl xl:text-8xl font-bold text-gray-900 leading-tight mb-6"
+            className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 leading-tight mb-8"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
@@ -90,7 +90,7 @@ const Hero = () => {
 
           {/* Enhanced Description */}
           <motion.p 
-            className="text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed max-w-lg font-body"
+            className="text-lg sm:text-xl text-gray-600 mb-10 leading-relaxed max-w-lg font-body"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
@@ -102,7 +102,7 @@ const Hero = () => {
 
           {/* Enhanced CTA Section */}
           <motion.div 
-            className="flex flex-col sm:flex-row items-start sm:items-center gap-4"
+            className="flex flex-col sm:flex-row items-start sm:items-center gap-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
@@ -116,21 +116,21 @@ const Hero = () => {
               Shop Now
             </motion.button>
             
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center shadow-lg">
-                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center shadow-lg">
+                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               </div>
-              <p className="text-base text-gray-600 font-medium">
+              <p className="text-base text-gray-600 font-semibold">
                 Discover the trends
               </p>
             </div>
           </motion.div>
 
-          {/* Stats Section */}
+          {/* Enhanced Stats Section */}
           <motion.div 
-            className="flex items-center gap-8 mt-8 pt-8 border-t border-gray-200"
+            className="flex items-center gap-8 mt-12 pt-8 border-t border-gray-200"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
@@ -138,22 +138,22 @@ const Hero = () => {
           >
             <div className="text-center">
               <div className="text-2xl font-bold text-gray-900">10K+</div>
-              <div className="text-sm text-gray-600">Happy Customers</div>
+              <div className="text-sm text-gray-600 font-medium">Happy Customers</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-gray-900">500+</div>
-              <div className="text-sm text-gray-600">Products</div>
+              <div className="text-sm text-gray-600 font-medium">Products</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-gray-900">24/7</div>
-              <div className="text-sm text-gray-600">Support</div>
+              <div className="text-sm text-gray-600 font-medium">Support</div>
             </div>
           </motion.div>
         </motion.div>
 
-        {/* Right Section: Enhanced Carousel */}
+        {/* Enhanced Right Section: Carousel */}
         <div className="w-full lg:w-1/2 h-[400px] sm:h-[500px] lg:h-auto relative overflow-hidden">
-          {/* Background Gradient */}
+          {/* Enhanced Background Gradient */}
           <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black" />
           
           <AnimatePresence initial={false} custom={direction}>
@@ -173,7 +173,7 @@ const Hero = () => {
                     className="w-full h-full object-cover"
                     draggable={false}
                   />
-                  {/* Overlay for better text readability */}
+                  {/* Enhanced Overlay for better text readability */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                 </div>
               ) : null}
@@ -206,12 +206,12 @@ const Hero = () => {
           </motion.button>
 
           {/* Enhanced Dots Navigation */}
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
+          <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 z-20">
             {heroSlides.map((_, i) => (
               <motion.button
                 key={i}
                 onClick={() => goTo(i)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                className={`w-4 h-4 rounded-full transition-all duration-300 ${
                   i === index 
                     ? 'bg-white shadow-lg scale-125' 
                     : 'bg-white/50 hover:bg-white/75'

@@ -20,16 +20,16 @@ const Footer = () => {
 
   return (
     <footer className="bg-gradient-to-br from-gray-50 to-gray-100 relative overflow-hidden">
-      {/* Background Pattern */}
+      {/* Enhanced Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-br from-green-500 to-blue-600 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2"></div>
       </div>
 
       <div className="relative z-10">
-        <div className="max-width container-padding py-16 sm:py-20">
+        <div className="max-width container-padding py-20 sm:py-24 lg:py-28">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-            {/* Company Info */}
+            {/* Enhanced Company Info */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -41,22 +41,22 @@ const Footer = () => {
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               >
-                <img src={assets.logo} className="mb-6 w-16" alt="Company Logo" />
+                <img src={assets.logo} className="mb-8 w-20" alt="Company Logo" />
               </motion.div>
               
-              <p className="text-gray-600 leading-relaxed mb-6 font-medium text-base font-body">
+              <p className="text-gray-600 leading-relaxed mb-8 font-medium text-base font-body">
                 Experience the future of technology with our premium collection of Apple products. 
                 Quality, innovation, and exceptional service at your fingertips.
               </p>
 
-              {/* Social Links */}
+              {/* Enhanced Social Links */}
               <div className="flex gap-4">
                 {socialLinks.map((social, index) => (
                   <motion.a
                     key={social.label}
                     href={social.href}
                     aria-label={social.label}
-                    className="w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center text-gray-600 hover:text-blue-600 hover:shadow-lg transition-all duration-300"
+                    className="w-12 h-12 bg-white rounded-full shadow-md flex items-center justify-center text-gray-600 hover:text-blue-600 hover:shadow-lg transition-all duration-300"
                     whileHover={{ scale: 1.1, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     initial={{ opacity: 0, y: 20 }}
@@ -70,18 +70,18 @@ const Footer = () => {
               </div>
             </motion.div>
 
-            {/* Company Links */}
+            {/* Enhanced Company Links */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+              <h3 className="text-xl font-bold text-gray-800 mb-8 flex items-center gap-3">
                 <div className="w-8 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"></div>
                 Company
               </h3>
-              <ul className="space-y-3">
+              <ul className="space-y-4">
                 {footerLinks.company.map((item, index) => (
                   <motion.li
                     key={item}
@@ -92,7 +92,7 @@ const Footer = () => {
                   >
                     <a
                       href="#"
-                      className="text-gray-600 hover:text-blue-600 hover:translate-x-1 transition-all duration-300 font-medium block text-base"
+                      className="text-gray-600 hover:text-blue-600 hover:translate-x-1 transition-all duration-300 font-semibold block text-base"
                     >
                       {item}
                     </a>
@@ -101,18 +101,18 @@ const Footer = () => {
               </ul>
             </motion.div>
 
-            {/* Support Links */}
+            {/* Enhanced Support Links */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+              <h3 className="text-xl font-bold text-gray-800 mb-8 flex items-center gap-3">
                 <div className="w-8 h-1 bg-gradient-to-r from-green-600 to-blue-600 rounded-full"></div>
                 Support
               </h3>
-              <ul className="space-y-3">
+              <ul className="space-y-4">
                 {footerLinks.support.map((item, index) => (
                   <motion.li
                     key={item}
@@ -123,7 +123,7 @@ const Footer = () => {
                   >
                     <a
                       href="#"
-                      className="text-gray-600 hover:text-blue-600 hover:translate-x-1 transition-all duration-300 font-medium block text-base"
+                      className="text-gray-600 hover:text-blue-600 hover:translate-x-1 transition-all duration-300 font-semibold block text-base"
                     >
                       {item}
                     </a>
@@ -132,65 +132,65 @@ const Footer = () => {
               </ul>
             </motion.div>
 
-            {/* Contact Info */}
+            {/* Enhanced Contact Info */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+              <h3 className="text-xl font-bold text-gray-800 mb-8 flex items-center gap-3">
                 <div className="w-8 h-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full"></div>
                 Get In Touch
               </h3>
               
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <motion.div
-                  className="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
+                  className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
                   whileHover={{ x: 5 }}
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.4, delay: 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                     <FaPhoneAlt className="text-white text-sm" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Phone</p>
-                    <p className="font-semibold text-gray-800 text-base">+1 (555) 123-4567</p>
+                    <p className="text-sm text-gray-500 font-medium">Phone</p>
+                    <p className="font-bold text-gray-800 text-base">+1 (555) 123-4567</p>
                   </div>
                 </motion.div>
 
                 <motion.div
-                  className="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
+                  className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
                   whileHover={{ x: 5 }}
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.4, delay: 0.2 }}
                   viewport={{ once: true }}
                 >
-                  <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center">
+                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center">
                     <FaEnvelope className="text-white text-sm" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Email</p>
-                    <p className="font-semibold text-gray-800 text-base">contact@applestore.com</p>
+                    <p className="text-sm text-gray-500 font-medium">Email</p>
+                    <p className="font-bold text-gray-800 text-base">contact@applestore.com</p>
                   </div>
                 </motion.div>
               </div>
 
-              {/* Newsletter Signup */}
-              <div className="mt-6">
-                <h4 className="text-sm font-semibold text-gray-800 mb-3">Newsletter</h4>
-                <div className="flex gap-2">
+              {/* Enhanced Newsletter Signup */}
+              <div className="mt-8">
+                <h4 className="text-sm font-bold text-gray-800 mb-4">Newsletter</h4>
+                <div className="flex gap-3">
                   <input
                     type="email"
                     placeholder="Enter your email"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white shadow-sm"
                   />
                   <motion.button
-                    className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold text-sm hover:from-blue-700 hover:to-purple-700 transition-all duration-300"
+                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-bold text-sm hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -201,15 +201,15 @@ const Footer = () => {
             </motion.div>
           </div>
 
-          {/* Bottom Section */}
+          {/* Enhanced Bottom Section */}
           <motion.div
-            className="border-t border-gray-200 mt-12 pt-8 text-center"
+            className="border-t border-gray-200 mt-16 pt-8 text-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
             viewport={{ once: true }}
           >
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 text-sm font-medium">
               © {currentYear} Apple Store. All rights reserved. | Designed with ❤️ for premium experience
             </p>
           </motion.div>

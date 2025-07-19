@@ -57,7 +57,7 @@ const NavBar = () => {
       <motion.nav 
         className={`sticky top-0 z-50 transition-all duration-500 ${
           scrolled 
-            ? 'glass backdrop-blur-xl bg-white/90 shadow-xl' 
+            ? 'glass backdrop-blur-xl bg-white/95 shadow-xl border-b border-gray-100' 
             : 'bg-white border-b border-gray-100'
         }`}
         initial={{ y: -100 }}
@@ -65,19 +65,19 @@ const NavBar = () => {
         transition={{ duration: 0.6 }}
       >
         <div className="font-ui flex items-center justify-between py-4 px-4 sm:py-5 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-          {/* Logo with enhanced animation */}
+          {/* Enhanced Logo with better animation */}
           <Link to="/" aria-label="Go to homepage" className="group">
             <motion.img 
               src={assets.logo} 
-              className="w-10 sm:w-12 transition-transform duration-300 group-hover:scale-110" 
+              className="w-12 sm:w-14 transition-transform duration-300 group-hover:scale-110" 
               alt="Logo"
               whileHover={{ rotate: 5 }}
               whileTap={{ scale: 0.95 }}
             />
           </Link>
 
-          {/* Desktop Navigation with enhanced styling */}
-          <div role="tablist" className="hidden sm:flex text-sm text-gray-900 gap-1">
+          {/* Enhanced Desktop Navigation */}
+          <div role="tablist" className="hidden sm:flex text-sm text-gray-900 gap-2">
             {navLinks.map((navItem, index) => (
               <motion.div
                 key={navItem.path}
@@ -89,7 +89,7 @@ const NavBar = () => {
                   to={navItem.path}
                   role="tab"
                   className={({ isActive }) =>
-                    `nav-link px-6 py-3 rounded-xl transition-all duration-300 font-medium ${
+                    `nav-link px-6 py-3 transition-all duration-300 font-semibold ${
                       isActive 
                         ? 'text-blue-600 bg-blue-50 shadow-sm' 
                         : 'hover:text-blue-600 hover:bg-gray-50'
@@ -102,9 +102,9 @@ const NavBar = () => {
             ))}
           </div>
 
-          {/* Right Icons with enhanced interactions */}
+          {/* Enhanced Right Icons */}
           <div className="flex items-center gap-3 sm:gap-4">
-            {/* Search with enhanced animation */}
+            {/* Enhanced Search */}
             {isCollectionPage && (
               <motion.button
                 onClick={() => setShowSearch(true)}
@@ -121,7 +121,7 @@ const NavBar = () => {
               </motion.button>
             )}
 
-            {/* Profile Dropdown with enhanced UX */}
+            {/* Enhanced Profile Dropdown */}
             <div className="relative" ref={profileDropdownRef}>
               {isLoggedIn ? (
                 <>
@@ -151,7 +151,7 @@ const NavBar = () => {
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <div className="glass backdrop-blur-xl bg-white/95 shadow-2xl rounded-2xl p-3 min-w-[180px] border border-gray-200">
+                        <div className="glass backdrop-blur-xl bg-white/95 shadow-2xl rounded-2xl p-3 min-w-[200px] border border-gray-200">
                           {userMenuLinks.map((link, index) => (
                             <motion.div
                               key={link.path}
@@ -162,7 +162,7 @@ const NavBar = () => {
                               <Link 
                                 to={link.path} 
                                 onClick={() => setShowProfileDropdown(false)}
-                                className="block px-4 py-3 text-sm text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-300 font-medium"
+                                className="block px-4 py-3 text-sm text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-300 font-semibold"
                               >
                                 {link.label}
                               </Link>
@@ -171,7 +171,7 @@ const NavBar = () => {
                           <hr className="my-2 border-gray-200" />
                           <motion.button 
                             onClick={handleLogout}
-                            className="w-full text-left px-4 py-3 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl transition-all duration-300 font-medium"
+                            className="w-full text-left px-4 py-3 text-sm text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl transition-all duration-300 font-semibold"
                             whileHover={{ x: 5 }}
                           >
                             Logout
@@ -199,7 +199,7 @@ const NavBar = () => {
               )}
             </div>
 
-            {/* Cart with enhanced badge */}
+            {/* Enhanced Cart with better badge */}
             <Link to="/cart" className="relative group" aria-label="Cart">
               <motion.div
                 className="p-3 rounded-xl hover:bg-gray-100 transition-all duration-300"
@@ -226,7 +226,7 @@ const NavBar = () => {
               </motion.div>
             </Link>
 
-            {/* Mobile Menu Button */}
+            {/* Enhanced Mobile Menu Button */}
             <motion.button
               className="sm:hidden p-3 rounded-xl hover:bg-gray-100 transition-all duration-300"
               onClick={() => setVisible(!visible)}
@@ -260,7 +260,7 @@ const NavBar = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Enhanced Mobile Menu */}
         <AnimatePresence>
           {visible && (
             <motion.div
@@ -282,7 +282,7 @@ const NavBar = () => {
                       to={navItem.path}
                       onClick={() => setVisible(false)}
                       className={({ isActive }) =>
-                        `block px-4 py-3 text-base font-medium rounded-xl transition-all duration-300 ${
+                        `block px-4 py-3 text-base font-semibold rounded-xl transition-all duration-300 ${
                           isActive 
                             ? 'text-blue-600 bg-blue-50' 
                             : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'

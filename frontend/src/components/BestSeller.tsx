@@ -16,7 +16,7 @@ const BestSeller: React.FC = () => {
   
   if (!products || products.length === 0) {
     return (
-      <section className="py-12 text-center text-gray-500">
+      <section className="py-16 text-center text-gray-500">
         Loading best sellers...
       </section>
     );
@@ -122,18 +122,18 @@ const BestSeller: React.FC = () => {
 
   return (
     <section className="px-4 sm:px-6 md:px-8 lg:px-12">
-      {/* Section Title */}
-      <header className="text-center mb-10">
+      {/* Enhanced Section Title */}
+      <header className="text-center mb-16">
         <Title text1="Best" text2="Seller" />
-        <p className="w-3/4 mx-auto text-sm sm:text-base text-gray-500 mt-2">
+        <p className="w-3/4 mx-auto text-base sm:text-lg text-gray-600 mt-4 font-medium">
           Discover our top-selling products loved by customers worldwide.
         </p>
       </header>
 
-      {/* Product Carousel */}
+      {/* Enhanced Product Carousel */}
       {bestSeller.length > 0 ? (
         <div className="relative">
-          {/* Carousel Container */}
+          {/* Enhanced Carousel Container */}
           <div className="carousel-container">
             <AnimatePresence mode="wait" custom={slideDirection}>
               <motion.div
@@ -170,10 +170,10 @@ const BestSeller: React.FC = () => {
             </AnimatePresence>
           </div>
 
-          {/* Navigation Buttons */}
+          {/* Enhanced Navigation Buttons */}
           {totalSlides > 1 && (
             <>
-              {/* Previous Button */}
+              {/* Enhanced Previous Button */}
               <motion.button
                 onClick={prevSlide}
                 className="carousel-nav-button left-0 -translate-x-4 sm:-translate-x-6"
@@ -196,7 +196,7 @@ const BestSeller: React.FC = () => {
                 </svg>
               </motion.button>
 
-              {/* Next Button */}
+              {/* Enhanced Next Button */}
               <motion.button
                 onClick={nextSlide}
                 className="carousel-nav-button right-0 translate-x-4 sm:translate-x-6"
@@ -221,9 +221,9 @@ const BestSeller: React.FC = () => {
             </>
           )}
 
-          {/* Slide Indicators */}
+          {/* Enhanced Slide Indicators */}
           {totalSlides > 1 && (
-            <div className="flex justify-center mt-8 space-x-2" role="tablist" aria-label="Carousel navigation">
+            <div className="flex justify-center mt-12 space-x-3" role="tablist" aria-label="Carousel navigation">
               {Array.from({ length: totalSlides }, (_, i) => (
                 <motion.button
                   key={i}
@@ -244,15 +244,15 @@ const BestSeller: React.FC = () => {
             </div>
           )}
 
-          {/* Slide Counter */}
+          {/* Enhanced Slide Counter */}
           {totalSlides > 1 && (
             <motion.div
-              className="text-center mt-4"
+              className="text-center mt-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3, delay: 0.2 }}
             >
-              <p className="text-sm text-gray-500" aria-live="polite">
+              <p className="text-sm text-gray-600 font-medium" aria-live="polite">
                 {currentSlide + 1} of {totalSlides}
               </p>
             </motion.div>
@@ -260,13 +260,13 @@ const BestSeller: React.FC = () => {
         </div>
       ) : (
         <motion.div 
-          className="text-center py-12"
+          className="text-center py-16"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          <p className="text-gray-500 text-lg">No bestseller products available at the moment.</p>
-          <p className="text-gray-400 text-sm mt-2">Check back soon for our featured products!</p>
+          <p className="text-gray-600 text-lg font-medium">No bestseller products available at the moment.</p>
+          <p className="text-gray-500 text-sm mt-3">Check back soon for our featured products!</p>
         </motion.div>
       )}
     </section>

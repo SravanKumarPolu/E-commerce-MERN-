@@ -7,8 +7,8 @@ import { motion } from "framer-motion";
 
 const Home = () => {
   return (
-    <div className="space-y-20 sm:space-y-24 lg:space-y-32">
-      {/* Hero Section */}
+    <div className="space-y-24 sm:space-y-28 lg:space-y-32">
+      {/* Enhanced Hero Section */}
       <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -18,7 +18,7 @@ const Home = () => {
         <Hero />
       </motion.section>
 
-      {/* Latest Products */}
+      {/* Enhanced Latest Products */}
       <motion.section
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -31,7 +31,7 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* Best Sellers */}
+      {/* Enhanced Best Sellers */}
       <motion.section
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -44,7 +44,7 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* Policies */}
+      {/* Enhanced Policies */}
       <motion.section
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -57,7 +57,7 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* Newsletter */}
+      {/* Enhanced Newsletter */}
       <motion.section
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
