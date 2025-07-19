@@ -290,6 +290,57 @@
   .max-width {
     @apply max-w-7xl mx-auto;
   }
+
+  /* Carousel Styles */
+  .carousel-container {
+    @apply relative overflow-hidden;
+    @apply touch-pan-y;
+  }
+
+  .carousel-slide {
+    @apply transition-all duration-500 ease-in-out;
+  }
+
+  .carousel-nav-button {
+    @apply absolute top-1/2 -translate-y-1/2 z-10;
+    @apply w-12 h-12 sm:w-14 sm:h-14;
+    @apply bg-white rounded-full shadow-lg border border-gray-200;
+    @apply flex items-center justify-center;
+    @apply hover:shadow-xl transition-all duration-300;
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .carousel-nav-button:hover {
+    @apply shadow-xl scale-105;
+  }
+
+  .carousel-nav-button:active {
+    @apply scale-95;
+  }
+
+  .carousel-indicator {
+    @apply w-3 h-3 rounded-full transition-all duration-300;
+    @apply hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500;
+  }
+
+  .carousel-indicator.active {
+    @apply bg-blue-600 scale-110;
+  }
+
+  .carousel-indicator.inactive {
+    @apply bg-gray-300 hover:bg-gray-400;
+  }
+
+  /* Scrollbar Hide Utility */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
 }
 
 /* Enhanced Animations */

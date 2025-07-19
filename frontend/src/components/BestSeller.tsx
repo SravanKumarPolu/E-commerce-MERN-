@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { ShopContext } from '../context/ShopContext';
 import Title from './Title';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import ProductItems from './ProductItems';
 import type { Product } from '../types';
 
@@ -22,53 +22,241 @@ const BestSeller: React.FC = () => {
     );
   }
   
-
   const [bestSeller, setBestSeller] = useState<Product[]>([]);
-
-
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
 
   useEffect(() => {
     if (products.length > 0) {
       // Filter products that are marked as bestsellers
       const bestsellerProducts = products.filter(product => product.bestseller === true);
-      // Take up to 5 bestseller products
-      setBestSeller(bestsellerProducts.slice(0, 5));
+      // Take up to 12 bestseller products for multiple slides
+      setBestSeller(bestsellerProducts.slice(0, 12));
     }
   }, [products]);
 
+  const itemsPerSlide = 4;
+  const totalSlides = Math.ceil(bestSeller.length / itemsPerSlide);
+
+  const nextSlide = () => {
+    if (totalSlides <= 1) return;
+    
+    setSlideDirection('right');
+    setCurrentSlide((prev) => {
+      if (prev === totalSlides - 1) {
+        // Loop back to first slide
+        return 0;
+      }
+      return prev + 1;
+    });
+  };
+
+  const prevSlide = () => {
+    if (totalSlides <= 1) return;
+    
+    setSlideDirection('left');
+    setCurrentSlide((prev) => {
+      if (prev === 0) {
+        // Loop back to last slide
+        return totalSlides - 1;
+      }
+      return prev - 1;
+    });
+  };
+
+  const goToSlide = (slideIndex: number) => {
+    if (slideIndex === currentSlide) return;
+    
+    // Determine slide direction based on target index
+    const direction = slideIndex > currentSlide ? 'right' : 'left';
+    setSlideDirection(direction);
+    setCurrentSlide(slideIndex);
+  };
+
+  const getCurrentSlideItems = () => {
+    const startIndex = currentSlide * itemsPerSlide;
+    return bestSeller.slice(startIndex, startIndex + itemsPerSlide);
+  };
+
+  // Keyboard navigation with improved logic
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (totalSlides <= 1) return;
+      
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        prevSlide();
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        nextSlide();
+      } else if (event.key >= '1' && event.key <= '9') {
+        const slideIndex = parseInt(event.key) - 1;
+        if (slideIndex < totalSlides) {
+          event.preventDefault();
+          goToSlide(slideIndex);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [totalSlides, currentSlide]);
+
+  // Get animation variants based on slide direction
+  const getSlideVariants = () => ({
+    enter: (direction: 'left' | 'right') => ({
+      x: direction === 'right' ? 300 : -300,
+      opacity: 0
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1
+    },
+    exit: (direction: 'left' | 'right') => ({
+      zIndex: 0,
+      x: direction === 'right' ? -300 : 300,
+      opacity: 0
+    })
+  });
+
   return (
-    <section className="px-4 sm:px-6 md:px-8 lg:px-12
-">
+    <section className="px-4 sm:px-6 md:px-8 lg:px-12">
       {/* Section Title */}
       <header className="text-center mb-10">
-  <Title text1="Best" text2="Seller" />
-  <p className="w-3/4 mx-auto text-sm sm:text-base text-gray-500 mt-2">
-    Discover our top-selling products loved by customers worldwide.
-  </p>
-</header>
+        <Title text1="Best" text2="Seller" />
+        <p className="w-3/4 mx-auto text-sm sm:text-base text-gray-500 mt-2">
+          Discover our top-selling products loved by customers worldwide.
+        </p>
+      </header>
 
-
-      {/* Product Grid */}
+      {/* Product Carousel */}
       {bestSeller.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
-          {bestSeller.map((item, index) => (
-             <motion.div
-             key={item._id}
-             className="h-full min-h-[500px] flex"
-             initial={{ opacity: 0, y: 20 }}
-             whileInView={{ opacity: 1, y: 0 }}
-             viewport={{ once: true }}
-             transition={{ duration: 0.4, delay: index * 0.1 }}
-           >
-             <ProductItems
-               id={item._id}
-               image={item.image}
-               name={item.name}
-               price={item.price}
-               bestseller={item.bestseller}
-             />
-           </motion.div>
-          ))}
+        <div className="relative group">
+          {/* Carousel Container */}
+          <div className="carousel-container">
+            <AnimatePresence mode="wait" custom={slideDirection}>
+              <motion.div
+                key={currentSlide}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8"
+                custom={slideDirection}
+                variants={getSlideVariants()}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  x: { type: "spring", stiffness: 300, damping: 30 },
+                  opacity: { duration: 0.2 }
+                }}
+              >
+                {getCurrentSlideItems().map((item, index) => (
+                  <motion.div
+                    key={item._id}
+                    className="h-full min-h-[500px] flex"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                  >
+                    <ProductItems
+                      id={item._id}
+                      image={item.image}
+                      name={item.name}
+                      price={item.price}
+                      bestseller={item.bestseller}
+                    />
+                  </motion.div>
+                ))}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Navigation Buttons - Hidden by default, shown on hover */}
+          {totalSlides > 1 && (
+            <>
+              {/* Previous Button */}
+              <motion.button
+                onClick={prevSlide}
+                className="carousel-nav-button left-0 -translate-x-4 sm:-translate-x-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 0, x: 0 }}
+                transition={{ duration: 0.3 }}
+                aria-label="Previous slide"
+                disabled={totalSlides <= 1}
+              >
+                <svg 
+                  className="w-6 h-6 text-gray-600 group-hover:text-blue-600 transition-colors duration-300" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </motion.button>
+
+              {/* Next Button */}
+              <motion.button
+                onClick={nextSlide}
+                className="carousel-nav-button right-0 translate-x-4 sm:translate-x-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 0, x: 0 }}
+                transition={{ duration: 0.3 }}
+                aria-label="Next slide"
+                disabled={totalSlides <= 1}
+              >
+                <svg 
+                  className="w-6 h-6 text-gray-600 group-hover:text-blue-600 transition-colors duration-300" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </motion.button>
+            </>
+          )}
+
+          {/* Slide Indicators */}
+          {totalSlides > 1 && (
+            <div className="flex justify-center mt-8 space-x-2" role="tablist" aria-label="Carousel navigation">
+              {Array.from({ length: totalSlides }, (_, i) => (
+                <motion.button
+                  key={i}
+                  onClick={() => goToSlide(i)}
+                  className={`carousel-indicator ${
+                    i === currentSlide ? 'active' : 'inactive'
+                  }`}
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: i * 0.1 }}
+                  role="tab"
+                  aria-selected={i === currentSlide}
+                  aria-label={`Go to slide ${i + 1}`}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Slide Counter */}
+          {totalSlides > 1 && (
+            <motion.div
+              className="text-center mt-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
+            >
+              <p className="text-sm text-gray-500" aria-live="polite">
+                {currentSlide + 1} of {totalSlides}
+              </p>
+            </motion.div>
+          )}
         </div>
       ) : (
         <motion.div 
