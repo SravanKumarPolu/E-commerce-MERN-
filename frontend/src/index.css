@@ -693,6 +693,15 @@
   }
 }
 
+@keyframes pulseSlow {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
 .animate-shake {
   animation: shake 0.5s ease-in-out;
 }
@@ -715,6 +724,10 @@
 
 .animate-spin {
   animation: spin 1s linear infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 2s ease-in-out infinite;
 }
 
 /* Enhanced focus styles for accessibility */
