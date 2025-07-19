@@ -1,5 +1,6 @@
 import { assets } from '../assets/assets';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const policies = [
   {
@@ -29,6 +30,12 @@ const policies = [
 ];
 
 const OurPolicy = () => {
+  const navigate = useNavigate();
+
+  const handleContactSupport = () => {
+    navigate('/contact');
+  };
+
   return (
     <section className="section-padding bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
       {/* Enhanced Background Pattern */}
@@ -123,9 +130,11 @@ const OurPolicy = () => {
             Have questions about our policies?
           </p>
           <motion.button
+            onClick={handleContactSupport}
             className="btn-modern btn-outline px-8 py-4 text-lg font-semibold rounded-2xl"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            aria-label="Navigate to contact page for support"
           >
             Contact Support
           </motion.button>
