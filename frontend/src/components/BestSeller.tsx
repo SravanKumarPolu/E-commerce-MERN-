@@ -132,7 +132,7 @@ const BestSeller: React.FC = () => {
 
       {/* Product Carousel */}
       {bestSeller.length > 0 ? (
-        <div className="relative group">
+        <div className="relative">
           {/* Carousel Container */}
           <div className="carousel-container">
             <AnimatePresence mode="wait" custom={slideDirection}>
@@ -170,17 +170,17 @@ const BestSeller: React.FC = () => {
             </AnimatePresence>
           </div>
 
-          {/* Navigation Buttons - Hidden by default, shown on hover */}
+          {/* Navigation Buttons */}
           {totalSlides > 1 && (
             <>
               {/* Previous Button */}
               <motion.button
                 onClick={prevSlide}
-                className="carousel-nav-button left-0 -translate-x-4 sm:-translate-x-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                className="carousel-nav-button left-0 -translate-x-4 sm:-translate-x-6"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 0, x: 0 }}
+                animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3 }}
                 aria-label="Previous slide"
                 disabled={totalSlides <= 1}
@@ -199,11 +199,11 @@ const BestSeller: React.FC = () => {
               {/* Next Button */}
               <motion.button
                 onClick={nextSlide}
-                className="carousel-nav-button right-0 translate-x-4 sm:translate-x-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                className="carousel-nav-button right-0 translate-x-4 sm:translate-x-6"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 0, x: 0 }}
+                animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3 }}
                 aria-label="Next slide"
                 disabled={totalSlides <= 1}
