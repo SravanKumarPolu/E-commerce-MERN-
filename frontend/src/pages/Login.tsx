@@ -260,29 +260,29 @@ const Login = () => {
 
   return (
     <div 
-      className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-100/50 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden"
+      className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100/50 to-slate-200/30 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden"
       role="main"
       aria-label="Login and registration form"
     >
-      {/* Enhanced Background Elements with Performance Optimization */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100/20 via-transparent to-transparent"></div>
+      {/* Refined Background Elements with Elegant Color Palette */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-200/30 via-transparent to-transparent"></div>
       {!reducedAnimations && (
         <>
-          <div className="absolute top-0 left-0 w-96 h-96 bg-blue-200/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 animate-pulse-slow"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-indigo-200/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-blue-300/5 rounded-full blur-2xl -translate-x-1/2 -translate-y-1/2 animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-0 left-0 w-96 h-96 bg-slate-300/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 animate-pulse-slow"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-slate-400/15 rounded-full blur-3xl translate-x-1/2 translate-y-1/2 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-slate-300/10 rounded-full blur-2xl -translate-x-1/2 -translate-y-1/2 animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
         </>
       )}
       
       <div className={`w-full max-w-md lg:max-w-lg xl:max-w-xl relative z-10 transition-all duration-700 ease-out ${
         isPageLoaded ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
       }`}>
-        {/* Enhanced Header Section with Improved Visual Hierarchy */}
-        <div className={`text-center mb-10 lg:mb-12 xl:mb-16 transition-all duration-500 ease-out ${
+        {/* Refined Header Section with Elegant Color Palette */}
+        <div className={`text-center mb-8 lg:mb-10 xl:mb-12 transition-all duration-500 ease-out ${
           isPageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}>
-          {/* Enhanced Logo with Better Proportions and Prominence */}
-          <div className={`inline-flex items-center justify-center w-20 h-20 lg:w-24 lg:h-24 xl:w-28 xl:h-28 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-3xl lg:rounded-4xl shadow-2xl lg:shadow-3xl mb-8 lg:mb-10 xl:mb-12 transition-all duration-300 hover:scale-110 hover:shadow-3xl hover:rotate-3 hover:from-blue-700 hover:via-blue-800 hover:to-indigo-900 ${
+          {/* Refined Logo with Elegant Color Scheme */}
+          <div className={`inline-flex items-center justify-center w-16 h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 rounded-2xl lg:rounded-3xl shadow-xl lg:shadow-2xl mb-6 lg:mb-8 xl:mb-10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:from-slate-800 hover:via-slate-900 hover:to-black ${
             isPageLoaded && !reducedAnimations ? 'animate-bounce-gentle' : ''
           }`} style={{ animationDelay: '1s' }}>
             <UserIcon 
@@ -292,14 +292,14 @@ const Login = () => {
             />
           </div>
           
-          {/* Enhanced Typography with Clearer Visual Hierarchy */}
-          <h1 className={`text-4xl lg:text-5xl xl:text-6xl font-black text-gray-900 mb-6 lg:mb-8 xl:mb-10 leading-tight tracking-tight transition-all duration-500 ease-out ${
+          {/* Refined Typography with Elegant Color Palette */}
+          <h1 className={`text-3xl lg:text-4xl xl:text-5xl font-black text-slate-900 mb-4 lg:mb-6 xl:mb-8 leading-tight tracking-tight transition-all duration-500 ease-out ${
             isPageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`} style={{ animationDelay: '0.4s' }}>
             {currentState === "Login" ? "Welcome Back" : "Create Account"}
           </h1>
           
-          <p className={`text-lg lg:text-xl xl:text-2xl text-gray-600 font-semibold leading-relaxed max-w-lg mx-auto transition-all duration-500 ease-out ${
+          <p className={`text-base lg:text-lg xl:text-xl text-slate-600 font-medium leading-relaxed max-w-md mx-auto transition-all duration-500 ease-out ${
             isPageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`} style={{ animationDelay: '0.6s' }}>
             {currentState === "Login" 
@@ -309,89 +309,87 @@ const Login = () => {
           </p>
         </div>
 
-        {/* Enhanced Form Card with Better Spacing and Layout */}
-        <div className={`bg-white/95 backdrop-blur-md rounded-3xl lg:rounded-4xl shadow-2xl lg:shadow-3xl p-8 lg:p-10 xl:p-12 transition-all duration-500 ease-out ${
+        {/* Refined Form Card with Elegant Color Palette and Simplified Layout */}
+        <div className={`bg-white/95 backdrop-blur-md rounded-2xl lg:rounded-3xl shadow-xl lg:shadow-2xl p-6 lg:p-8 xl:p-10 transition-all duration-500 ease-out ${
           isPageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        } hover:shadow-3xl hover:-translate-y-1 hover:shadow-blue-100/50 border border-white/30 relative overflow-hidden`}>
-          {/* Subtle background pattern for visual interest */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/20 via-transparent to-indigo-50/20 opacity-50"></div>
-          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100/30 to-transparent rounded-full blur-2xl"></div>
-          <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-indigo-100/30 to-transparent rounded-full blur-xl"></div>
+        } hover:shadow-2xl hover:-translate-y-1 border border-slate-200/50 relative overflow-hidden`}>
+          {/* Subtle background pattern with elegant colors */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-50/30 via-transparent to-slate-100/20 opacity-60"></div>
+          <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-slate-200/40 to-transparent rounded-full blur-xl"></div>
+          <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-to-tr from-slate-300/30 to-transparent rounded-full blur-lg"></div>
           
           <div className="relative z-10">
             <form 
               ref={formRef}
               onSubmit={onSubmitHandler} 
-              className="space-y-8 lg:space-y-10 xl:space-y-12"
+              className="space-y-6 lg:space-y-8"
               aria-label={`${currentState} form`}
             >
-              {/* Enhanced Error Message with Better Visibility and Spacing */}
+              {/* Refined Error Message with Elegant Color Palette */}
               {error && (
                 <div 
-                  className="bg-gradient-to-r from-red-50 to-red-100 border-2 border-red-200 text-red-900 px-6 py-4 rounded-2xl text-base font-bold animate-fade-in relative overflow-hidden shadow-lg"
+                  className="bg-gradient-to-r from-red-50 to-red-100 border border-red-200 text-red-800 px-4 py-3 rounded-xl text-sm font-medium animate-fade-in relative overflow-hidden shadow-sm"
                   role="alert"
                   aria-live="polite"
                 >
-                  <div className="flex items-center space-x-4 relative z-10">
+                  <div className="flex items-center space-x-3 relative z-10">
                     <ExclamationIcon 
-                      size="lg" 
-                      className="text-red-600 flex-shrink-0 animate-pulse" 
+                      size="md" 
+                      className="text-red-600 flex-shrink-0" 
                       aria-hidden="true"
                     />
                     <span>{error}</span>
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-r from-red-200/30 via-red-100/40 to-red-200/30 animate-pulse-slow"></div>
                 </div>
               )}
 
-              {/* Enhanced Success Message with Better Spacing */}
+              {/* Refined Success Message with Elegant Color Palette */}
               {success && (
                 <div 
-                  className="bg-gradient-to-r from-green-50 to-emerald-100 border-2 border-green-200 text-green-900 px-6 py-4 rounded-2xl text-base font-bold animate-bounce-gentle relative overflow-hidden shadow-lg"
+                  className="bg-gradient-to-r from-emerald-50 to-green-100 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-xl text-sm font-medium animate-fade-in relative overflow-hidden shadow-sm"
                   role="alert"
                   aria-live="polite"
                 >
-                  <div className="flex items-center space-x-4 relative z-10">
+                  <div className="flex items-center space-x-3 relative z-10">
                     <CheckIcon 
-                      size="lg" 
-                      className="text-green-600 flex-shrink-0 animate-pulse" 
+                      size="md" 
+                      className="text-emerald-600 flex-shrink-0" 
                       aria-hidden="true"
                     />
                     <span>{success}</span>
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-r from-green-200/30 via-emerald-100/40 to-green-200/30 animate-pulse-slow"></div>
                 </div>
               )}
 
-              {/* Loading Skeleton with Better Spacing */}
+              {/* Loading Skeleton with Refined Spacing */}
               {isFormSubmitting && !isLoading && (
-                <div className="space-y-8 animate-pulse" aria-hidden="true">
-                  <div className="h-4 bg-gray-200 rounded-xl animate-shimmer"></div>
-                  <div className="h-16 bg-gray-200 rounded-xl animate-shimmer"></div>
-                  <div className="h-16 bg-gray-200 rounded-xl animate-shimmer"></div>
-                  <div className="h-16 bg-gray-200 rounded-xl animate-shimmer"></div>
+                <div className="space-y-6 animate-pulse" aria-hidden="true">
+                  <div className="h-4 bg-slate-200 rounded-lg animate-shimmer"></div>
+                  <div className="h-14 bg-slate-200 rounded-xl animate-shimmer"></div>
+                  <div className="h-14 bg-slate-200 rounded-xl animate-shimmer"></div>
+                  <div className="h-14 bg-slate-200 rounded-xl animate-shimmer"></div>
                 </div>
               )}
 
-              {/* Enhanced Name Field - Only for Sign Up with Better Spacing */}
+              {/* Refined Name Field - Only for Sign Up with Simplified Design */}
               {currentState === "Sign Up" && !isFormSubmitting && (
-                <div className={`space-y-4 transition-all duration-500 ease-out ${
+                <div className={`space-y-3 transition-all duration-500 ease-out ${
                   currentState === "Sign Up" ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0'
                 }`}>
-                  <label htmlFor="name" className="block text-base lg:text-lg xl:text-xl font-bold text-gray-900 transition-colors duration-200 hover:text-blue-700">
+                  <label htmlFor="name" className="block text-sm font-semibold text-slate-700">
                     Full Name
                   </label>
                   <div className="relative group">
                     <input
                       id="name"
                       type="text"
-                      className={`w-full pl-14 pr-4 py-4 lg:py-5 xl:py-6 text-base lg:text-lg xl:text-xl border-2 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 bg-white/60 backdrop-blur-sm text-gray-900 placeholder-gray-500 group-hover:border-blue-400 group-hover:shadow-lg group-hover:bg-white/90 ${
+                      className={`w-full pl-12 pr-4 py-3 lg:py-4 text-base border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 transition-all duration-200 bg-white text-slate-900 placeholder-slate-500 group-hover:border-slate-400 ${
                         fieldErrors.name 
-                          ? 'border-red-400 focus:ring-red-500/20 animate-shake' 
+                          ? 'border-red-300 focus:ring-red-500/20 focus:border-red-500' 
                           : name.length > 0 && !fieldErrors.name 
-                            ? 'border-green-400 focus:ring-green-500/20'
-                            : 'border-gray-300 focus:ring-blue-500/20'
-                      } ${focusedField === 'name' ? 'ring-4 ring-blue-500/20 shadow-xl bg-white' : ''}`}
+                            ? 'border-emerald-300 focus:ring-emerald-500/20 focus:border-emerald-500'
+                            : ''
+                      }`}
                       placeholder="Enter your full name"
                       value={name}
                       onChange={(e) => handleNameChange(e.target.value)}
@@ -401,35 +399,35 @@ const Login = () => {
                       aria-describedby={fieldErrors.name ? "name-error" : undefined}
                       aria-invalid={!!fieldErrors.name}
                     />
-                    <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none transition-transform duration-200 group-focus-within:scale-110">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                       <UserIcon 
-                        size="xl" 
-                        className="text-gray-500 transition-colors duration-200 group-focus-within:text-blue-600" 
+                        size="lg" 
+                        className="text-slate-400 transition-colors duration-200 group-focus-within:text-slate-600" 
                         aria-hidden="true"
                       />
                     </div>
-                    {/* Validation indicator */}
+                    {/* Simplified validation indicator */}
                     {name.length > 0 && (
-                      <div className="absolute inset-y-0 right-0 pr-5 flex items-center animate-fade-in" aria-hidden="true">
+                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center" aria-hidden="true">
                         {fieldErrors.name ? (
                           <ExclamationIcon 
-                            size="xl" 
-                            className="text-red-600 animate-pulse"
+                            size="md" 
+                            className="text-red-500"
                           />
                         ) : (
                           <CheckIcon 
-                            size="xl" 
-                            className="text-green-600 animate-bounce-gentle"
+                            size="md" 
+                            className="text-emerald-500"
                           />
                         )}
                       </div>
                     )}
                   </div>
                   {fieldErrors.name && (
-                    <div id="name-error" className="text-red-700 text-sm lg:text-base xl:text-lg font-bold mt-3 animate-fade-in flex items-center space-x-3" role="alert">
+                    <div id="name-error" className="text-red-600 text-sm mt-2 flex items-center space-x-2" role="alert">
                       <ExclamationIcon 
-                        size="md" 
-                        className="text-red-600 animate-pulse" 
+                        size="sm" 
+                        className="text-red-500" 
                         aria-hidden="true"
                       />
                       <span>{fieldErrors.name}</span>
@@ -438,10 +436,10 @@ const Login = () => {
                 </div>
               )}
 
-              {/* Enhanced Email Field with Better Spacing */}
+              {/* Refined Email Field with Simplified Design */}
               {!isFormSubmitting && (
-                <div className="space-y-4">
-                  <label htmlFor="email" className="block text-base lg:text-lg xl:text-xl font-bold text-gray-900 transition-colors duration-200 hover:text-blue-700">
+                <div className="space-y-3">
+                  <label htmlFor="email" className="block text-sm font-semibold text-slate-700">
                     Email Address
                   </label>
                   <div className="relative group">
@@ -449,13 +447,13 @@ const Login = () => {
                       ref={emailInputRef}
                       id="email"
                       type="email"
-                      className={`w-full pl-14 pr-4 py-4 lg:py-5 xl:py-6 text-base lg:text-lg xl:text-xl border-2 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 bg-white/60 backdrop-blur-sm text-gray-900 placeholder-gray-500 group-hover:border-blue-400 group-hover:shadow-lg group-hover:bg-white/90 ${
+                      className={`w-full pl-12 pr-4 py-3 lg:py-4 text-base border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 transition-all duration-200 bg-white text-slate-900 placeholder-slate-500 group-hover:border-slate-400 ${
                         fieldErrors.email 
-                          ? 'border-red-400 focus:ring-red-500/20 animate-shake' 
+                          ? 'border-red-300 focus:ring-red-500/20 focus:border-red-500' 
                           : email.length > 0 && !fieldErrors.email 
-                            ? 'border-green-400 focus:ring-green-500/20'
-                            : 'border-gray-300 focus:ring-blue-500/20'
-                      } ${focusedField === 'email' ? 'ring-4 ring-blue-500/20 shadow-xl bg-white' : ''}`}
+                            ? 'border-emerald-300 focus:ring-emerald-500/20 focus:border-emerald-500'
+                            : ''
+                      }`}
                       placeholder="Enter your email"
                       value={email}
                       onChange={(e) => handleEmailChange(e.target.value)}
@@ -465,35 +463,35 @@ const Login = () => {
                       aria-describedby={fieldErrors.email ? "email-error" : undefined}
                       aria-invalid={!!fieldErrors.email}
                     />
-                    <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none transition-transform duration-200 group-focus-within:scale-110">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                       <EmailIcon 
-                        size="xl" 
-                        className="text-gray-500 transition-colors duration-200 group-focus-within:text-blue-600" 
+                        size="lg" 
+                        className="text-slate-400 transition-colors duration-200 group-focus-within:text-slate-600" 
                         aria-hidden="true"
                       />
                     </div>
-                    {/* Validation indicator */}
+                    {/* Simplified validation indicator */}
                     {email.length > 0 && (
-                      <div className="absolute inset-y-0 right-0 pr-5 flex items-center animate-fade-in" aria-hidden="true">
+                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center" aria-hidden="true">
                         {fieldErrors.email ? (
                           <ExclamationIcon 
-                            size="xl" 
-                            className="text-red-600 animate-pulse"
+                            size="md" 
+                            className="text-red-500"
                           />
                         ) : (
                           <CheckIcon 
-                            size="xl" 
-                            className="text-green-600 animate-bounce-gentle"
+                            size="md" 
+                            className="text-emerald-500"
                           />
                         )}
                       </div>
                     )}
                   </div>
                   {fieldErrors.email && (
-                    <div id="email-error" className="text-red-700 text-sm lg:text-base xl:text-lg font-bold mt-3 animate-fade-in flex items-center space-x-3" role="alert">
+                    <div id="email-error" className="text-red-600 text-sm mt-2 flex items-center space-x-2" role="alert">
                       <ExclamationIcon 
-                        size="md" 
-                        className="text-red-600 animate-pulse" 
+                        size="sm" 
+                        className="text-red-500" 
                         aria-hidden="true"
                       />
                       <span>{fieldErrors.email}</span>
@@ -502,10 +500,10 @@ const Login = () => {
                 </div>
               )}
 
-              {/* Enhanced Password Field with Better Spacing */}
+              {/* Refined Password Field with Simplified Design */}
               {!isFormSubmitting && (
-                <div className="space-y-4">
-                  <label htmlFor="password" className="block text-base lg:text-lg xl:text-xl font-bold text-gray-900 transition-colors duration-200 hover:text-blue-700">
+                <div className="space-y-3">
+                  <label htmlFor="password" className="block text-sm font-semibold text-slate-700">
                     Password
                   </label>
                   <div className="relative group">
@@ -513,13 +511,13 @@ const Login = () => {
                       ref={passwordInputRef}
                       id="password"
                       type={showPassword ? "text" : "password"}
-                      className={`w-full pl-14 pr-16 py-4 lg:py-5 xl:py-6 text-base lg:text-lg xl:text-xl border-2 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 bg-white/60 backdrop-blur-sm text-gray-900 placeholder-gray-500 group-hover:border-blue-400 group-hover:shadow-lg group-hover:bg-white/90 ${
+                      className={`w-full pl-12 pr-12 py-3 lg:py-4 text-base border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 transition-all duration-200 bg-white text-slate-900 placeholder-slate-500 group-hover:border-slate-400 ${
                         fieldErrors.password 
-                          ? 'border-red-400 focus:ring-red-500/20 animate-shake' 
+                          ? 'border-red-300 focus:ring-red-500/20 focus:border-red-500' 
                           : password.length > 0 && !fieldErrors.password 
-                            ? 'border-green-400 focus:ring-green-500/20'
-                            : 'border-gray-300 focus:ring-blue-500/20'
-                      } ${focusedField === 'password' ? 'ring-4 ring-blue-500/20 shadow-xl bg-white' : ''}`}
+                            ? 'border-emerald-300 focus:ring-emerald-500/20 focus:border-emerald-500'
+                            : ''
+                      }`}
                       placeholder="Enter your password"
                       value={password}
                       onChange={(e) => handlePasswordChange(e.target.value)}
@@ -530,60 +528,60 @@ const Login = () => {
                       aria-describedby={fieldErrors.password ? "password-error" : undefined}
                       aria-invalid={!!fieldErrors.password}
                     />
-                    <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none transition-transform duration-200 group-focus-within:scale-110">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                       <LockIcon 
-                        size="xl" 
-                        className="text-gray-500 transition-colors duration-200 group-focus-within:text-blue-600" 
+                        size="lg" 
+                        className="text-slate-400 transition-colors duration-200 group-focus-within:text-slate-600" 
                         aria-hidden="true"
                       />
                     </div>
                     <button
                       type="button"
-                      className="absolute inset-y-0 right-0 pr-5 flex items-center hover:bg-gray-50/80 rounded-r-2xl transition-all duration-200 hover:scale-110 active:scale-95 hover:shadow-inner"
+                      className="absolute inset-y-0 right-0 pr-4 flex items-center hover:bg-slate-50 rounded-r-xl transition-all duration-200"
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       <EyeIcon 
-                        size="xl" 
-                        className="text-gray-500 hover:text-gray-700 transition-all duration-200 hover:rotate-12" 
+                        size="lg" 
+                        className="text-slate-400 hover:text-slate-600 transition-all duration-200" 
                         isVisible={!showPassword}
                         aria-hidden="true"
                       />
                     </button>
-                    {/* Validation indicator - positioned to the left of password toggle */}
+                    {/* Simplified validation indicator - positioned to the left of password toggle */}
                     {password.length > 0 && (
-                      <div className="absolute inset-y-0 right-0 pr-16 flex items-center animate-fade-in" aria-hidden="true">
+                      <div className="absolute inset-y-0 right-0 pr-12 flex items-center" aria-hidden="true">
                         {fieldErrors.password ? (
                           <ExclamationIcon 
-                            size="xl" 
-                            className="text-red-600 animate-pulse"
+                            size="md" 
+                            className="text-red-500"
                           />
                         ) : (
                           <CheckIcon 
-                            size="xl" 
-                            className="text-green-600 animate-bounce-gentle"
+                            size="md" 
+                            className="text-emerald-500"
                           />
                         )}
                       </div>
                     )}
                   </div>
                   
-                  {/* Password error message with better spacing */}
+                  {/* Simplified password error message */}
                   {fieldErrors.password && (
-                    <div id="password-error" className="text-red-700 text-sm lg:text-base xl:text-lg font-bold mt-3 animate-fade-in flex items-center space-x-3" role="alert">
+                    <div id="password-error" className="text-red-600 text-sm mt-2 flex items-center space-x-2" role="alert">
                       <ExclamationIcon 
-                        size="md" 
-                        className="text-red-600 animate-pulse" 
+                        size="sm" 
+                        className="text-red-500" 
                         aria-hidden="true"
                       />
                       <span>{fieldErrors.password}</span>
                     </div>
                   )}
                   
-                  {/* Enhanced Password Requirements - Only show for Sign Up with better spacing */}
+                  {/* Simplified Password Requirements - Only show for Sign Up */}
                   {currentState === "Sign Up" && password && !isFormSubmitting && (
-                    <div className={`mt-6 p-6 bg-gradient-to-br from-gray-50/90 to-blue-50/90 backdrop-blur-sm rounded-2xl border-2 border-gray-200/60 transition-all duration-500 ease-out animate-slide-up hover:shadow-lg hover:border-blue-200 hover:from-blue-50/95 hover:to-indigo-50/95`}>
-                      <p className="text-base lg:text-lg xl:text-xl font-bold text-gray-900 mb-6">Password requirements:</p>
-                      <div className="space-y-4">
+                    <div className={`mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200 transition-all duration-300 ease-out`}>
+                      <p className="text-sm font-semibold text-slate-700 mb-3">Password requirements:</p>
+                      <div className="space-y-2">
                         {[
                           { key: 'minLength', label: 'At least 8 characters', test: password.length >= 8 },
                           { key: 'hasUpperCase', label: 'One uppercase letter', test: /[A-Z]/.test(password) },
@@ -591,15 +589,15 @@ const Login = () => {
                           { key: 'hasNumbers', label: 'One number', test: /\d/.test(password) },
                           { key: 'hasSpecialChar', label: 'One special character (@$!%*?&)', test: /[@$!%*?&]/.test(password) }
                         ].map((requirement, index) => (
-                          <div key={requirement.key} className={`flex items-center space-x-4 transition-all duration-300 ease-out hover:scale-105 ${
+                          <div key={requirement.key} className={`flex items-center space-x-3 transition-all duration-200 ${
                             requirement.test ? 'animate-fade-in' : ''
-                          }`} style={{ animationDelay: `${index * 100}ms` }}>
+                          }`} style={{ animationDelay: `${index * 50}ms` }}>
                             <ValidationIcon 
-                              size="md" 
-                              className={`transition-all duration-300 ${requirement.test ? 'text-green-600 scale-110' : 'text-gray-500'}`}
+                              size="sm" 
+                              className={`transition-all duration-200 ${requirement.test ? 'text-emerald-500' : 'text-slate-400'}`}
                               isValid={requirement.test}
                             />
-                            <span className={`text-base lg:text-lg transition-all duration-300 ${requirement.test ? 'text-green-800 font-bold' : 'text-gray-700 font-semibold'}`}>
+                            <span className={`text-sm transition-all duration-200 ${requirement.test ? 'text-emerald-700 font-medium' : 'text-slate-600'}`}>
                               {requirement.label}
                             </span>
                           </div>
@@ -610,32 +608,32 @@ const Login = () => {
                 </div>
               )}
 
-              {/* Remember Me Checkbox - Only for Login with better spacing */}
+              {/* Refined Remember Me Checkbox - Only for Login */}
               {currentState === "Login" && !isFormSubmitting && (
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-3">
                   <input
                     id="remember-me"
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    className="w-4 h-4 text-slate-600 border-slate-300 rounded focus:ring-slate-500"
                   />
-                  <label htmlFor="remember-me" className="text-base lg:text-lg text-gray-700 font-semibold">
+                  <label htmlFor="remember-me" className="text-sm text-slate-700 font-medium">
                     Remember me
                   </label>
                 </div>
               )}
 
-              {/* Biometric Authentication - Only for Login with better spacing */}
+              {/* Refined Biometric Authentication - Only for Login */}
               {currentState === "Login" && !isFormSubmitting && (
                 <button
                   type="button"
                   onClick={handleBiometricAuth}
-                  className="w-full py-4 lg:py-5 xl:py-6 px-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 flex items-center justify-center space-x-4 font-bold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-base lg:text-lg"
+                  className="w-full py-3 lg:py-4 px-4 bg-gradient-to-r from-slate-600 to-slate-700 text-white rounded-xl hover:from-slate-700 hover:to-slate-800 transition-all duration-200 flex items-center justify-center space-x-3 font-medium shadow-sm hover:shadow-md text-sm lg:text-base"
                   aria-label="Sign in with biometric authentication"
                 >
                   <ShieldIcon 
-                    size="lg" 
+                    size="md" 
                     className="text-white" 
                     aria-hidden="true"
                   />
@@ -643,13 +641,13 @@ const Login = () => {
                 </button>
               )}
 
-              {/* Enhanced Forgot Password & Toggle Links with better spacing */}
+              {/* Refined Forgot Password & Toggle Links */}
               {!isFormSubmitting && (
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 text-base lg:text-lg xl:text-xl">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0 text-sm">
                   <button
                     type="button"
                     onClick={() => setShowPasswordRecovery(true)}
-                    className="text-blue-700 hover:text-blue-800 font-bold transition-all duration-200 hover:underline text-left hover:scale-105 active:scale-95 hover:bg-blue-50/80 px-4 py-3 rounded-xl hover:shadow-md"
+                    className="text-slate-600 hover:text-slate-800 font-medium transition-all duration-200 hover:underline text-left"
                     aria-label="Forgot password? Click to reset"
                   >
                     Forgot password?
@@ -657,7 +655,7 @@ const Login = () => {
                   <button
                     type="button"
                     onClick={() => setCurrentState(currentState === "Login" ? "Sign Up" : "Login")}
-                    className="text-blue-700 hover:text-blue-800 font-bold transition-all duration-200 hover:underline text-left sm:text-right hover:scale-105 active:scale-95 hover:bg-blue-50/80 px-4 py-3 rounded-xl hover:shadow-md"
+                    className="text-slate-600 hover:text-slate-800 font-medium transition-all duration-200 hover:underline text-left sm:text-right"
                     aria-label={`Switch to ${currentState === "Login" ? "Sign Up" : "Login"} mode`}
                   >
                     {currentState === "Login" ? "Create account" : "Sign in instead"}
@@ -665,33 +663,28 @@ const Login = () => {
                 </div>
               )}
 
-              {/* Enhanced Submit Button with better spacing and prominence */}
-              <div className="pt-8 lg:pt-10 xl:pt-12">
+              {/* Refined Submit Button with Elegant Design */}
+              <div className="pt-6 lg:pt-8">
                 <button 
                   type="submit" 
                   disabled={isLoading}
-                  className={`w-full py-5 lg:py-6 xl:py-7 px-8 text-white text-lg lg:text-xl xl:text-2xl font-black rounded-2xl shadow-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-offset-4 transform relative overflow-hidden ${
+                  className={`w-full py-4 lg:py-5 px-6 text-white text-base lg:text-lg font-semibold rounded-xl shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 transform ${
                     isLoading
-                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 cursor-not-allowed opacity-75'
-                      : 'bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 hover:from-blue-700 hover:via-blue-800 hover:to-indigo-800 hover:shadow-3xl hover:scale-105 active:scale-95 focus:ring-blue-500/50'
+                      ? 'bg-slate-400 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-800 hover:to-slate-900 hover:shadow-md active:scale-98 focus:ring-slate-500'
                   }`}
                   style={{ display: 'block', visibility: 'visible', opacity: 1 }}
                   aria-describedby={isLoading ? "loading-status" : undefined}
                 >
-                  {/* Subtle glow effect */}
-                  {!isLoading && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-blue-500/20 to-indigo-400/20 blur-xl opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
-                  )}
-                  
                   {isLoading ? (
-                    <div className="flex items-center justify-center space-x-4 relative z-10">
-                      <div className="w-6 h-6 lg:w-7 lg:h-7 xl:w-8 xl:h-8 border-3 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true"></div>
-                      <span className="font-bold animate-pulse">
+                    <div className="flex items-center justify-center space-x-3">
+                      <div className="w-5 h-5 lg:w-6 lg:h-6 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true"></div>
+                      <span className="font-medium">
                         {currentState === "Login" ? "Signing in..." : "Creating account..."}
                       </span>
                     </div>
                   ) : (
-                    <span className="font-black relative z-10">
+                    <span className="font-semibold">
                       {currentState === "Login" ? "Sign In" : "Create Account"}
                     </span>
                   )}
@@ -704,42 +697,42 @@ const Login = () => {
               </div>
             </form>
 
-            {/* Enhanced Divider with better spacing */}
+            {/* Refined Divider */}
             {!isFormSubmitting && (
-              <div className="relative my-10 lg:my-12 xl:my-16">
+              <div className="relative my-8 lg:my-10">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t-2 border-gray-200/60"></div>
+                  <div className="w-full border-t border-slate-200"></div>
                 </div>
-                <div className="relative flex justify-center text-base lg:text-lg xl:text-xl">
-                  <span className="px-6 bg-white/95 backdrop-blur-sm text-gray-600 font-bold">Or continue with</span>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-4 bg-white text-slate-500 font-medium">Or continue with</span>
                 </div>
               </div>
             )}
 
-            {/* Enhanced Social Login Buttons with better spacing */}
+            {/* Refined Social Login Buttons */}
             {!isFormSubmitting && (
-              <div className="space-y-5 lg:space-y-6 xl:space-y-8">
+              <div className="space-y-4">
                 <button 
-                  className="w-full py-4 lg:py-5 xl:py-6 px-6 bg-white/95 backdrop-blur-sm border-2 border-gray-200/60 rounded-2xl hover:bg-white hover:border-gray-300 transition-all duration-300 flex items-center justify-center space-x-4 text-gray-800 font-bold shadow-lg hover:shadow-xl text-base lg:text-lg xl:text-xl hover:scale-105 active:scale-95 transform group"
+                  className="w-full py-3 lg:py-4 px-4 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 flex items-center justify-center space-x-3 text-slate-700 font-medium shadow-sm hover:shadow-md text-sm lg:text-base"
                   disabled={isSocialLoading}
                 >
                   {isSocialLoading ? (
-                    <div className="w-6 h-6 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                    <div className="w-5 h-5 border-2 border-slate-300 border-t-slate-600 rounded-full animate-spin"></div>
                   ) : (
                     <>
                       <GoogleIcon 
-                        size="xl" 
-                        className="transition-transform duration-300 group-hover:scale-110"
+                        size="lg" 
+                        className="transition-transform duration-200"
                       />
                       <span>Continue with Google</span>
                     </>
                   )}
                 </button>
                 
-                <button className="w-full py-4 lg:py-5 xl:py-6 px-6 bg-white/95 backdrop-blur-sm border-2 border-gray-200/60 rounded-2xl hover:bg-white hover:border-gray-300 transition-all duration-300 flex items-center justify-center space-x-4 text-gray-800 font-bold shadow-lg hover:shadow-xl text-base lg:text-lg xl:text-xl hover:scale-105 active:scale-95 transform group">
+                <button className="w-full py-3 lg:py-4 px-4 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 flex items-center justify-center space-x-3 text-slate-700 font-medium shadow-sm hover:shadow-md text-sm lg:text-base">
                   <FacebookIcon 
-                    size="xl" 
-                    className="transition-transform duration-300 group-hover:scale-110"
+                    size="lg" 
+                    className="transition-transform duration-200"
                   />
                   <span>Continue with Facebook</span>
                 </button>
@@ -748,30 +741,30 @@ const Login = () => {
           </div>
         </div>
 
-        {/* Enhanced Footer with better spacing */}
-        <div className={`text-center mt-10 lg:mt-12 xl:mt-16 transition-all duration-500 ease-out ${
+        {/* Refined Footer */}
+        <div className={`text-center mt-8 lg:mt-10 transition-all duration-500 ease-out ${
           isPageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}>
-          <p className="text-base lg:text-lg xl:text-xl text-gray-600 leading-relaxed font-semibold">
+          <p className="text-sm text-slate-600 leading-relaxed font-medium">
             By continuing, you agree to our{" "}
-            <a href="#" className="text-blue-700 hover:text-blue-800 font-bold transition-all duration-200 hover:underline hover:scale-105">
+            <a href="#" className="text-slate-700 hover:text-slate-900 font-medium transition-all duration-200 hover:underline">
               Terms of Service
             </a>{" "}
             and{" "}
-            <a href="#" className="text-blue-700 hover:text-blue-800 font-bold transition-all duration-200 hover:underline hover:scale-105">
+            <a href="#" className="text-slate-700 hover:text-slate-900 font-medium transition-all duration-200 hover:underline">
               Privacy Policy
             </a>
           </p>
         </div>
       </div>
       
-      {/* Optimized Floating Particles with Performance Considerations */}
+      {/* Refined Floating Particles with Elegant Colors */}
       {!reducedAnimations && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {[...Array(particleCount)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-2 h-2 bg-blue-200/30 rounded-full animate-float"
+              className="absolute w-1.5 h-1.5 bg-slate-300/40 rounded-full animate-float"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
