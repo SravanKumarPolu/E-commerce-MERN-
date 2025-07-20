@@ -17,6 +17,7 @@ const Contact = lazy(() => import("./pages/Contact"));
 const Product = lazy(() => import("./pages/Product"));
 const Cart = lazy(() => import("./pages/Cart"));
 const Login = lazy(() => import("./pages/Login"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Orders = lazy(() => import("./pages/Orders"));
 const PlaceOrder = lazy(() => import("./pages/PlaceOrder"));
@@ -84,6 +85,14 @@ function App() {
             element={
               <Layout>
                 <Login />
+              </Layout>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <Layout>
+                <ResetPassword />
               </Layout>
             }
           />

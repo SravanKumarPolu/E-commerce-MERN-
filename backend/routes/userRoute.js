@@ -1,5 +1,19 @@
 import express from 'express';
-import { adminLogin, loginUser, registerUser, getUserProfile, updateUserProfile, addUserAddress, getUserAddresses, setDefaultAddress, editUserAddress, deleteUserAddress, debugUsers } from '../controllers/userController.js';
+import { 
+  adminLogin, 
+  loginUser, 
+  registerUser, 
+  requestPasswordReset,
+  resetPassword,
+  getUserProfile, 
+  updateUserProfile, 
+  addUserAddress, 
+  getUserAddresses, 
+  setDefaultAddress, 
+  editUserAddress, 
+  deleteUserAddress, 
+  debugUsers 
+} from '../controllers/userController.js';
 import { validateUserRegistration, validateUserLogin, validateAdminLogin } from '../middleware/validation.js';
 import authUser from '../middleware/auth.js';
 
@@ -10,16 +24,22 @@ userRouter.post('/register', validateUserRegistration, registerUser);
 userRouter.post('/login', validateUserLogin, loginUser);
 userRouter.post('/admin', validateAdminLogin, adminLogin);
 
-// Debug route (no auth required)
-userRouter.get('/debug', debugUsers);
+// Password recovery routes (public)
+userRouter.post('/forgot-password', requestPasswordReset);
+userRouter.post('/reset-password', resetPassword);
 
 // Protected routes
 userRouter.get('/profile', authUser, getUserProfile);
 userRouter.put('/profile', authUser, updateUserProfile);
-userRouter.post('/address', authUser, addUserAddress);
-userRouter.get('/address', authUser, getUserAddresses);
-userRouter.put('/address/:addressId/default', authUser, setDefaultAddress);
-userRouter.put('/address/:addressId', authUser, editUserAddress);
-userRouter.delete('/address/:addressId', authUser, deleteUserAddress);
+
+// Address management routes
+userRouter.post('/addresses', authUser, addUserAddress);
+userRouter.get('/addresses', authUser, getUserAddresses);
+userRouter.put('/addresses/default', authUser, setDefaultAddress);
+userRouter.put('/addresses/:addressId', authUser, editUserAddress);
+userRouter.delete('/addresses/:addressId', authUser, deleteUserAddress);
+
+// Debug route (admin only)
+userRouter.get('/debug', authUser, debugUsers);
 
 export default userRouter;

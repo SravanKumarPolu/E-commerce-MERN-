@@ -61,13 +61,22 @@ const Login = () => {
   // Password recovery handler
   const handlePasswordRecovery = async (recoveryEmail: string): Promise<boolean> => {
     try {
-      // TODO: Implement actual password recovery API call
-      console.log('Password recovery requested for:', recoveryEmail);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      return true;
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'}/api/user/forgot-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: recoveryEmail }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        return true;
+      } else {
+        console.error('Password recovery failed:', data.message);
+        return false;
+      }
     } catch (error) {
       console.error('Password recovery error:', error);
       return false;

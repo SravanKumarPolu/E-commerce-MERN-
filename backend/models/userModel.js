@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import validator from 'validator';
+import crypto from 'crypto';
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -67,15 +68,54 @@ const userSchema = new mongoose.Schema({
   },
   lastLogin: {
     type: Date
+  },
+  // Password reset fields
+  passwordResetToken: {
+    type: String,
+    select: false
+  },
+  passwordResetExpires: {
+    type: Date,
+    select: false
+  },
+  // Account security fields
+  loginAttempts: {
+    type: Number,
+    default: 0,
+    select: false
+  },
+  lockUntil: {
+    type: Date,
+    select: false
+  },
+  // Two-factor authentication fields
+  twoFactorSecret: {
+    type: String,
+    select: false
+  },
+  twoFactorEnabled: {
+    type: Boolean,
+    default: false
+  },
+  // Biometric authentication fields
+  biometricEnabled: {
+    type: Boolean,
+    default: false
+  },
+  biometricCredentials: {
+    type: String,
+    select: false
   }
 }, {
   timestamps: true, // Adds createdAt and updatedAt
   minimize: false
 });
 
-// Create indexes for better performance (removed duplicate email index)
+// Create indexes for better performance
 userSchema.index({ createdAt: 1 });
 userSchema.index({ isActive: 1 });
+userSchema.index({ email: 1 });
+userSchema.index({ passwordResetToken: 1 });
 
 // Pre-save middleware to validate password strength
 userSchema.pre('save', function(next) {
@@ -94,6 +134,66 @@ userSchema.methods.updateLastLogin = function() {
   return this.save();
 };
 
+// Instance method to create password reset token
+userSchema.methods.createPasswordResetToken = function() {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  
+  // Hash the token before saving to database
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+  
+  // Set expiration to 1 hour from now
+  this.passwordResetExpires = Date.now() + 60 * 60 * 1000; // 1 hour
+  
+  return resetToken;
+};
+
+// Instance method to check if password reset token is valid
+userSchema.methods.isPasswordResetTokenValid = function() {
+  return this.passwordResetExpires > Date.now();
+};
+
+// Instance method to clear password reset token
+userSchema.methods.clearPasswordResetToken = function() {
+  this.passwordResetToken = undefined;
+  this.passwordResetExpires = undefined;
+  return this.save();
+};
+
+// Instance method to increment login attempts
+userSchema.methods.incrementLoginAttempts = function() {
+  // If we have a previous lock that has expired, restart at 1
+  if (this.lockUntil && this.lockUntil < Date.now()) {
+    return this.updateOne({
+      $unset: { lockUntil: 1 },
+      $set: { loginAttempts: 1 }
+    });
+  }
+  
+  const updates = { $inc: { loginAttempts: 1 } };
+  
+  // Lock account after 5 failed attempts for 2 hours
+  if (this.loginAttempts + 1 >= 5 && !this.isLocked) {
+    updates.$set = { lockUntil: Date.now() + 2 * 60 * 60 * 1000 }; // 2 hours
+  }
+  
+  return this.updateOne(updates);
+};
+
+// Instance method to reset login attempts
+userSchema.methods.resetLoginAttempts = function() {
+  return this.updateOne({
+    $unset: { loginAttempts: 1, lockUntil: 1 }
+  });
+};
+
+// Virtual for checking if account is locked
+userSchema.virtual('isLocked').get(function() {
+  return !!(this.lockUntil && this.lockUntil > Date.now());
+});
+
 // Static method to find active users
 userSchema.statics.findActiveUsers = function() {
   return this.find({ isActive: true });
@@ -103,6 +203,12 @@ userSchema.statics.findActiveUsers = function() {
 userSchema.methods.toJSON = function() {
   const user = this.toObject();
   delete user.password;
+  delete user.passwordResetToken;
+  delete user.passwordResetExpires;
+  delete user.loginAttempts;
+  delete user.lockUntil;
+  delete user.twoFactorSecret;
+  delete user.biometricCredentials;
   delete user.__v;
   return user;
 };
