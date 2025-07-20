@@ -1,5 +1,6 @@
 import { AddIcon, ListIcon, OrdersIcon, DashboardIcon, SalesIcon, ProductsIcon, UsersIcon, SearchIcon } from '../assets/SidebarIcons';
 import { NavLink } from 'react-router-dom';
+import { ShieldIcon, CurrencyIcon } from './icons';
 
 function Sidebar() {
   const linkClasses = ({ isActive }: { isActive: boolean }) =>
@@ -19,9 +20,7 @@ function Sidebar() {
         <div className="p-8 pb-10 flex-shrink-0">
           <div className="flex items-center gap-4 mb-8">
             <div className="w-16 h-16 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 rounded-2xl flex items-center justify-center shadow-xl shadow-primary-500/30 border border-primary-400/20 hover:scale-105 transition-transform duration-300 hover:shadow-2xl hover:shadow-primary-500/40">
-              <svg className="w-9 h-9 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
+              <ShieldIcon className="w-9 h-9 text-white" />
             </div>
             <div>
               <h1 className="text-heading-2 font-bold bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 bg-clip-text text-transparent mb-1">
@@ -144,9 +143,7 @@ function Sidebar() {
                 <div className={`p-3.5 rounded-xl transition-all duration-300 ${
                   'bg-white/20 shadow-lg shadow-white/20 border border-white/10 backdrop-blur-sm'
                 }`}>
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                  </svg>
+                  <CurrencyIcon className="w-6 h-6" />
                 </div>
                 <span className="font-semibold">PayPal Analytics</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-success-400/0 to-success-400/0 group-hover:from-success-400/5 group-hover:to-success-400/10 transition-all duration-300 rounded-2xl pointer-events-none"></div>
