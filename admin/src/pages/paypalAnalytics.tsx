@@ -117,18 +117,28 @@ const PayPalAnalytics: React.FC = () => {
     }
   };
 
-  const formatCurrency = (amount: number) => {
+  const formatCurrency = (amount: number | null | undefined) => {
+    if (amount === null || amount === undefined || isNaN(amount)) {
+      return `${currency}0.00`;
+    }
     return `${currency}${amount.toFixed(2)}`;
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+  const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) {
+      return 'Unknown date';
+    }
+    try {
+      return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (error) {
+      return 'Invalid date';
+    }
   };
 
   if (loading) {
@@ -204,7 +214,7 @@ const PayPalAnalytics: React.FC = () => {
             </div>
             <div className="ml-6">
               <p className="text-caption text-neutral-500 mb-3 font-semibold">Total PayPal Payments</p>
-              <p className="text-heading-2 font-bold text-neutral-900">{data.summary.totalPayPalPayments}</p>
+              <p className="text-heading-2 font-bold text-neutral-900">{data.summary?.totalPayPalPayments || 0}</p>
             </div>
           </div>
         </div>
@@ -218,7 +228,7 @@ const PayPalAnalytics: React.FC = () => {
             </div>
             <div className="ml-6">
               <p className="text-caption text-neutral-500 mb-3 font-semibold">Total Amount Received</p>
-              <p className="text-heading-2 font-bold text-neutral-900">{formatCurrency(data.summary.totalPayPalAmount)}</p>
+              <p className="text-heading-2 font-bold text-neutral-900">{formatCurrency(data.summary?.totalPayPalAmount)}</p>
             </div>
           </div>
         </div>
@@ -232,7 +242,7 @@ const PayPalAnalytics: React.FC = () => {
             </div>
             <div className="ml-6">
               <p className="text-caption text-neutral-500 mb-3 font-semibold">Average Payment</p>
-              <p className="text-heading-2 font-bold text-neutral-900">{formatCurrency(data.summary.averagePayPalAmount)}</p>
+              <p className="text-heading-2 font-bold text-neutral-900">{formatCurrency(data.summary?.averagePayPalAmount)}</p>
             </div>
           </div>
         </div>
@@ -242,23 +252,33 @@ const PayPalAnalytics: React.FC = () => {
       <div className="card-modern p-8">
         <h2 className="text-heading-2 font-bold text-neutral-900 mb-6">Business Account Summary</h2>
         <div className="space-y-6">
-          {data.businessAccountSummary.map((account) => (
-            <div key={account._id} className="flex items-center justify-between p-6 bg-gradient-to-r from-neutral-50 via-white to-neutral-50 rounded-2xl border border-neutral-200/60 transition-all duration-300 hover:bg-gradient-to-r hover:from-neutral-100 hover:via-white hover:to-neutral-100 hover:shadow-lg hover:shadow-neutral-900/5 hover:scale-[1.02]">
-              <div>
-                <p className="font-bold text-neutral-900 text-lg mb-2">{account._id}</p>
-                <p className="text-body-small text-neutral-600 font-medium mb-1">
-                  {account.totalPayments} payments received
-                </p>
-                <p className="text-caption text-neutral-500 font-semibold">
-                  Last payment: {formatDate(account.lastPayment)}
-                </p>
+          {data.businessAccountSummary && data.businessAccountSummary.length > 0 ? (
+            data.businessAccountSummary.map((account) => (
+              <div key={account._id} className="flex items-center justify-between p-6 bg-gradient-to-r from-neutral-50 via-white to-neutral-50 rounded-2xl border border-neutral-200/60 transition-all duration-300 hover:bg-gradient-to-r hover:from-neutral-100 hover:via-white hover:to-neutral-100 hover:shadow-lg hover:shadow-neutral-900/5 hover:scale-[1.02]">
+                <div>
+                  <p className="font-bold text-neutral-900 text-lg mb-2">{account._id || 'Unknown Account'}</p>
+                  <p className="text-body-small text-neutral-600 font-medium mb-1">
+                    {account.totalPayments || 0} payments received
+                  </p>
+                  <p className="text-caption text-neutral-500 font-semibold">
+                    Last payment: {account.lastPayment ? formatDate(account.lastPayment) : 'No payments yet'}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="font-bold text-neutral-900 text-lg mb-2">{formatCurrency(account.totalAmount)}</p>
+                  <p className="text-caption text-neutral-500">Average: {formatCurrency(account.averageAmount)}</p>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="font-bold text-neutral-900 text-lg mb-2">{formatCurrency(account.totalAmount)}</p>
-                <p className="text-caption text-neutral-500">Average: {formatCurrency(account.averageAmount)}</p>
-              </div>
+            ))
+          ) : (
+            <div className="text-center py-8">
+              <svg className="mx-auto h-12 w-12 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+              </svg>
+              <h3 className="mt-2 text-sm font-medium text-neutral-900">No business account data</h3>
+              <p className="mt-1 text-sm text-neutral-500">No PayPal business account data available yet.</p>
             </div>
-          ))}
+          )}
         </div>
       </div>
 
@@ -266,21 +286,31 @@ const PayPalAnalytics: React.FC = () => {
       <div className="card-modern p-8">
         <h2 className="text-heading-2 font-bold text-neutral-900 mb-6">Recent PayPal Payments</h2>
         <div className="space-y-4">
-          {data.recentPayments.map((payment) => (
-            <div key={payment._id} className="flex items-center justify-between p-4 bg-neutral-50 rounded-xl">
-              <div>
-                <h3 className="font-semibold text-neutral-900">{payment.userId.name}</h3>
-                <p className="text-body-small text-neutral-600">{payment.userId.email}</p>
-                <p className="text-caption text-neutral-500">{formatDate(payment.paymentCompletedAt)}</p>
+          {data.recentPayments && data.recentPayments.length > 0 ? (
+            data.recentPayments.map((payment) => (
+              <div key={payment._id} className="flex items-center justify-between p-4 bg-neutral-50 rounded-xl">
+                <div>
+                  <h3 className="font-semibold text-neutral-900">{payment.userId?.name || 'Unknown User'}</h3>
+                  <p className="text-body-small text-neutral-600">{payment.userId?.email || 'No email'}</p>
+                  <p className="text-caption text-neutral-500">{payment.paymentCompletedAt ? formatDate(payment.paymentCompletedAt) : 'Unknown date'}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-heading-4 font-bold text-success-600">
+                    {payment.paypalCaptureCurrency || 'USD'} {payment.paypalCaptureAmount || 0}
+                  </p>
+                  <p className="text-caption text-neutral-500">Order: {formatCurrency(payment.total)}</p>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="text-heading-4 font-bold text-success-600">
-                  {payment.paypalCaptureCurrency} {payment.paypalCaptureAmount}
-                </p>
-                <p className="text-caption text-neutral-500">Order: {formatCurrency(payment.total)}</p>
-              </div>
+            ))
+          ) : (
+            <div className="text-center py-8">
+              <svg className="mx-auto h-12 w-12 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+              </svg>
+              <h3 className="mt-2 text-sm font-medium text-neutral-900">No recent payments</h3>
+              <p className="mt-1 text-sm text-neutral-500">No recent PayPal payments found.</p>
             </div>
-          ))}
+          )}
         </div>
       </div>
       <AuthDebug />
