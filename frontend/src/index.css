@@ -1176,3 +1176,260 @@
     font-size: 1.125rem;
   }
 }
+
+/* Enhanced Loading Animations for Login Component */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background-size: 200% 100%;
+}
+
+/* Enhanced Spinner Animations */
+@keyframes spin-smooth {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Enhanced Loading States */
+.loading-spinner-enhanced {
+  position: relative;
+  display: inline-block;
+}
+
+.loading-spinner-enhanced::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  animation: pulse-glow 2s infinite;
+}
+
+.loading-spinner-enhanced::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin-smooth 1s linear infinite;
+}
+
+/* Enhanced Button Loading States */
+.btn-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+/* Enhanced Form Loading Skeleton */
+.skeleton-line {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-input {
+  height: 56px;
+  background: linear-gradient(90deg, #f8fafc 25%, #e2e8f0 50%, #f8fafc 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 12px;
+}
+
+/* Enhanced Social Login Loading */
+.social-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.social-loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+/* Enhanced Validation Animations */
+.validation-success {
+  animation: scale-in 0.3s ease-out;
+}
+
+.validation-error {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  75% {
+    transform: translateX(2px);
+  }
+}
+
+/* Enhanced Focus States */
+.input-focus-enhanced {
+  transition: all 0.2s ease-out;
+}
+
+.input-focus-enhanced:focus {
+  transform: scale(1.01);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Enhanced Loading Text */
+.loading-text {
+  animation: pulse-glow 2s infinite;
+}
+
+/* Enhanced Success Animation */
+.success-checkmark {
+  animation: scale-in 0.3s ease-out, bounce-subtle 0.6s ease-out 0.3s;
+}
+
+/* Enhanced Error Animation */
+.error-cross {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Enhanced Form Transition */
+.form-transition {
+  animation: fade-in-up 0.5s ease-out;
+}
+
+/* Enhanced Button Press Effect */
+.btn-press {
+  transition: transform 0.1s ease-out;
+}
+
+.btn-press:active {
+  transform: scale(0.98);
+}
+
+/* Enhanced Loading Overlay */
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fade-in-up 0.3s ease-out;
+}
+
+/* Enhanced Progress Indicator */
+.progress-dots {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.progress-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+  animation: pulse-glow 1.5s infinite;
+}
+
+.progress-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.progress-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Enhanced Loading States for Different Actions */
+.loading-authenticating {
+  background: linear-gradient(90deg, #3b82f6, #1d4ed8, #3b82f6);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.loading-connecting {
+  background: linear-gradient(90deg, #059669, #047857, #059669);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.loading-processing {
+  background: linear-gradient(90deg, #7c3aed, #5b21b6, #7c3aed);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}

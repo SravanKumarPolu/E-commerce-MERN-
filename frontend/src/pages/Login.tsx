@@ -361,13 +361,13 @@ const Login = () => {
                 </div>
               )}
 
-              {/* Loading Skeleton with Refined Spacing */}
+              {/* Enhanced Loading Skeleton with Polished Animations */}
               {isFormSubmitting && !isLoading && (
-                <div className="space-y-6 animate-pulse" aria-hidden="true">
-                  <div className="h-4 bg-slate-200 rounded-lg animate-shimmer"></div>
-                  <div className="h-14 bg-slate-200 rounded-xl animate-shimmer"></div>
-                  <div className="h-14 bg-slate-200 rounded-xl animate-shimmer"></div>
-                  <div className="h-14 bg-slate-200 rounded-xl animate-shimmer"></div>
+                <div className="space-y-6" aria-hidden="true">
+                  <div className="h-4 skeleton-line"></div>
+                  <div className="skeleton-input"></div>
+                  <div className="skeleton-input"></div>
+                  <div className="skeleton-input"></div>
                 </div>
               )}
 
@@ -383,7 +383,7 @@ const Login = () => {
                     <input
                       id="name"
                       type="text"
-                      className={`w-full pl-12 pr-4 py-3 lg:py-4 text-base border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 transition-all duration-200 bg-white text-slate-900 placeholder-slate-500 group-hover:border-slate-400 ${
+                      className={`w-full pl-12 pr-4 py-3 lg:py-4 text-base border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 transition-all duration-200 bg-white text-slate-900 placeholder-slate-500 group-hover:border-slate-400 input-focus-enhanced ${
                         fieldErrors.name 
                           ? 'border-red-300 focus:ring-red-500/20 focus:border-red-500' 
                           : name.length > 0 && !fieldErrors.name 
@@ -412,19 +412,19 @@ const Login = () => {
                         {fieldErrors.name ? (
                           <ExclamationIcon 
                             size="md" 
-                            className="text-red-500"
+                            className="text-red-500 error-cross"
                           />
                         ) : (
                           <CheckIcon 
                             size="md" 
-                            className="text-emerald-500"
+                            className="text-emerald-500 success-checkmark"
                           />
                         )}
                       </div>
                     )}
                   </div>
                   {fieldErrors.name && (
-                    <div id="name-error" className="text-red-600 text-sm mt-2 flex items-center space-x-2" role="alert">
+                    <div id="name-error" className="text-red-600 text-sm mt-2 flex items-center space-x-2 validation-error" role="alert">
                       <ExclamationIcon 
                         size="sm" 
                         className="text-red-500" 
@@ -447,7 +447,7 @@ const Login = () => {
                       ref={emailInputRef}
                       id="email"
                       type="email"
-                      className={`w-full pl-12 pr-4 py-3 lg:py-4 text-base border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 transition-all duration-200 bg-white text-slate-900 placeholder-slate-500 group-hover:border-slate-400 ${
+                      className={`w-full pl-12 pr-4 py-3 lg:py-4 text-base border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 transition-all duration-200 bg-white text-slate-900 placeholder-slate-500 group-hover:border-slate-400 input-focus-enhanced ${
                         fieldErrors.email 
                           ? 'border-red-300 focus:ring-red-500/20 focus:border-red-500' 
                           : email.length > 0 && !fieldErrors.email 
@@ -476,19 +476,19 @@ const Login = () => {
                         {fieldErrors.email ? (
                           <ExclamationIcon 
                             size="md" 
-                            className="text-red-500"
+                            className="text-red-500 error-cross"
                           />
                         ) : (
                           <CheckIcon 
                             size="md" 
-                            className="text-emerald-500"
+                            className="text-emerald-500 success-checkmark"
                           />
                         )}
                       </div>
                     )}
                   </div>
                   {fieldErrors.email && (
-                    <div id="email-error" className="text-red-600 text-sm mt-2 flex items-center space-x-2" role="alert">
+                    <div id="email-error" className="text-red-600 text-sm mt-2 flex items-center space-x-2 validation-error" role="alert">
                       <ExclamationIcon 
                         size="sm" 
                         className="text-red-500" 
@@ -511,7 +511,7 @@ const Login = () => {
                       ref={passwordInputRef}
                       id="password"
                       type={showPassword ? "text" : "password"}
-                      className={`w-full pl-12 pr-12 py-3 lg:py-4 text-base border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 transition-all duration-200 bg-white text-slate-900 placeholder-slate-500 group-hover:border-slate-400 ${
+                      className={`w-full pl-12 pr-12 py-3 lg:py-4 text-base border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 transition-all duration-200 bg-white text-slate-900 placeholder-slate-500 group-hover:border-slate-400 input-focus-enhanced ${
                         fieldErrors.password 
                           ? 'border-red-300 focus:ring-red-500/20 focus:border-red-500' 
                           : password.length > 0 && !fieldErrors.password 
@@ -537,7 +537,7 @@ const Login = () => {
                     </div>
                     <button
                       type="button"
-                      className="absolute inset-y-0 right-0 pr-4 flex items-center hover:bg-slate-50 rounded-r-xl transition-all duration-200"
+                      className="absolute inset-y-0 right-0 pr-4 flex items-center hover:bg-slate-50 rounded-r-xl transition-all duration-200 btn-press"
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       <EyeIcon 
@@ -553,12 +553,12 @@ const Login = () => {
                         {fieldErrors.password ? (
                           <ExclamationIcon 
                             size="md" 
-                            className="text-red-500"
+                            className="text-red-500 error-cross"
                           />
                         ) : (
                           <CheckIcon 
                             size="md" 
-                            className="text-emerald-500"
+                            className="text-emerald-500 success-checkmark"
                           />
                         )}
                       </div>
@@ -567,7 +567,7 @@ const Login = () => {
                   
                   {/* Simplified password error message */}
                   {fieldErrors.password && (
-                    <div id="password-error" className="text-red-600 text-sm mt-2 flex items-center space-x-2" role="alert">
+                    <div id="password-error" className="text-red-600 text-sm mt-2 flex items-center space-x-2 validation-error" role="alert">
                       <ExclamationIcon 
                         size="sm" 
                         className="text-red-500" 
@@ -579,7 +579,7 @@ const Login = () => {
                   
                   {/* Simplified Password Requirements - Only show for Sign Up */}
                   {currentState === "Sign Up" && password && !isFormSubmitting && (
-                    <div className={`mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200 transition-all duration-300 ease-out`}>
+                    <div className={`mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200 transition-all duration-300 ease-out form-transition`}>
                       <p className="text-sm font-semibold text-slate-700 mb-3">Password requirements:</p>
                       <div className="space-y-2">
                         {[
@@ -590,7 +590,7 @@ const Login = () => {
                           { key: 'hasSpecialChar', label: 'One special character (@$!%*?&)', test: /[@$!%*?&]/.test(password) }
                         ].map((requirement, index) => (
                           <div key={requirement.key} className={`flex items-center space-x-3 transition-all duration-200 ${
-                            requirement.test ? 'animate-fade-in' : ''
+                            requirement.test ? 'animate-fade-in validation-success' : ''
                           }`} style={{ animationDelay: `${index * 50}ms` }}>
                             <ValidationIcon 
                               size="sm" 
@@ -663,28 +663,34 @@ const Login = () => {
                 </div>
               )}
 
-              {/* Refined Submit Button with Elegant Design */}
+              {/* Enhanced Submit Button with Polished Loading Animation */}
               <div className="pt-6 lg:pt-8">
                 <button 
                   type="submit" 
                   disabled={isLoading}
-                  className={`w-full py-4 lg:py-5 px-6 text-white text-base lg:text-lg font-semibold rounded-xl shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 transform ${
+                  className={`w-full py-4 lg:py-5 px-6 text-white text-base lg:text-lg font-semibold rounded-xl shadow-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 transform relative overflow-hidden btn-press ${
                     isLoading
-                      ? 'bg-slate-400 cursor-not-allowed'
+                      ? 'bg-slate-500 cursor-not-allowed btn-loading'
                       : 'bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-800 hover:to-slate-900 hover:shadow-md active:scale-98 focus:ring-slate-500'
                   }`}
                   style={{ display: 'block', visibility: 'visible', opacity: 1 }}
                   aria-describedby={isLoading ? "loading-status" : undefined}
                 >
+                  {/* Enhanced Loading Background Animation */}
+                  {isLoading && (
+                    <div className="absolute inset-0 loading-authenticating"></div>
+                  )}
+                  
                   {isLoading ? (
-                    <div className="flex items-center justify-center space-x-3">
-                      <div className="w-5 h-5 lg:w-6 lg:h-6 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true"></div>
-                      <span className="font-medium">
+                    <div className="flex items-center justify-center space-x-4 relative z-10">
+                      {/* Enhanced Spinner with Pulse Effect */}
+                      <div className="loading-spinner-enhanced w-6 h-6 lg:w-7 lg:h-7 text-white"></div>
+                      <span className="font-medium loading-text">
                         {currentState === "Login" ? "Signing in..." : "Creating account..."}
                       </span>
                     </div>
                   ) : (
-                    <span className="font-semibold">
+                    <span className="font-semibold relative z-10">
                       {currentState === "Login" ? "Sign In" : "Create Account"}
                     </span>
                   )}
@@ -709,15 +715,24 @@ const Login = () => {
               </div>
             )}
 
-            {/* Refined Social Login Buttons */}
+            {/* Enhanced Social Login Buttons with Polished Loading States */}
             {!isFormSubmitting && (
               <div className="space-y-4">
                 <button 
-                  className="w-full py-3 lg:py-4 px-4 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 flex items-center justify-center space-x-3 text-slate-700 font-medium shadow-sm hover:shadow-md text-sm lg:text-base"
+                  className="w-full py-3 lg:py-4 px-4 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 flex items-center justify-center space-x-3 text-slate-700 font-medium shadow-sm hover:shadow-md text-sm lg:text-base relative overflow-hidden btn-press"
                   disabled={isSocialLoading}
                 >
+                  {/* Enhanced Loading Background for Social Buttons */}
+                  {isSocialLoading && (
+                    <div className="absolute inset-0 social-loading"></div>
+                  )}
+                  
                   {isSocialLoading ? (
-                    <div className="w-5 h-5 border-2 border-slate-300 border-t-slate-600 rounded-full animate-spin"></div>
+                    <div className="flex items-center justify-center space-x-3 relative z-10">
+                      {/* Enhanced Social Loading Spinner */}
+                      <div className="loading-spinner-enhanced w-5 h-5 text-slate-600"></div>
+                      <span className="text-slate-600 font-medium loading-text">Connecting...</span>
+                    </div>
                   ) : (
                     <>
                       <GoogleIcon 
@@ -729,7 +744,7 @@ const Login = () => {
                   )}
                 </button>
                 
-                <button className="w-full py-3 lg:py-4 px-4 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 flex items-center justify-center space-x-3 text-slate-700 font-medium shadow-sm hover:shadow-md text-sm lg:text-base">
+                <button className="w-full py-3 lg:py-4 px-4 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 flex items-center justify-center space-x-3 text-slate-700 font-medium shadow-sm hover:shadow-md text-sm lg:text-base btn-press">
                   <FacebookIcon 
                     size="lg" 
                     className="transition-transform duration-200"
