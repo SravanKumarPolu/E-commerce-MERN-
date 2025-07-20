@@ -11,6 +11,7 @@ import SalesAnalytics from "./pages/salesAnalytics";
 import ProductAnalytics from "./pages/productAnalytics";
 import UserAnalytics from "./pages/userAnalytics";
 import SearchAnalytics from "./pages/searchAnalytics";
+import PayPalAnalytics from "./pages/paypalAnalytics";
 import Sidebar from "./components/Sidebar";
 import { ToastContainer } from "react-toastify";
 
@@ -65,6 +66,7 @@ const App = () => {
                   <Route path="/analytics/products" element={<ProductAnalytics />} />
                   <Route path="/analytics/users" element={<UserAnalytics />} />
                   <Route path="/analytics/search" element={<SearchAnalytics />} />
+                  <Route path="/analytics/paypal" element={<PayPalAnalytics />} />
                 </Routes>
               </div>
             </main>

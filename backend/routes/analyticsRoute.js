@@ -5,7 +5,8 @@ import {
   getProductPerformance,
   getUserBehavior,
   getSearchAnalytics,
-  getDashboardSummary
+  getDashboardSummary,
+  getPayPalAnalytics
 } from '../controllers/analyticsController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
@@ -19,6 +20,9 @@ router.get('/dashboard-summary', protect, admin, getDashboardSummary);
 
 // Sales analytics (admin only)
 router.get('/sales', protect, admin, getSalesAnalytics);
+
+// PayPal analytics (admin only)
+router.get('/paypal', protect, admin, getPayPalAnalytics);
 
 // Product performance analytics (admin only)
 router.get('/products', protect, admin, getProductPerformance);

@@ -654,3 +654,118 @@ export const getDashboardSummary = async (req, res) => {
     res.status(500).json({ message: 'Error fetching dashboard summary' });
   }
 }; 
+
+// Get PayPal payment analytics
+export const getPayPalAnalytics = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+    
+    let start, end;
+    
+    if (startDate && endDate) {
+      start = new Date(startDate);
+      end = new Date(endDate);
+    } else {
+      // Default to last 30 days
+      end = new Date();
+      start = new Date();
+      start.setDate(start.getDate() - 30);
+    }
+
+    // Get PayPal payment data
+    const paypalData = await orderModel.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: start, $lte: end },
+          paymentMethod: 'PayPal',
+          paymentStatus: 'completed',
+          isActive: true
+        }
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" }
+          },
+          totalPayments: { $sum: 1 },
+          totalAmount: { $sum: "$paypalCaptureAmount" },
+          averageAmount: { $avg: "$paypalCaptureAmount" }
+        }
+      },
+      {
+        $sort: { _id: 1 }
+      }
+    ]);
+
+    // Get business account summary
+    const businessAccountSummary = await orderModel.aggregate([
+      {
+        $match: {
+          paymentMethod: 'PayPal',
+          paymentStatus: 'completed',
+          isActive: true
+        }
+      },
+      {
+        $group: {
+          _id: "$paypalPayeeEmail",
+          totalPayments: { $sum: 1 },
+          totalAmount: { $sum: "$paypalCaptureAmount" },
+          averageAmount: { $avg: "$paypalCaptureAmount" },
+          lastPayment: { $max: "$paymentCompletedAt" }
+        }
+      }
+    ]);
+
+    // Get recent PayPal payments
+    const recentPayments = await orderModel.find({
+      paymentMethod: 'PayPal',
+      paymentStatus: 'completed',
+      isActive: true
+    })
+    .sort({ paymentCompletedAt: -1 })
+    .limit(10)
+    .populate('userId', 'name email')
+    .select('paypalCaptureAmount paypalCaptureCurrency paypalPayeeEmail paymentCompletedAt userId total');
+
+    // Calculate summary statistics
+    const summary = await orderModel.aggregate([
+      {
+        $match: {
+          paymentMethod: 'PayPal',
+          paymentStatus: 'completed',
+          isActive: true
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalPayPalPayments: { $sum: 1 },
+          totalPayPalAmount: { $sum: "$paypalCaptureAmount" },
+          averagePayPalAmount: { $avg: "$paypalCaptureAmount" }
+        }
+      }
+    ]);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        paypalData,
+        businessAccountSummary,
+        recentPayments,
+        summary: summary[0] || {
+          totalPayPalPayments: 0,
+          totalPayPalAmount: 0,
+          averagePayPalAmount: 0
+        },
+        period: {
+          start: start.toISOString(),
+          end: end.toISOString()
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error getting PayPal analytics:', error);
+    res.status(500).json({ message: 'Error fetching PayPal analytics' });
+  }
+}; 
