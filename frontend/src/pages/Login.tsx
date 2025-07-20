@@ -277,12 +277,12 @@ const Login = () => {
       <div className={`w-full max-w-md lg:max-w-lg xl:max-w-xl relative z-10 transition-all duration-700 ease-out ${
         isPageLoaded ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
       }`}>
-        {/* Enhanced Header Section with Better Typography */}
-        <div className={`text-center mb-8 lg:mb-10 xl:mb-12 transition-all duration-500 ease-out ${
+        {/* Enhanced Header Section with Improved Visual Hierarchy */}
+        <div className={`text-center mb-10 lg:mb-12 xl:mb-16 transition-all duration-500 ease-out ${
           isPageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}>
-          {/* Enhanced Logo with Better Proportions */}
-          <div className={`inline-flex items-center justify-center w-16 h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-2xl lg:rounded-3xl shadow-xl lg:shadow-2xl mb-6 lg:mb-8 xl:mb-10 transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:rotate-3 hover:from-blue-700 hover:via-blue-800 hover:to-indigo-900 ${
+          {/* Enhanced Logo with Better Proportions and Prominence */}
+          <div className={`inline-flex items-center justify-center w-20 h-20 lg:w-24 lg:h-24 xl:w-28 xl:h-28 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-3xl lg:rounded-4xl shadow-2xl lg:shadow-3xl mb-8 lg:mb-10 xl:mb-12 transition-all duration-300 hover:scale-110 hover:shadow-3xl hover:rotate-3 hover:from-blue-700 hover:via-blue-800 hover:to-indigo-900 ${
             isPageLoaded && !reducedAnimations ? 'animate-bounce-gentle' : ''
           }`} style={{ animationDelay: '1s' }}>
             <UserIcon 
@@ -292,14 +292,14 @@ const Login = () => {
             />
           </div>
           
-          {/* Enhanced Typography with Better Hierarchy */}
-          <h1 className={`text-3xl lg:text-4xl xl:text-5xl font-black text-gray-900 mb-4 lg:mb-6 xl:mb-8 leading-tight tracking-tight transition-all duration-500 ease-out ${
+          {/* Enhanced Typography with Clearer Visual Hierarchy */}
+          <h1 className={`text-4xl lg:text-5xl xl:text-6xl font-black text-gray-900 mb-6 lg:mb-8 xl:mb-10 leading-tight tracking-tight transition-all duration-500 ease-out ${
             isPageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`} style={{ animationDelay: '0.4s' }}>
             {currentState === "Login" ? "Welcome Back" : "Create Account"}
           </h1>
           
-          <p className={`text-base lg:text-lg xl:text-xl text-gray-600 font-semibold leading-relaxed max-w-md mx-auto transition-all duration-500 ease-out ${
+          <p className={`text-lg lg:text-xl xl:text-2xl text-gray-600 font-semibold leading-relaxed max-w-lg mx-auto transition-all duration-500 ease-out ${
             isPageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`} style={{ animationDelay: '0.6s' }}>
             {currentState === "Login" 
@@ -309,438 +309,450 @@ const Login = () => {
           </p>
         </div>
 
-        {/* Enhanced Form Card with Better Spacing */}
-        <div className={`bg-white/90 backdrop-blur-md rounded-3xl lg:rounded-4xl shadow-2xl lg:shadow-3xl p-6 lg:p-8 xl:p-10 transition-all duration-500 ease-out ${
+        {/* Enhanced Form Card with Better Spacing and Layout */}
+        <div className={`bg-white/95 backdrop-blur-md rounded-3xl lg:rounded-4xl shadow-2xl lg:shadow-3xl p-8 lg:p-10 xl:p-12 transition-all duration-500 ease-out ${
           isPageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        } hover:shadow-3xl hover:-translate-y-1 hover:shadow-blue-100/50 border border-white/30`}>
-          <form 
-            ref={formRef}
-            onSubmit={onSubmitHandler} 
-            className="space-y-6 lg:space-y-8 xl:space-y-10"
-            aria-label={`${currentState} form`}
-          >
-            {/* Enhanced Error Message with Better Visibility */}
-            {error && (
-              <div 
-                className="bg-gradient-to-r from-red-50 to-red-100 border-2 border-red-200 text-red-900 px-4 py-3 rounded-2xl text-sm font-bold animate-fade-in relative overflow-hidden shadow-lg"
-                role="alert"
-                aria-live="polite"
-              >
-                <div className="flex items-center space-x-3 relative z-10">
-                  <ExclamationIcon 
-                    size="md" 
-                    className="text-red-600 flex-shrink-0 animate-pulse" 
-                    aria-hidden="true"
-                  />
-                  <span>{error}</span>
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-r from-red-200/30 via-red-100/40 to-red-200/30 animate-pulse-slow"></div>
-              </div>
-            )}
-
-            {/* Enhanced Success Message */}
-            {success && (
-              <div 
-                className="bg-gradient-to-r from-green-50 to-emerald-100 border-2 border-green-200 text-green-900 px-4 py-3 rounded-2xl text-sm font-bold animate-bounce-gentle relative overflow-hidden shadow-lg"
-                role="alert"
-                aria-live="polite"
-              >
-                <div className="flex items-center space-x-3 relative z-10">
-                  <CheckIcon 
-                    size="md" 
-                    className="text-green-600 flex-shrink-0 animate-pulse" 
-                    aria-hidden="true"
-                  />
-                  <span>{success}</span>
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-r from-green-200/30 via-emerald-100/40 to-green-200/30 animate-pulse-slow"></div>
-              </div>
-            )}
-
-            {/* Loading Skeleton */}
-            {isFormSubmitting && !isLoading && (
-              <div className="space-y-6 animate-pulse" aria-hidden="true">
-                <div className="h-4 bg-gray-200 rounded-xl animate-shimmer"></div>
-                <div className="h-14 bg-gray-200 rounded-xl animate-shimmer"></div>
-                <div className="h-14 bg-gray-200 rounded-xl animate-shimmer"></div>
-                <div className="h-14 bg-gray-200 rounded-xl animate-shimmer"></div>
-              </div>
-            )}
-
-            {/* Enhanced Name Field - Only for Sign Up */}
-            {currentState === "Sign Up" && !isFormSubmitting && (
-              <div className={`space-y-3 transition-all duration-500 ease-out ${
-                currentState === "Sign Up" ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0'
-              }`}>
-                <label htmlFor="name" className="block text-sm lg:text-base xl:text-lg font-bold text-gray-900 transition-colors duration-200 hover:text-blue-700">
-                  Full Name
-                </label>
-                <div className="relative group">
-                  <input
-                    id="name"
-                    type="text"
-                    className={`w-full pl-12 pr-4 py-3 lg:py-4 xl:py-5 text-sm lg:text-base xl:text-lg border-2 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 bg-white/60 backdrop-blur-sm text-gray-900 placeholder-gray-500 group-hover:border-blue-400 group-hover:shadow-lg group-hover:bg-white/90 ${
-                      fieldErrors.name 
-                        ? 'border-red-400 focus:ring-red-500/20 animate-shake' 
-                        : name.length > 0 && !fieldErrors.name 
-                          ? 'border-green-400 focus:ring-green-500/20'
-                          : 'border-gray-300 focus:ring-blue-500/20'
-                    } ${focusedField === 'name' ? 'ring-4 ring-blue-500/20 shadow-xl bg-white' : ''}`}
-                    placeholder="Enter your full name"
-                    value={name}
-                    onChange={(e) => handleNameChange(e.target.value)}
-                    onFocus={() => setFocusedField('name')}
-                    onBlur={() => setFocusedField('')}
-                    required
-                    aria-describedby={fieldErrors.name ? "name-error" : undefined}
-                    aria-invalid={!!fieldErrors.name}
-                  />
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-transform duration-200 group-focus-within:scale-110">
-                    <UserIcon 
-                      size="lg" 
-                      className="text-gray-500 transition-colors duration-200 group-focus-within:text-blue-600" 
-                      aria-hidden="true"
-                    />
-                  </div>
-                  {/* Validation indicator */}
-                  {name.length > 0 && (
-                    <div className="absolute inset-y-0 right-0 pr-4 flex items-center animate-fade-in" aria-hidden="true">
-                      {fieldErrors.name ? (
-                        <ExclamationIcon 
-                          size="lg" 
-                          className="text-red-600 animate-pulse"
-                        />
-                      ) : (
-                        <CheckIcon 
-                          size="lg" 
-                          className="text-green-600 animate-bounce-gentle"
-                        />
-                      )}
-                    </div>
-                  )}
-                </div>
-                {fieldErrors.name && (
-                  <div id="name-error" className="text-red-700 text-xs lg:text-sm xl:text-base font-bold mt-2 animate-fade-in flex items-center space-x-2" role="alert">
-                    <ExclamationIcon 
-                      size="sm" 
-                      className="text-red-600 animate-pulse" 
-                      aria-hidden="true"
-                    />
-                    <span>{fieldErrors.name}</span>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Enhanced Email Field */}
-            {!isFormSubmitting && (
-              <div className="space-y-3">
-                <label htmlFor="email" className="block text-sm lg:text-base xl:text-lg font-bold text-gray-900 transition-colors duration-200 hover:text-blue-700">
-                  Email Address
-                </label>
-                <div className="relative group">
-                  <input
-                    ref={emailInputRef}
-                    id="email"
-                    type="email"
-                    className={`w-full pl-12 pr-4 py-3 lg:py-4 xl:py-5 text-sm lg:text-base xl:text-lg border-2 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 bg-white/60 backdrop-blur-sm text-gray-900 placeholder-gray-500 group-hover:border-blue-400 group-hover:shadow-lg group-hover:bg-white/90 ${
-                      fieldErrors.email 
-                        ? 'border-red-400 focus:ring-red-500/20 animate-shake' 
-                        : email.length > 0 && !fieldErrors.email 
-                          ? 'border-green-400 focus:ring-green-500/20'
-                          : 'border-gray-300 focus:ring-blue-500/20'
-                    } ${focusedField === 'email' ? 'ring-4 ring-blue-500/20 shadow-xl bg-white' : ''}`}
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => handleEmailChange(e.target.value)}
-                    onFocus={() => setFocusedField('email')}
-                    onBlur={() => setFocusedField('')}
-                    required
-                    aria-describedby={fieldErrors.email ? "email-error" : undefined}
-                    aria-invalid={!!fieldErrors.email}
-                  />
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-transform duration-200 group-focus-within:scale-110">
-                    <EmailIcon 
-                      size="lg" 
-                      className="text-gray-500 transition-colors duration-200 group-focus-within:text-blue-600" 
-                      aria-hidden="true"
-                    />
-                  </div>
-                  {/* Validation indicator */}
-                  {email.length > 0 && (
-                    <div className="absolute inset-y-0 right-0 pr-4 flex items-center animate-fade-in" aria-hidden="true">
-                      {fieldErrors.email ? (
-                        <ExclamationIcon 
-                          size="lg" 
-                          className="text-red-600 animate-pulse"
-                        />
-                      ) : (
-                        <CheckIcon 
-                          size="lg" 
-                          className="text-green-600 animate-bounce-gentle"
-                        />
-                      )}
-                    </div>
-                  )}
-                </div>
-                {fieldErrors.email && (
-                  <div id="email-error" className="text-red-700 text-xs lg:text-sm xl:text-base font-bold mt-2 animate-fade-in flex items-center space-x-2" role="alert">
-                    <ExclamationIcon 
-                      size="sm" 
-                      className="text-red-600 animate-pulse" 
-                      aria-hidden="true"
-                    />
-                    <span>{fieldErrors.email}</span>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Enhanced Password Field */}
-            {!isFormSubmitting && (
-              <div className="space-y-3">
-                <label htmlFor="password" className="block text-sm lg:text-base xl:text-lg font-bold text-gray-900 transition-colors duration-200 hover:text-blue-700">
-                  Password
-                </label>
-                <div className="relative group">
-                  <input
-                    ref={passwordInputRef}
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    className={`w-full pl-12 pr-12 py-3 lg:py-4 xl:py-5 text-sm lg:text-base xl:text-lg border-2 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 bg-white/60 backdrop-blur-sm text-gray-900 placeholder-gray-500 group-hover:border-blue-400 group-hover:shadow-lg group-hover:bg-white/90 ${
-                      fieldErrors.password 
-                        ? 'border-red-400 focus:ring-red-500/20 animate-shake' 
-                        : password.length > 0 && !fieldErrors.password 
-                          ? 'border-green-400 focus:ring-green-500/20'
-                          : 'border-gray-300 focus:ring-blue-500/20'
-                    } ${focusedField === 'password' ? 'ring-4 ring-blue-500/20 shadow-xl bg-white' : ''}`}
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => handlePasswordChange(e.target.value)}
-                    onFocus={() => setFocusedField('password')}
-                    onBlur={() => setFocusedField('')}
-                    required
-                    minLength={8}
-                    aria-describedby={fieldErrors.password ? "password-error" : undefined}
-                    aria-invalid={!!fieldErrors.password}
-                  />
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-transform duration-200 group-focus-within:scale-110">
-                    <LockIcon 
-                      size="lg" 
-                      className="text-gray-500 transition-colors duration-200 group-focus-within:text-blue-600" 
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center hover:bg-gray-50/80 rounded-r-2xl transition-all duration-200 hover:scale-110 active:scale-95 hover:shadow-inner"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    <EyeIcon 
-                      size="lg" 
-                      className="text-gray-500 hover:text-gray-700 transition-all duration-200 hover:rotate-12" 
-                      isVisible={!showPassword}
-                      aria-hidden="true"
-                    />
-                  </button>
-                  {/* Validation indicator - positioned to the left of password toggle */}
-                  {password.length > 0 && (
-                    <div className="absolute inset-y-0 right-0 pr-12 flex items-center animate-fade-in" aria-hidden="true">
-                      {fieldErrors.password ? (
-                        <ExclamationIcon 
-                          size="lg" 
-                          className="text-red-600 animate-pulse"
-                        />
-                      ) : (
-                        <CheckIcon 
-                          size="lg" 
-                          className="text-green-600 animate-bounce-gentle"
-                        />
-                      )}
-                    </div>
-                  )}
-                </div>
-                
-                {/* Password error message */}
-                {fieldErrors.password && (
-                  <div id="password-error" className="text-red-700 text-xs lg:text-sm xl:text-base font-bold mt-2 animate-fade-in flex items-center space-x-2" role="alert">
-                    <ExclamationIcon 
-                      size="sm" 
-                      className="text-red-600 animate-pulse" 
-                      aria-hidden="true"
-                    />
-                    <span>{fieldErrors.password}</span>
-                  </div>
-                )}
-                
-                {/* Enhanced Password Requirements - Only show for Sign Up */}
-                {currentState === "Sign Up" && password && !isFormSubmitting && (
-                  <div className={`mt-4 p-4 bg-gradient-to-br from-gray-50/90 to-blue-50/90 backdrop-blur-sm rounded-2xl border-2 border-gray-200/60 transition-all duration-500 ease-out animate-slide-up hover:shadow-lg hover:border-blue-200 hover:from-blue-50/95 hover:to-indigo-50/95`}>
-                    <p className="text-sm lg:text-base xl:text-lg font-bold text-gray-900 mb-4">Password requirements:</p>
-                    <div className="space-y-3">
-                      {[
-                        { key: 'minLength', label: 'At least 8 characters', test: password.length >= 8 },
-                        { key: 'hasUpperCase', label: 'One uppercase letter', test: /[A-Z]/.test(password) },
-                        { key: 'hasLowerCase', label: 'One lowercase letter', test: /[a-z]/.test(password) },
-                        { key: 'hasNumbers', label: 'One number', test: /\d/.test(password) },
-                        { key: 'hasSpecialChar', label: 'One special character (@$!%*?&)', test: /[@$!%*?&]/.test(password) }
-                      ].map((requirement, index) => (
-                        <div key={requirement.key} className={`flex items-center space-x-3 transition-all duration-300 ease-out hover:scale-105 ${
-                          requirement.test ? 'animate-fade-in' : ''
-                        }`} style={{ animationDelay: `${index * 100}ms` }}>
-                          <ValidationIcon 
-                            size="sm" 
-                            className={`transition-all duration-300 ${requirement.test ? 'text-green-600 scale-110' : 'text-gray-500'}`}
-                            isValid={requirement.test}
-                          />
-                          <span className={`text-sm lg:text-base transition-all duration-300 ${requirement.test ? 'text-green-800 font-bold' : 'text-gray-700 font-semibold'}`}>
-                            {requirement.label}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Remember Me Checkbox - Only for Login */}
-            {currentState === "Login" && !isFormSubmitting && (
-              <div className="flex items-center space-x-3">
-                <input
-                  id="remember-me"
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                />
-                <label htmlFor="remember-me" className="text-sm lg:text-base text-gray-700 font-medium">
-                  Remember me
-                </label>
-              </div>
-            )}
-
-            {/* Biometric Authentication - Only for Login */}
-            {currentState === "Login" && !isFormSubmitting && (
-              <button
-                type="button"
-                onClick={handleBiometricAuth}
-                className="w-full py-3 lg:py-4 px-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 flex items-center justify-center space-x-3 font-bold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
-                aria-label="Sign in with biometric authentication"
-              >
-                <ShieldIcon 
-                  size="md" 
-                  className="text-white" 
-                  aria-hidden="true"
-                />
-                <span>Sign in with Biometrics</span>
-              </button>
-            )}
-
-            {/* Enhanced Forgot Password & Toggle Links */}
-            {!isFormSubmitting && (
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0 text-sm lg:text-base xl:text-lg">
-                <button
-                  type="button"
-                  onClick={() => setShowPasswordRecovery(true)}
-                  className="text-blue-700 hover:text-blue-800 font-bold transition-all duration-200 hover:underline text-left hover:scale-105 active:scale-95 hover:bg-blue-50/80 px-3 py-2 rounded-xl hover:shadow-md"
-                  aria-label="Forgot password? Click to reset"
+        } hover:shadow-3xl hover:-translate-y-1 hover:shadow-blue-100/50 border border-white/30 relative overflow-hidden`}>
+          {/* Subtle background pattern for visual interest */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/20 via-transparent to-indigo-50/20 opacity-50"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100/30 to-transparent rounded-full blur-2xl"></div>
+          <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-indigo-100/30 to-transparent rounded-full blur-xl"></div>
+          
+          <div className="relative z-10">
+            <form 
+              ref={formRef}
+              onSubmit={onSubmitHandler} 
+              className="space-y-8 lg:space-y-10 xl:space-y-12"
+              aria-label={`${currentState} form`}
+            >
+              {/* Enhanced Error Message with Better Visibility and Spacing */}
+              {error && (
+                <div 
+                  className="bg-gradient-to-r from-red-50 to-red-100 border-2 border-red-200 text-red-900 px-6 py-4 rounded-2xl text-base font-bold animate-fade-in relative overflow-hidden shadow-lg"
+                  role="alert"
+                  aria-live="polite"
                 >
-                  Forgot password?
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setCurrentState(currentState === "Login" ? "Sign Up" : "Login")}
-                  className="text-blue-700 hover:text-blue-800 font-bold transition-all duration-200 hover:underline text-left sm:text-right hover:scale-105 active:scale-95 hover:bg-blue-50/80 px-3 py-2 rounded-xl hover:shadow-md"
-                  aria-label={`Switch to ${currentState === "Login" ? "Sign Up" : "Login"} mode`}
-                >
-                  {currentState === "Login" ? "Create account" : "Sign in instead"}
-                </button>
-              </div>
-            )}
-
-            {/* Enhanced Submit Button */}
-            <div className="pt-6 lg:pt-8 xl:pt-10">
-              <button 
-                type="submit" 
-                disabled={isLoading}
-                className={`w-full py-4 lg:py-5 xl:py-6 px-8 text-white text-base lg:text-lg xl:text-xl font-bold rounded-2xl shadow-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-offset-4 transform ${
-                  isLoading
-                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 cursor-not-allowed opacity-75'
-                    : 'bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 hover:from-blue-700 hover:via-blue-800 hover:to-indigo-800 hover:shadow-2xl hover:scale-105 active:scale-95 focus:ring-blue-500/50'
-                }`}
-                style={{ display: 'block', visibility: 'visible', opacity: 1 }}
-                aria-describedby={isLoading ? "loading-status" : undefined}
-              >
-                {isLoading ? (
-                  <div className="flex items-center justify-center space-x-3">
-                    <div className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 border-3 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true"></div>
-                    <span className="font-bold animate-pulse">
-                      {currentState === "Login" ? "Signing in..." : "Creating account..."}
-                    </span>
+                  <div className="flex items-center space-x-4 relative z-10">
+                    <ExclamationIcon 
+                      size="lg" 
+                      className="text-red-600 flex-shrink-0 animate-pulse" 
+                      aria-hidden="true"
+                    />
+                    <span>{error}</span>
                   </div>
-                ) : (
-                  <span className="font-bold">
-                    {currentState === "Login" ? "Sign In" : "Create Account"}
-                  </span>
-                )}
-              </button>
-              {isLoading && (
-                <div id="loading-status" className="sr-only" aria-live="polite">
-                  {currentState === "Login" ? "Signing in..." : "Creating account..."}
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-200/30 via-red-100/40 to-red-200/30 animate-pulse-slow"></div>
                 </div>
               )}
-            </div>
-          </form>
 
-          {/* Enhanced Divider */}
-          {!isFormSubmitting && (
-            <div className="relative my-8 lg:my-10 xl:my-12">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t-2 border-gray-200/60"></div>
-              </div>
-              <div className="relative flex justify-center text-sm lg:text-base xl:text-lg">
-                <span className="px-4 bg-white/90 backdrop-blur-sm text-gray-600 font-bold">Or continue with</span>
-              </div>
-            </div>
-          )}
-
-          {/* Enhanced Social Login Buttons */}
-          {!isFormSubmitting && (
-            <div className="space-y-4 lg:space-y-5 xl:space-y-6">
-              <button 
-                className="w-full py-3 lg:py-4 xl:py-5 px-4 bg-white/90 backdrop-blur-sm border-2 border-gray-200/60 rounded-2xl hover:bg-white hover:border-gray-300 transition-all duration-300 flex items-center justify-center space-x-3 text-gray-800 font-bold shadow-lg hover:shadow-xl text-sm lg:text-base xl:text-lg hover:scale-105 active:scale-95 transform group"
-                disabled={isSocialLoading}
-              >
-                {isSocialLoading ? (
-                  <div className="w-5 h-5 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
-                ) : (
-                  <>
-                    <GoogleIcon 
+              {/* Enhanced Success Message with Better Spacing */}
+              {success && (
+                <div 
+                  className="bg-gradient-to-r from-green-50 to-emerald-100 border-2 border-green-200 text-green-900 px-6 py-4 rounded-2xl text-base font-bold animate-bounce-gentle relative overflow-hidden shadow-lg"
+                  role="alert"
+                  aria-live="polite"
+                >
+                  <div className="flex items-center space-x-4 relative z-10">
+                    <CheckIcon 
                       size="lg" 
-                      className="transition-transform duration-300 group-hover:scale-110"
+                      className="text-green-600 flex-shrink-0 animate-pulse" 
+                      aria-hidden="true"
                     />
-                    <span>Continue with Google</span>
-                  </>
+                    <span>{success}</span>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-200/30 via-emerald-100/40 to-green-200/30 animate-pulse-slow"></div>
+                </div>
+              )}
+
+              {/* Loading Skeleton with Better Spacing */}
+              {isFormSubmitting && !isLoading && (
+                <div className="space-y-8 animate-pulse" aria-hidden="true">
+                  <div className="h-4 bg-gray-200 rounded-xl animate-shimmer"></div>
+                  <div className="h-16 bg-gray-200 rounded-xl animate-shimmer"></div>
+                  <div className="h-16 bg-gray-200 rounded-xl animate-shimmer"></div>
+                  <div className="h-16 bg-gray-200 rounded-xl animate-shimmer"></div>
+                </div>
+              )}
+
+              {/* Enhanced Name Field - Only for Sign Up with Better Spacing */}
+              {currentState === "Sign Up" && !isFormSubmitting && (
+                <div className={`space-y-4 transition-all duration-500 ease-out ${
+                  currentState === "Sign Up" ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0'
+                }`}>
+                  <label htmlFor="name" className="block text-base lg:text-lg xl:text-xl font-bold text-gray-900 transition-colors duration-200 hover:text-blue-700">
+                    Full Name
+                  </label>
+                  <div className="relative group">
+                    <input
+                      id="name"
+                      type="text"
+                      className={`w-full pl-14 pr-4 py-4 lg:py-5 xl:py-6 text-base lg:text-lg xl:text-xl border-2 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 bg-white/60 backdrop-blur-sm text-gray-900 placeholder-gray-500 group-hover:border-blue-400 group-hover:shadow-lg group-hover:bg-white/90 ${
+                        fieldErrors.name 
+                          ? 'border-red-400 focus:ring-red-500/20 animate-shake' 
+                          : name.length > 0 && !fieldErrors.name 
+                            ? 'border-green-400 focus:ring-green-500/20'
+                            : 'border-gray-300 focus:ring-blue-500/20'
+                      } ${focusedField === 'name' ? 'ring-4 ring-blue-500/20 shadow-xl bg-white' : ''}`}
+                      placeholder="Enter your full name"
+                      value={name}
+                      onChange={(e) => handleNameChange(e.target.value)}
+                      onFocus={() => setFocusedField('name')}
+                      onBlur={() => setFocusedField('')}
+                      required
+                      aria-describedby={fieldErrors.name ? "name-error" : undefined}
+                      aria-invalid={!!fieldErrors.name}
+                    />
+                    <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none transition-transform duration-200 group-focus-within:scale-110">
+                      <UserIcon 
+                        size="xl" 
+                        className="text-gray-500 transition-colors duration-200 group-focus-within:text-blue-600" 
+                        aria-hidden="true"
+                      />
+                    </div>
+                    {/* Validation indicator */}
+                    {name.length > 0 && (
+                      <div className="absolute inset-y-0 right-0 pr-5 flex items-center animate-fade-in" aria-hidden="true">
+                        {fieldErrors.name ? (
+                          <ExclamationIcon 
+                            size="xl" 
+                            className="text-red-600 animate-pulse"
+                          />
+                        ) : (
+                          <CheckIcon 
+                            size="xl" 
+                            className="text-green-600 animate-bounce-gentle"
+                          />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  {fieldErrors.name && (
+                    <div id="name-error" className="text-red-700 text-sm lg:text-base xl:text-lg font-bold mt-3 animate-fade-in flex items-center space-x-3" role="alert">
+                      <ExclamationIcon 
+                        size="md" 
+                        className="text-red-600 animate-pulse" 
+                        aria-hidden="true"
+                      />
+                      <span>{fieldErrors.name}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Enhanced Email Field with Better Spacing */}
+              {!isFormSubmitting && (
+                <div className="space-y-4">
+                  <label htmlFor="email" className="block text-base lg:text-lg xl:text-xl font-bold text-gray-900 transition-colors duration-200 hover:text-blue-700">
+                    Email Address
+                  </label>
+                  <div className="relative group">
+                    <input
+                      ref={emailInputRef}
+                      id="email"
+                      type="email"
+                      className={`w-full pl-14 pr-4 py-4 lg:py-5 xl:py-6 text-base lg:text-lg xl:text-xl border-2 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 bg-white/60 backdrop-blur-sm text-gray-900 placeholder-gray-500 group-hover:border-blue-400 group-hover:shadow-lg group-hover:bg-white/90 ${
+                        fieldErrors.email 
+                          ? 'border-red-400 focus:ring-red-500/20 animate-shake' 
+                          : email.length > 0 && !fieldErrors.email 
+                            ? 'border-green-400 focus:ring-green-500/20'
+                            : 'border-gray-300 focus:ring-blue-500/20'
+                      } ${focusedField === 'email' ? 'ring-4 ring-blue-500/20 shadow-xl bg-white' : ''}`}
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => handleEmailChange(e.target.value)}
+                      onFocus={() => setFocusedField('email')}
+                      onBlur={() => setFocusedField('')}
+                      required
+                      aria-describedby={fieldErrors.email ? "email-error" : undefined}
+                      aria-invalid={!!fieldErrors.email}
+                    />
+                    <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none transition-transform duration-200 group-focus-within:scale-110">
+                      <EmailIcon 
+                        size="xl" 
+                        className="text-gray-500 transition-colors duration-200 group-focus-within:text-blue-600" 
+                        aria-hidden="true"
+                      />
+                    </div>
+                    {/* Validation indicator */}
+                    {email.length > 0 && (
+                      <div className="absolute inset-y-0 right-0 pr-5 flex items-center animate-fade-in" aria-hidden="true">
+                        {fieldErrors.email ? (
+                          <ExclamationIcon 
+                            size="xl" 
+                            className="text-red-600 animate-pulse"
+                          />
+                        ) : (
+                          <CheckIcon 
+                            size="xl" 
+                            className="text-green-600 animate-bounce-gentle"
+                          />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  {fieldErrors.email && (
+                    <div id="email-error" className="text-red-700 text-sm lg:text-base xl:text-lg font-bold mt-3 animate-fade-in flex items-center space-x-3" role="alert">
+                      <ExclamationIcon 
+                        size="md" 
+                        className="text-red-600 animate-pulse" 
+                        aria-hidden="true"
+                      />
+                      <span>{fieldErrors.email}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Enhanced Password Field with Better Spacing */}
+              {!isFormSubmitting && (
+                <div className="space-y-4">
+                  <label htmlFor="password" className="block text-base lg:text-lg xl:text-xl font-bold text-gray-900 transition-colors duration-200 hover:text-blue-700">
+                    Password
+                  </label>
+                  <div className="relative group">
+                    <input
+                      ref={passwordInputRef}
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      className={`w-full pl-14 pr-16 py-4 lg:py-5 xl:py-6 text-base lg:text-lg xl:text-xl border-2 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 bg-white/60 backdrop-blur-sm text-gray-900 placeholder-gray-500 group-hover:border-blue-400 group-hover:shadow-lg group-hover:bg-white/90 ${
+                        fieldErrors.password 
+                          ? 'border-red-400 focus:ring-red-500/20 animate-shake' 
+                          : password.length > 0 && !fieldErrors.password 
+                            ? 'border-green-400 focus:ring-green-500/20'
+                            : 'border-gray-300 focus:ring-blue-500/20'
+                      } ${focusedField === 'password' ? 'ring-4 ring-blue-500/20 shadow-xl bg-white' : ''}`}
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => handlePasswordChange(e.target.value)}
+                      onFocus={() => setFocusedField('password')}
+                      onBlur={() => setFocusedField('')}
+                      required
+                      minLength={8}
+                      aria-describedby={fieldErrors.password ? "password-error" : undefined}
+                      aria-invalid={!!fieldErrors.password}
+                    />
+                    <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none transition-transform duration-200 group-focus-within:scale-110">
+                      <LockIcon 
+                        size="xl" 
+                        className="text-gray-500 transition-colors duration-200 group-focus-within:text-blue-600" 
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-0 pr-5 flex items-center hover:bg-gray-50/80 rounded-r-2xl transition-all duration-200 hover:scale-110 active:scale-95 hover:shadow-inner"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      <EyeIcon 
+                        size="xl" 
+                        className="text-gray-500 hover:text-gray-700 transition-all duration-200 hover:rotate-12" 
+                        isVisible={!showPassword}
+                        aria-hidden="true"
+                      />
+                    </button>
+                    {/* Validation indicator - positioned to the left of password toggle */}
+                    {password.length > 0 && (
+                      <div className="absolute inset-y-0 right-0 pr-16 flex items-center animate-fade-in" aria-hidden="true">
+                        {fieldErrors.password ? (
+                          <ExclamationIcon 
+                            size="xl" 
+                            className="text-red-600 animate-pulse"
+                          />
+                        ) : (
+                          <CheckIcon 
+                            size="xl" 
+                            className="text-green-600 animate-bounce-gentle"
+                          />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Password error message with better spacing */}
+                  {fieldErrors.password && (
+                    <div id="password-error" className="text-red-700 text-sm lg:text-base xl:text-lg font-bold mt-3 animate-fade-in flex items-center space-x-3" role="alert">
+                      <ExclamationIcon 
+                        size="md" 
+                        className="text-red-600 animate-pulse" 
+                        aria-hidden="true"
+                      />
+                      <span>{fieldErrors.password}</span>
+                    </div>
+                  )}
+                  
+                  {/* Enhanced Password Requirements - Only show for Sign Up with better spacing */}
+                  {currentState === "Sign Up" && password && !isFormSubmitting && (
+                    <div className={`mt-6 p-6 bg-gradient-to-br from-gray-50/90 to-blue-50/90 backdrop-blur-sm rounded-2xl border-2 border-gray-200/60 transition-all duration-500 ease-out animate-slide-up hover:shadow-lg hover:border-blue-200 hover:from-blue-50/95 hover:to-indigo-50/95`}>
+                      <p className="text-base lg:text-lg xl:text-xl font-bold text-gray-900 mb-6">Password requirements:</p>
+                      <div className="space-y-4">
+                        {[
+                          { key: 'minLength', label: 'At least 8 characters', test: password.length >= 8 },
+                          { key: 'hasUpperCase', label: 'One uppercase letter', test: /[A-Z]/.test(password) },
+                          { key: 'hasLowerCase', label: 'One lowercase letter', test: /[a-z]/.test(password) },
+                          { key: 'hasNumbers', label: 'One number', test: /\d/.test(password) },
+                          { key: 'hasSpecialChar', label: 'One special character (@$!%*?&)', test: /[@$!%*?&]/.test(password) }
+                        ].map((requirement, index) => (
+                          <div key={requirement.key} className={`flex items-center space-x-4 transition-all duration-300 ease-out hover:scale-105 ${
+                            requirement.test ? 'animate-fade-in' : ''
+                          }`} style={{ animationDelay: `${index * 100}ms` }}>
+                            <ValidationIcon 
+                              size="md" 
+                              className={`transition-all duration-300 ${requirement.test ? 'text-green-600 scale-110' : 'text-gray-500'}`}
+                              isValid={requirement.test}
+                            />
+                            <span className={`text-base lg:text-lg transition-all duration-300 ${requirement.test ? 'text-green-800 font-bold' : 'text-gray-700 font-semibold'}`}>
+                              {requirement.label}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Remember Me Checkbox - Only for Login with better spacing */}
+              {currentState === "Login" && !isFormSubmitting && (
+                <div className="flex items-center space-x-4">
+                  <input
+                    id="remember-me"
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="remember-me" className="text-base lg:text-lg text-gray-700 font-semibold">
+                    Remember me
+                  </label>
+                </div>
+              )}
+
+              {/* Biometric Authentication - Only for Login with better spacing */}
+              {currentState === "Login" && !isFormSubmitting && (
+                <button
+                  type="button"
+                  onClick={handleBiometricAuth}
+                  className="w-full py-4 lg:py-5 xl:py-6 px-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 flex items-center justify-center space-x-4 font-bold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-base lg:text-lg"
+                  aria-label="Sign in with biometric authentication"
+                >
+                  <ShieldIcon 
+                    size="lg" 
+                    className="text-white" 
+                    aria-hidden="true"
+                  />
+                  <span>Sign in with Biometrics</span>
+                </button>
+              )}
+
+              {/* Enhanced Forgot Password & Toggle Links with better spacing */}
+              {!isFormSubmitting && (
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 text-base lg:text-lg xl:text-xl">
+                  <button
+                    type="button"
+                    onClick={() => setShowPasswordRecovery(true)}
+                    className="text-blue-700 hover:text-blue-800 font-bold transition-all duration-200 hover:underline text-left hover:scale-105 active:scale-95 hover:bg-blue-50/80 px-4 py-3 rounded-xl hover:shadow-md"
+                    aria-label="Forgot password? Click to reset"
+                  >
+                    Forgot password?
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCurrentState(currentState === "Login" ? "Sign Up" : "Login")}
+                    className="text-blue-700 hover:text-blue-800 font-bold transition-all duration-200 hover:underline text-left sm:text-right hover:scale-105 active:scale-95 hover:bg-blue-50/80 px-4 py-3 rounded-xl hover:shadow-md"
+                    aria-label={`Switch to ${currentState === "Login" ? "Sign Up" : "Login"} mode`}
+                  >
+                    {currentState === "Login" ? "Create account" : "Sign in instead"}
+                  </button>
+                </div>
+              )}
+
+              {/* Enhanced Submit Button with better spacing and prominence */}
+              <div className="pt-8 lg:pt-10 xl:pt-12">
+                <button 
+                  type="submit" 
+                  disabled={isLoading}
+                  className={`w-full py-5 lg:py-6 xl:py-7 px-8 text-white text-lg lg:text-xl xl:text-2xl font-black rounded-2xl shadow-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-offset-4 transform relative overflow-hidden ${
+                    isLoading
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 cursor-not-allowed opacity-75'
+                      : 'bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 hover:from-blue-700 hover:via-blue-800 hover:to-indigo-800 hover:shadow-3xl hover:scale-105 active:scale-95 focus:ring-blue-500/50'
+                  }`}
+                  style={{ display: 'block', visibility: 'visible', opacity: 1 }}
+                  aria-describedby={isLoading ? "loading-status" : undefined}
+                >
+                  {/* Subtle glow effect */}
+                  {!isLoading && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-blue-500/20 to-indigo-400/20 blur-xl opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                  )}
+                  
+                  {isLoading ? (
+                    <div className="flex items-center justify-center space-x-4 relative z-10">
+                      <div className="w-6 h-6 lg:w-7 lg:h-7 xl:w-8 xl:h-8 border-3 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true"></div>
+                      <span className="font-bold animate-pulse">
+                        {currentState === "Login" ? "Signing in..." : "Creating account..."}
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="font-black relative z-10">
+                      {currentState === "Login" ? "Sign In" : "Create Account"}
+                    </span>
+                  )}
+                </button>
+                {isLoading && (
+                  <div id="loading-status" className="sr-only" aria-live="polite">
+                    {currentState === "Login" ? "Signing in..." : "Creating account..."}
+                  </div>
                 )}
-              </button>
-              
-              <button className="w-full py-3 lg:py-4 xl:py-5 px-4 bg-white/90 backdrop-blur-sm border-2 border-gray-200/60 rounded-2xl hover:bg-white hover:border-gray-300 transition-all duration-300 flex items-center justify-center space-x-3 text-gray-800 font-bold shadow-lg hover:shadow-xl text-sm lg:text-base xl:text-lg hover:scale-105 active:scale-95 transform group">
-                <FacebookIcon 
-                  size="lg" 
-                  className="transition-transform duration-300 group-hover:scale-110"
-                />
-                <span>Continue with Facebook</span>
-              </button>
-            </div>
-          )}
+              </div>
+            </form>
+
+            {/* Enhanced Divider with better spacing */}
+            {!isFormSubmitting && (
+              <div className="relative my-10 lg:my-12 xl:my-16">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t-2 border-gray-200/60"></div>
+                </div>
+                <div className="relative flex justify-center text-base lg:text-lg xl:text-xl">
+                  <span className="px-6 bg-white/95 backdrop-blur-sm text-gray-600 font-bold">Or continue with</span>
+                </div>
+              </div>
+            )}
+
+            {/* Enhanced Social Login Buttons with better spacing */}
+            {!isFormSubmitting && (
+              <div className="space-y-5 lg:space-y-6 xl:space-y-8">
+                <button 
+                  className="w-full py-4 lg:py-5 xl:py-6 px-6 bg-white/95 backdrop-blur-sm border-2 border-gray-200/60 rounded-2xl hover:bg-white hover:border-gray-300 transition-all duration-300 flex items-center justify-center space-x-4 text-gray-800 font-bold shadow-lg hover:shadow-xl text-base lg:text-lg xl:text-xl hover:scale-105 active:scale-95 transform group"
+                  disabled={isSocialLoading}
+                >
+                  {isSocialLoading ? (
+                    <div className="w-6 h-6 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                  ) : (
+                    <>
+                      <GoogleIcon 
+                        size="xl" 
+                        className="transition-transform duration-300 group-hover:scale-110"
+                      />
+                      <span>Continue with Google</span>
+                    </>
+                  )}
+                </button>
+                
+                <button className="w-full py-4 lg:py-5 xl:py-6 px-6 bg-white/95 backdrop-blur-sm border-2 border-gray-200/60 rounded-2xl hover:bg-white hover:border-gray-300 transition-all duration-300 flex items-center justify-center space-x-4 text-gray-800 font-bold shadow-lg hover:shadow-xl text-base lg:text-lg xl:text-xl hover:scale-105 active:scale-95 transform group">
+                  <FacebookIcon 
+                    size="xl" 
+                    className="transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <span>Continue with Facebook</span>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Enhanced Footer */}
-        <div className={`text-center mt-8 lg:mt-10 xl:mt-12 transition-all duration-500 ease-out ${
+        {/* Enhanced Footer with better spacing */}
+        <div className={`text-center mt-10 lg:mt-12 xl:mt-16 transition-all duration-500 ease-out ${
           isPageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}>
-          <p className="text-sm lg:text-base xl:text-lg text-gray-600 leading-relaxed font-semibold">
+          <p className="text-base lg:text-lg xl:text-xl text-gray-600 leading-relaxed font-semibold">
             By continuing, you agree to our{" "}
             <a href="#" className="text-blue-700 hover:text-blue-800 font-bold transition-all duration-200 hover:underline hover:scale-105">
               Terms of Service
