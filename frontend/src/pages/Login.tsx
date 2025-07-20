@@ -108,9 +108,7 @@ const Login = () => {
         });
         
         if (credential) {
-          // Handle successful biometric authentication
           console.log('Biometric authentication successful');
-          // TODO: Implement actual biometric login
         }
       }
     } catch (error) {
@@ -200,16 +198,12 @@ const Login = () => {
       if (currentState === "Login") {
         success = await loginUser(email, password);
         
-        // Handle remember me functionality
         if (success && rememberMe) {
           localStorage.setItem('rememberedEmail', email);
-          // Note: In a real app, you'd want to store this securely
-          // and implement proper token-based remember me
         } else if (!rememberMe) {
           localStorage.removeItem('rememberedEmail');
         }
       } else {
-        // Validate password for signup
         const passwordValidation = validatePassword(password);
         if (!passwordValidation.isValid) {
           setError("Password must be at least 8 characters and contain uppercase, lowercase, number, and special character (@$!%*?&)");
@@ -217,14 +211,12 @@ const Login = () => {
           return;
         }
 
-        // Validate name
         if (name.trim().length < 2) {
           setError("Name must be at least 2 characters long");
           setIsLoading(false);
           return;
         }
 
-        // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
           setError("Please enter a valid email address");
@@ -238,7 +230,7 @@ const Login = () => {
       if (success) {
         setSuccess(currentState === "Login" ? "Login successful!" : "Account created successfully!");
         setTimeout(() => {
-          navigate('/'); // Redirect to home page after successful login/signup
+          navigate('/');
         }, 1000);
       }
     } catch (error) {
