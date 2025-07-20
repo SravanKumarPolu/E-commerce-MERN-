@@ -260,46 +260,51 @@ const Login = () => {
 
   return (
     <div 
-      className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100/50 to-slate-200/30 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden"
+      className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden"
       role="main"
       aria-label="Login and registration form"
     >
-      {/* Refined Background Elements with Elegant Color Palette */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-200/30 via-transparent to-transparent"></div>
-      {!reducedAnimations && (
-        <>
-          <div className="absolute top-0 left-0 w-96 h-96 bg-slate-300/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 animate-pulse-slow"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-slate-400/15 rounded-full blur-3xl translate-x-1/2 translate-y-1/2 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-slate-300/10 rounded-full blur-2xl -translate-x-1/2 -translate-y-1/2 animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
-        </>
-      )}
+      {/* Modern Animated Background */}
+      <div className="absolute inset-0">
+        {/* Gradient Orbs */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-indigo-400/20 to-purple-400/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 animate-pulse-slow"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl translate-x-1/2 translate-y-1/2 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-gradient-to-br from-blue-400/15 to-indigo-400/15 rounded-full blur-2xl -translate-x-1/2 -translate-y-1/2 animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+        
+        {/* Geometric Patterns */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-20 left-20 w-32 h-32 border border-indigo-300 rounded-full animate-spin" style={{ animationDuration: '20s' }}></div>
+          <div className="absolute bottom-20 right-20 w-24 h-24 border border-purple-300 rounded-full animate-spin" style={{ animationDuration: '15s', animationDirection: 'reverse' }}></div>
+          <div className="absolute top-1/2 left-1/4 w-16 h-16 border border-blue-300 rounded-full animate-spin" style={{ animationDuration: '25s' }}></div>
+        </div>
+      </div>
       
       <div className={`w-full max-w-md lg:max-w-lg xl:max-w-xl relative z-10 transition-all duration-700 ease-out ${
         isPageLoaded ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
       }`}>
-        {/* Refined Header Section with Elegant Color Palette */}
+        {/* Modern Header Section */}
         <div className={`text-center mb-8 lg:mb-10 xl:mb-12 transition-all duration-500 ease-out ${
           isPageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}>
-          {/* Refined Logo with Elegant Color Scheme */}
-          <div className={`inline-flex items-center justify-center w-16 h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 rounded-2xl lg:rounded-3xl shadow-xl lg:shadow-2xl mb-6 lg:mb-8 xl:mb-10 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:from-slate-800 hover:via-slate-900 hover:to-black ${
+          {/* Modern Logo with Gradient */}
+          <div className={`inline-flex items-center justify-center w-20 h-20 lg:w-24 lg:h-24 xl:w-28 xl:h-28 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-3xl lg:rounded-4xl shadow-2xl lg:shadow-3xl mb-8 lg:mb-10 xl:mb-12 transition-all duration-300 hover:scale-110 hover:shadow-3xl hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 ${
             isPageLoaded && !reducedAnimations ? 'animate-bounce-gentle' : ''
           }`} style={{ animationDelay: '1s' }}>
             <UserIcon 
-              size="xl" 
+              size="2xl" 
               className="text-white transition-transform duration-300 hover:rotate-12" 
               aria-hidden="true"
             />
           </div>
           
-          {/* Refined Typography with Elegant Color Palette */}
-          <h1 className={`text-3xl lg:text-4xl xl:text-5xl font-black text-slate-900 mb-4 lg:mb-6 xl:mb-8 leading-tight tracking-tight transition-all duration-500 ease-out ${
+          {/* Modern Typography with Gradient */}
+          <h1 className={`text-4xl lg:text-5xl xl:text-6xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-6 lg:mb-8 xl:mb-10 leading-tight tracking-tight transition-all duration-500 ease-out ${
             isPageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`} style={{ animationDelay: '0.4s' }}>
             {currentState === "Login" ? "Welcome Back" : "Create Account"}
           </h1>
           
-          <p className={`text-base lg:text-lg xl:text-xl text-slate-600 font-medium leading-relaxed max-w-md mx-auto transition-all duration-500 ease-out ${
+          <p className={`text-lg lg:text-xl xl:text-2xl text-gray-600 font-medium leading-relaxed max-w-md mx-auto transition-all duration-500 ease-out ${
             isPageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`} style={{ animationDelay: '0.6s' }}>
             {currentState === "Login" 
@@ -309,14 +314,14 @@ const Login = () => {
           </p>
         </div>
 
-        {/* Refined Form Card with Elegant Color Palette and Simplified Layout */}
-        <div className={`bg-white/95 backdrop-blur-md rounded-2xl lg:rounded-3xl shadow-xl lg:shadow-2xl p-6 lg:p-8 xl:p-10 transition-all duration-500 ease-out ${
+        {/* Modern Form Card with Glassmorphism */}
+        <div className={`bg-white/80 backdrop-blur-xl rounded-3xl lg:rounded-4xl shadow-2xl lg:shadow-3xl p-8 lg:p-10 xl:p-12 transition-all duration-500 ease-out ${
           isPageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        } hover:shadow-2xl hover:-translate-y-1 border border-slate-200/50 relative overflow-hidden`}>
-          {/* Subtle background pattern with elegant colors */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-50/30 via-transparent to-slate-100/20 opacity-60"></div>
-          <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-slate-200/40 to-transparent rounded-full blur-xl"></div>
-          <div className="absolute bottom-0 left-0 w-20 h-20 bg-gradient-to-tr from-slate-300/30 to-transparent rounded-full blur-lg"></div>
+        } hover:shadow-3xl hover:-translate-y-2 border border-white/20 relative overflow-hidden`}>
+          {/* Subtle background pattern */}
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/30 via-transparent to-purple-50/30 opacity-60"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-200/40 to-transparent rounded-full blur-xl"></div>
+          <div className="absolute bottom-0 left-0 w-28 h-28 bg-gradient-to-tr from-purple-200/30 to-transparent rounded-full blur-lg"></div>
           
           <div className="relative z-10">
             <form 
@@ -325,10 +330,10 @@ const Login = () => {
               className="space-y-6 lg:space-y-8"
               aria-label={`${currentState} form`}
             >
-              {/* Refined Error Message with Elegant Color Palette */}
+              {/* Modern Error Message */}
               {error && (
                 <div 
-                  className="bg-gradient-to-r from-red-50 to-red-100 border border-red-200 text-red-800 px-4 py-3 rounded-xl text-sm font-medium animate-fade-in relative overflow-hidden shadow-sm"
+                  className="bg-gradient-to-r from-red-50 to-red-100 border border-red-200 text-red-800 px-6 py-4 rounded-2xl text-sm font-medium animate-fade-in relative overflow-hidden shadow-lg"
                   role="alert"
                   aria-live="polite"
                 >
@@ -343,10 +348,10 @@ const Login = () => {
                 </div>
               )}
 
-              {/* Refined Success Message with Elegant Color Palette */}
+              {/* Modern Success Message */}
               {success && (
                 <div 
-                  className="bg-gradient-to-r from-emerald-50 to-green-100 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-xl text-sm font-medium animate-fade-in relative overflow-hidden shadow-sm"
+                  className="bg-gradient-to-r from-emerald-50 to-green-100 border border-emerald-200 text-emerald-800 px-6 py-4 rounded-2xl text-sm font-medium animate-fade-in relative overflow-hidden shadow-lg"
                   role="alert"
                   aria-live="polite"
                 >
@@ -361,7 +366,7 @@ const Login = () => {
                 </div>
               )}
 
-              {/* Enhanced Loading Skeleton with Polished Animations */}
+              {/* Enhanced Loading Skeleton */}
               {isFormSubmitting && !isLoading && (
                 <div className="space-y-6" aria-hidden="true">
                   <div className="h-4 skeleton-line"></div>
@@ -371,19 +376,19 @@ const Login = () => {
                 </div>
               )}
 
-              {/* Refined Name Field - Only for Sign Up with Simplified Design */}
+              {/* Modern Name Field - Only for Sign Up */}
               {currentState === "Sign Up" && !isFormSubmitting && (
                 <div className={`space-y-3 transition-all duration-500 ease-out ${
                   currentState === "Sign Up" ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0'
                 }`}>
-                  <label htmlFor="name" className="block text-sm font-semibold text-slate-700">
+                  <label htmlFor="name" className="block text-sm font-semibold text-gray-700">
                     Full Name
                   </label>
                   <div className="relative group">
                     <input
                       id="name"
                       type="text"
-                      className={`w-full pl-12 pr-4 py-3 lg:py-4 text-base border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 transition-all duration-200 bg-white text-slate-900 placeholder-slate-500 group-hover:border-slate-400 input-focus-enhanced ${
+                      className={`w-full pl-14 pr-4 py-4 lg:py-5 text-base border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all duration-300 bg-white/80 backdrop-blur-sm text-gray-900 placeholder-gray-500 group-hover:border-gray-300 input-focus-enhanced ${
                         fieldErrors.name 
                           ? 'border-red-300 focus:ring-red-500/20 focus:border-red-500' 
                           : name.length > 0 && !fieldErrors.name 
@@ -399,16 +404,16 @@ const Login = () => {
                       aria-describedby={fieldErrors.name ? "name-error" : undefined}
                       aria-invalid={!!fieldErrors.name}
                     />
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                       <UserIcon 
                         size="lg" 
-                        className="text-slate-400 transition-colors duration-200 group-focus-within:text-slate-600" 
+                        className="text-gray-400 transition-colors duration-300 group-focus-within:text-indigo-600" 
                         aria-hidden="true"
                       />
                     </div>
-                    {/* Simplified validation indicator */}
+                    {/* Modern validation indicator */}
                     {name.length > 0 && (
-                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center" aria-hidden="true">
+                      <div className="absolute inset-y-0 right-0 pr-5 flex items-center" aria-hidden="true">
                         {fieldErrors.name ? (
                           <ExclamationIcon 
                             size="md" 
@@ -436,10 +441,10 @@ const Login = () => {
                 </div>
               )}
 
-              {/* Refined Email Field with Simplified Design */}
+              {/* Modern Email Field */}
               {!isFormSubmitting && (
                 <div className="space-y-3">
-                  <label htmlFor="email" className="block text-sm font-semibold text-slate-700">
+                  <label htmlFor="email" className="block text-sm font-semibold text-gray-700">
                     Email Address
                   </label>
                   <div className="relative group">
@@ -447,7 +452,7 @@ const Login = () => {
                       ref={emailInputRef}
                       id="email"
                       type="email"
-                      className={`w-full pl-12 pr-4 py-3 lg:py-4 text-base border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 transition-all duration-200 bg-white text-slate-900 placeholder-slate-500 group-hover:border-slate-400 input-focus-enhanced ${
+                      className={`w-full pl-14 pr-4 py-4 lg:py-5 text-base border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all duration-300 bg-white/80 backdrop-blur-sm text-gray-900 placeholder-gray-500 group-hover:border-gray-300 input-focus-enhanced ${
                         fieldErrors.email 
                           ? 'border-red-300 focus:ring-red-500/20 focus:border-red-500' 
                           : email.length > 0 && !fieldErrors.email 
@@ -463,16 +468,16 @@ const Login = () => {
                       aria-describedby={fieldErrors.email ? "email-error" : undefined}
                       aria-invalid={!!fieldErrors.email}
                     />
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                       <EmailIcon 
                         size="lg" 
-                        className="text-slate-400 transition-colors duration-200 group-focus-within:text-slate-600" 
+                        className="text-gray-400 transition-colors duration-300 group-focus-within:text-indigo-600" 
                         aria-hidden="true"
                       />
                     </div>
-                    {/* Simplified validation indicator */}
+                    {/* Modern validation indicator */}
                     {email.length > 0 && (
-                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center" aria-hidden="true">
+                      <div className="absolute inset-y-0 right-0 pr-5 flex items-center" aria-hidden="true">
                         {fieldErrors.email ? (
                           <ExclamationIcon 
                             size="md" 
@@ -500,10 +505,10 @@ const Login = () => {
                 </div>
               )}
 
-              {/* Refined Password Field with Simplified Design */}
+              {/* Modern Password Field */}
               {!isFormSubmitting && (
                 <div className="space-y-3">
-                  <label htmlFor="password" className="block text-sm font-semibold text-slate-700">
+                  <label htmlFor="password" className="block text-sm font-semibold text-gray-700">
                     Password
                   </label>
                   <div className="relative group">
@@ -511,7 +516,7 @@ const Login = () => {
                       ref={passwordInputRef}
                       id="password"
                       type={showPassword ? "text" : "password"}
-                      className={`w-full pl-12 pr-12 py-3 lg:py-4 text-base border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 transition-all duration-200 bg-white text-slate-900 placeholder-slate-500 group-hover:border-slate-400 input-focus-enhanced ${
+                      className={`w-full pl-14 pr-14 py-4 lg:py-5 text-base border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all duration-300 bg-white/80 backdrop-blur-sm text-gray-900 placeholder-gray-500 group-hover:border-gray-300 input-focus-enhanced ${
                         fieldErrors.password 
                           ? 'border-red-300 focus:ring-red-500/20 focus:border-red-500' 
                           : password.length > 0 && !fieldErrors.password 
@@ -528,28 +533,28 @@ const Login = () => {
                       aria-describedby={fieldErrors.password ? "password-error" : undefined}
                       aria-invalid={!!fieldErrors.password}
                     />
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                       <LockIcon 
                         size="lg" 
-                        className="text-slate-400 transition-colors duration-200 group-focus-within:text-slate-600" 
+                        className="text-gray-400 transition-colors duration-300 group-focus-within:text-indigo-600" 
                         aria-hidden="true"
                       />
                     </div>
                     <button
                       type="button"
-                      className="absolute inset-y-0 right-0 pr-4 flex items-center hover:bg-slate-50 rounded-r-xl transition-all duration-200 btn-press"
+                      className="absolute inset-y-0 right-0 pr-5 flex items-center hover:bg-gray-50/50 rounded-r-2xl transition-all duration-300 btn-press"
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       <EyeIcon 
                         size="lg" 
-                        className="text-slate-400 hover:text-slate-600 transition-all duration-200" 
+                        className="text-gray-400 hover:text-gray-600 transition-all duration-300" 
                         isVisible={!showPassword}
                         aria-hidden="true"
                       />
                     </button>
-                    {/* Simplified validation indicator - positioned to the left of password toggle */}
+                    {/* Modern validation indicator - positioned to the left of password toggle */}
                     {password.length > 0 && (
-                      <div className="absolute inset-y-0 right-0 pr-12 flex items-center" aria-hidden="true">
+                      <div className="absolute inset-y-0 right-0 pr-14 flex items-center" aria-hidden="true">
                         {fieldErrors.password ? (
                           <ExclamationIcon 
                             size="md" 
@@ -565,7 +570,7 @@ const Login = () => {
                     )}
                   </div>
                   
-                  {/* Simplified password error message */}
+                  {/* Modern password error message */}
                   {fieldErrors.password && (
                     <div id="password-error" className="text-red-600 text-sm mt-2 flex items-center space-x-2 validation-error" role="alert">
                       <ExclamationIcon 
@@ -577,11 +582,11 @@ const Login = () => {
                     </div>
                   )}
                   
-                  {/* Simplified Password Requirements - Only show for Sign Up */}
+                  {/* Modern Password Requirements - Only show for Sign Up */}
                   {currentState === "Sign Up" && password && !isFormSubmitting && (
-                    <div className={`mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200 transition-all duration-300 ease-out form-transition`}>
-                      <p className="text-sm font-semibold text-slate-700 mb-3">Password requirements:</p>
-                      <div className="space-y-2">
+                    <div className={`mt-6 p-6 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl border border-indigo-200/50 transition-all duration-300 ease-out form-transition`}>
+                      <p className="text-sm font-semibold text-gray-700 mb-4">Password requirements:</p>
+                      <div className="space-y-3">
                         {[
                           { key: 'minLength', label: 'At least 8 characters', test: password.length >= 8 },
                           { key: 'hasUpperCase', label: 'One uppercase letter', test: /[A-Z]/.test(password) },
@@ -589,15 +594,15 @@ const Login = () => {
                           { key: 'hasNumbers', label: 'One number', test: /\d/.test(password) },
                           { key: 'hasSpecialChar', label: 'One special character (@$!%*?&)', test: /[@$!%*?&]/.test(password) }
                         ].map((requirement, index) => (
-                          <div key={requirement.key} className={`flex items-center space-x-3 transition-all duration-200 ${
+                          <div key={requirement.key} className={`flex items-center space-x-3 transition-all duration-300 ${
                             requirement.test ? 'animate-fade-in validation-success' : ''
-                          }`} style={{ animationDelay: `${index * 50}ms` }}>
+                          }`} style={{ animationDelay: `${index * 100}ms` }}>
                             <ValidationIcon 
                               size="sm" 
-                              className={`transition-all duration-200 ${requirement.test ? 'text-emerald-500' : 'text-slate-400'}`}
+                              className={`transition-all duration-300 ${requirement.test ? 'text-emerald-500' : 'text-gray-400'}`}
                               isValid={requirement.test}
                             />
-                            <span className={`text-sm transition-all duration-200 ${requirement.test ? 'text-emerald-700 font-medium' : 'text-slate-600'}`}>
+                            <span className={`text-sm transition-all duration-300 ${requirement.test ? 'text-emerald-700 font-medium' : 'text-gray-600'}`}>
                               {requirement.label}
                             </span>
                           </div>
@@ -608,7 +613,7 @@ const Login = () => {
                 </div>
               )}
 
-              {/* Refined Remember Me Checkbox - Only for Login */}
+              {/* Modern Remember Me Checkbox - Only for Login */}
               {currentState === "Login" && !isFormSubmitting && (
                 <div className="flex items-center space-x-3">
                   <input
@@ -616,20 +621,20 @@ const Login = () => {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 text-slate-600 border-slate-300 rounded focus:ring-slate-500"
+                    className="w-5 h-5 text-indigo-600 border-gray-300 rounded-lg focus:ring-indigo-500 focus:ring-2"
                   />
-                  <label htmlFor="remember-me" className="text-sm text-slate-700 font-medium">
+                  <label htmlFor="remember-me" className="text-sm text-gray-700 font-medium">
                     Remember me
                   </label>
                 </div>
               )}
 
-              {/* Refined Biometric Authentication - Only for Login */}
+              {/* Modern Biometric Authentication - Only for Login */}
               {currentState === "Login" && !isFormSubmitting && (
                 <button
                   type="button"
                   onClick={handleBiometricAuth}
-                  className="w-full py-3 lg:py-4 px-4 bg-gradient-to-r from-slate-600 to-slate-700 text-white rounded-xl hover:from-slate-700 hover:to-slate-800 transition-all duration-200 flex items-center justify-center space-x-3 font-medium shadow-sm hover:shadow-md text-sm lg:text-base"
+                  className="w-full py-4 lg:py-5 px-6 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-2xl hover:from-gray-700 hover:to-gray-800 transition-all duration-300 flex items-center justify-center space-x-3 font-medium shadow-lg hover:shadow-xl text-sm lg:text-base transform hover:scale-[1.02] active:scale-[0.98]"
                   aria-label="Sign in with biometric authentication"
                 >
                   <ShieldIcon 
@@ -641,13 +646,13 @@ const Login = () => {
                 </button>
               )}
 
-              {/* Refined Forgot Password & Toggle Links */}
+              {/* Modern Forgot Password & Toggle Links */}
               {!isFormSubmitting && (
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0 text-sm">
                   <button
                     type="button"
                     onClick={() => setShowPasswordRecovery(true)}
-                    className="text-slate-600 hover:text-slate-800 font-medium transition-all duration-200 hover:underline text-left"
+                    className="text-gray-600 hover:text-indigo-600 font-medium transition-all duration-300 hover:underline text-left"
                     aria-label="Forgot password? Click to reset"
                   >
                     Forgot password?
@@ -655,7 +660,7 @@ const Login = () => {
                   <button
                     type="button"
                     onClick={() => setCurrentState(currentState === "Login" ? "Sign Up" : "Login")}
-                    className="text-slate-600 hover:text-slate-800 font-medium transition-all duration-200 hover:underline text-left sm:text-right"
+                    className="text-gray-600 hover:text-indigo-600 font-medium transition-all duration-300 hover:underline text-left sm:text-right"
                     aria-label={`Switch to ${currentState === "Login" ? "Sign Up" : "Login"} mode`}
                   >
                     {currentState === "Login" ? "Create account" : "Sign in instead"}
@@ -663,15 +668,15 @@ const Login = () => {
                 </div>
               )}
 
-              {/* Enhanced Submit Button with Polished Loading Animation */}
+              {/* Modern Submit Button with Enhanced Loading Animation */}
               <div className="pt-6 lg:pt-8">
                 <button 
                   type="submit" 
                   disabled={isLoading}
-                  className={`w-full py-4 lg:py-5 px-6 text-white text-base lg:text-lg font-semibold rounded-xl shadow-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 transform relative overflow-hidden btn-press ${
+                  className={`w-full py-5 lg:py-6 px-8 text-white text-lg lg:text-xl font-bold rounded-2xl shadow-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-offset-4 transform relative overflow-hidden btn-press ${
                     isLoading
-                      ? 'bg-slate-500 cursor-not-allowed btn-loading'
-                      : 'bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-800 hover:to-slate-900 hover:shadow-md active:scale-98 focus:ring-slate-500'
+                      ? 'bg-gray-500 cursor-not-allowed btn-loading'
+                      : 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 hover:shadow-2xl active:scale-[0.98] focus:ring-indigo-500'
                   }`}
                   style={{ display: 'block', visibility: 'visible', opacity: 1 }}
                   aria-describedby={isLoading ? "loading-status" : undefined}
@@ -684,13 +689,13 @@ const Login = () => {
                   {isLoading ? (
                     <div className="flex items-center justify-center space-x-4 relative z-10">
                       {/* Enhanced Spinner with Pulse Effect */}
-                      <div className="loading-spinner-enhanced w-6 h-6 lg:w-7 lg:h-7 text-white"></div>
-                      <span className="font-medium loading-text">
+                      <div className="loading-spinner-enhanced w-7 h-7 lg:w-8 lg:h-8 text-white"></div>
+                      <span className="font-bold loading-text">
                         {currentState === "Login" ? "Signing in..." : "Creating account..."}
                       </span>
                     </div>
                   ) : (
-                    <span className="font-semibold relative z-10">
+                    <span className="font-bold relative z-10">
                       {currentState === "Login" ? "Sign In" : "Create Account"}
                     </span>
                   )}
@@ -703,23 +708,23 @@ const Login = () => {
               </div>
             </form>
 
-            {/* Refined Divider */}
+            {/* Modern Divider */}
             {!isFormSubmitting && (
               <div className="relative my-8 lg:my-10">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-200"></div>
+                  <div className="w-full border-t border-gray-200"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-slate-500 font-medium">Or continue with</span>
+                  <span className="px-6 bg-white text-gray-500 font-medium">Or continue with</span>
                 </div>
               </div>
             )}
 
-            {/* Enhanced Social Login Buttons with Polished Loading States */}
+            {/* Modern Social Login Buttons with Enhanced Loading States */}
             {!isFormSubmitting && (
               <div className="space-y-4">
                 <button 
-                  className="w-full py-3 lg:py-4 px-4 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 flex items-center justify-center space-x-3 text-slate-700 font-medium shadow-sm hover:shadow-md text-sm lg:text-base relative overflow-hidden btn-press"
+                  className="w-full py-4 lg:py-5 px-6 bg-white border-2 border-gray-200 rounded-2xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 flex items-center justify-center space-x-3 text-gray-700 font-semibold shadow-lg hover:shadow-xl text-sm lg:text-base relative overflow-hidden btn-press transform hover:scale-[1.02] active:scale-[0.98]"
                   disabled={isSocialLoading}
                 >
                   {/* Enhanced Loading Background for Social Buttons */}
@@ -730,24 +735,24 @@ const Login = () => {
                   {isSocialLoading ? (
                     <div className="flex items-center justify-center space-x-3 relative z-10">
                       {/* Enhanced Social Loading Spinner */}
-                      <div className="loading-spinner-enhanced w-5 h-5 text-slate-600"></div>
-                      <span className="text-slate-600 font-medium loading-text">Connecting...</span>
+                      <div className="loading-spinner-enhanced w-6 h-6 text-gray-600"></div>
+                      <span className="text-gray-600 font-semibold loading-text">Connecting...</span>
                     </div>
                   ) : (
                     <>
                       <GoogleIcon 
                         size="lg" 
-                        className="transition-transform duration-200"
+                        className="transition-transform duration-300"
                       />
                       <span>Continue with Google</span>
                     </>
                   )}
                 </button>
                 
-                <button className="w-full py-3 lg:py-4 px-4 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 flex items-center justify-center space-x-3 text-slate-700 font-medium shadow-sm hover:shadow-md text-sm lg:text-base btn-press">
+                <button className="w-full py-4 lg:py-5 px-6 bg-white border-2 border-gray-200 rounded-2xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 flex items-center justify-center space-x-3 text-gray-700 font-semibold shadow-lg hover:shadow-xl text-sm lg:text-base btn-press transform hover:scale-[1.02] active:scale-[0.98]">
                   <FacebookIcon 
                     size="lg" 
-                    className="transition-transform duration-200"
+                    className="transition-transform duration-300"
                   />
                   <span>Continue with Facebook</span>
                 </button>
@@ -756,30 +761,30 @@ const Login = () => {
           </div>
         </div>
 
-        {/* Refined Footer */}
+        {/* Modern Footer */}
         <div className={`text-center mt-8 lg:mt-10 transition-all duration-500 ease-out ${
           isPageLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}>
-          <p className="text-sm text-slate-600 leading-relaxed font-medium">
+          <p className="text-sm text-gray-600 leading-relaxed font-medium">
             By continuing, you agree to our{" "}
-            <a href="#" className="text-slate-700 hover:text-slate-900 font-medium transition-all duration-200 hover:underline">
+            <a href="#" className="text-indigo-600 hover:text-indigo-700 font-semibold transition-all duration-300 hover:underline">
               Terms of Service
             </a>{" "}
             and{" "}
-            <a href="#" className="text-slate-700 hover:text-slate-900 font-medium transition-all duration-200 hover:underline">
+            <a href="#" className="text-indigo-600 hover:text-indigo-700 font-semibold transition-all duration-300 hover:underline">
               Privacy Policy
             </a>
           </p>
         </div>
       </div>
       
-      {/* Refined Floating Particles with Elegant Colors */}
+      {/* Modern Floating Particles */}
       {!reducedAnimations && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {[...Array(particleCount)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-1.5 h-1.5 bg-slate-300/40 rounded-full animate-float"
+              className="absolute w-2 h-2 bg-gradient-to-r from-indigo-400/40 to-purple-400/40 rounded-full animate-float"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
