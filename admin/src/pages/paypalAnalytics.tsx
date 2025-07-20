@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { backendUrl, currency } from '../App';
+import AuthDebug from '../components/AuthDebug';
 
 interface PayPalPayment {
   _id: string;
@@ -58,7 +59,20 @@ const PayPalAnalytics: React.FC = () => {
   const fetchPayPalData = async () => {
     try {
       setLoading(true);
+      setError(null);
+      
       const token = localStorage.getItem('token');
+      
+      // Debug: Check if token exists
+      if (!token) {
+        throw new Error('No authentication token found. Please login to admin panel.');
+      }
+      
+      console.log('🔍 PayPal Analytics Debug:');
+      console.log('  - Token exists:', !!token);
+      console.log('  - Token length:', token.length);
+      console.log('  - Date range:', dateRange);
+      
       const params = new URLSearchParams({
         startDate: dateRange.startDate,
         endDate: dateRange.endDate
@@ -71,13 +85,32 @@ const PayPalAnalytics: React.FC = () => {
         }
       });
 
+      console.log('  - Response status:', response.status);
+      console.log('  - Response ok:', response.ok);
+
       if (!response.ok) {
-        throw new Error('Failed to fetch PayPal data');
+        const errorText = await response.text();
+        console.log('  - Error response:', errorText);
+        
+        if (response.status === 401) {
+          throw new Error('Authentication failed. Please logout and login again to admin panel.');
+        } else if (response.status === 403) {
+          throw new Error('Access denied. Admin privileges required.');
+        } else {
+          throw new Error(`Failed to fetch PayPal data: ${response.status} ${errorText}`);
+        }
       }
 
       const result = await response.json();
-      setData(result.data);
+      console.log('  - Success response:', result);
+      
+      if (result.success && result.data) {
+        setData(result.data);
+      } else {
+        throw new Error('Invalid response format from server');
+      }
     } catch (err) {
+      console.error('❌ PayPal Analytics Error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
@@ -250,6 +283,7 @@ const PayPalAnalytics: React.FC = () => {
           ))}
         </div>
       </div>
+      <AuthDebug />
     </div>
   );
 };

@@ -4,7 +4,16 @@ import userModel from '../models/userModel.js';
 // Protect middleware - requires authentication
 const protect = async (req, res, next) => {
   try {
-    const { token } = req.headers;
+    let token;
+
+    // Check for token in Authorization header (Bearer token)
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
+    }
+    // Fallback: check for token in headers (for backward compatibility)
+    else if (req.headers.token) {
+      token = req.headers.token;
+    }
 
     if (!token) {
       return res.status(401).json({
@@ -63,7 +72,16 @@ const protect = async (req, res, next) => {
 // Admin middleware - requires admin privileges
 const admin = async (req, res, next) => {
   try {
-    const { token } = req.headers;
+    let token;
+
+    // Check for token in Authorization header (Bearer token)
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
+    }
+    // Fallback: check for token in headers (for backward compatibility)
+    else if (req.headers.token) {
+      token = req.headers.token;
+    }
 
     if (!token) {
       return res.status(401).json({
