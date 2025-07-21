@@ -37,6 +37,14 @@ export const useWebSocket = ({
 
   // Connect to WebSocket
   const connect = useCallback(() => {
+    // Check if WebSockets are disabled via environment variable
+    const isWebSocketDisabled = import.meta.env.VITE_DISABLE_WEBSOCKET === 'true';
+    
+    if (isWebSocketDisabled) {
+      console.log('🔇 WebSocket is disabled via environment variable');
+      return;
+    }
+
     if (!token) {
       console.log('🔌 No token available, skipping WebSocket connection');
       return;

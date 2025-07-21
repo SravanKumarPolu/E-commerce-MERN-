@@ -2,7 +2,7 @@ import paypal from '@paypal/checkout-server-sdk';
 import dotenv from 'dotenv';
 import orderModel from '../models/orderModel.js';
 import userModel from '../models/userModel.js';
-import socketService from '../services/socketService.js';
+// import socketService from '../services/socketService.js';  // DISABLED: WebSocket functionality removed
 import { UserActivity, ProductPerformance } from '../models/analyticsModel.js';
 
 dotenv.config();
@@ -99,10 +99,10 @@ const placeOrder = async (req, res) => {
     const orderWithUser = await orderModel.findById(order._id).populate('userId', 'name email');
     
     // Send new order notification to admin
-    socketService.sendNewOrderToAdmin(orderWithUser.toJSON());
+    // socketService.sendNewOrderToAdmin(orderWithUser.toJSON()); // DISABLED
     
     // Send order update to user
-    socketService.sendOrderUpdateToUser(userId, orderWithUser.toJSON());
+    // socketService.sendOrderUpdateToUser(userId, orderWithUser.toJSON()); // DISABLED
     
     res.json({
       success: true,
@@ -423,20 +423,20 @@ const capturePayPalPayment = async (req, res) => {
       const orderWithUser = await orderModel.findById(order._id).populate('userId', 'name email');
       
       // Send payment status update to user
-      socketService.sendPaymentStatusUpdate(orderWithUser.toJSON());
+      // socketService.sendPaymentStatusUpdate(orderWithUser.toJSON()); // DISABLED
       
       // Send order status update to admin with payment details
-      socketService.sendOrderUpdateToAdmin({
-        ...orderWithUser.toJSON(),
-        paymentDetails: {
-          captureId,
-          transactionId,
-          amount: captureAmount,
-          currency: currency,
-          payeeEmail: payeeEmail,
-          receivedAt: new Date()
-        }
-      });
+      // socketService.sendOrderUpdateToAdmin({ // DISABLED
+      //   ...orderWithUser.toJSON(),
+      //   paymentDetails: {
+      //     captureId,
+      //     transactionId,
+      //     amount: captureAmount,
+      //     currency: currency,
+      //     payeeEmail: payeeEmail,
+      //     receivedAt: new Date()
+      //   }
+      // });
       
       res.json({
         success: true,
@@ -530,7 +530,7 @@ const updateStatus = async (req, res) => {
     const orderWithUser = await orderModel.findById(orderId).populate('userId', 'name email');
     
     // Send order status update to all relevant parties
-    socketService.sendOrderStatusUpdate(orderWithUser.toJSON());
+    // socketService.sendOrderStatusUpdate(orderWithUser.toJSON()); // DISABLED
     
     res.json({
       success: true,

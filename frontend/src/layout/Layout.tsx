@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";
 import { ScrollToTopButton } from "../utils/ScrollToTop";
 import PerformanceMonitor from "../components/PerformanceMonitor";
+import WebSocketController from "../components/WebSocketController";
 
 interface LayoutProps {
   children: ReactNode;
@@ -63,6 +64,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       
       {/* Enhanced Scroll to Top Button */}
       <ScrollToTopButton />
+      
+      {/* WebSocket Controller */}
+      {/* <WebSocketController /> */} {/* DISABLED: WebSocket functionality removed */}
       
       {/* Performance Monitor (Development Only) */}
       <PerformanceMonitor />
