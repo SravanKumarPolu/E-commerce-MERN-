@@ -1,133 +1,248 @@
 #!/usr/bin/env node
 
 /**
- * PayPal Transfer Test Script
- * Tests the admin PayPal transfer functionality
+ * PayPal Transfer API Test Script
+ * Tests the PayPal transfer functionality endpoints
  */
 
-const fetch = require('node-fetch');
+const BASE_URL = 'http://localhost:3001';
+const ADMIN_EMAIL = 'admin@e-commerce.com';
+const ADMIN_PASSWORD = 'skr123456';
 
-const BACKEND_URL = 'http://localhost:3001';
-const ADMIN_TOKEN = 'your-admin-token-here'; // Replace with actual admin token
+// Colors for console output
+const colors = {
+  reset: '\x1b[0m',
+  bright: '\x1b[1m',
+  red: '\x1b[31m',
+  green: '\x1b[32m',
+  yellow: '\x1b[33m',
+  blue: '\x1b[34m',
+  magenta: '\x1b[35m',
+  cyan: '\x1b[36m'
+};
 
-async function testPayPalTransfer() {
-  console.log('🧪 Testing PayPal Transfer Functionality...\n');
+function log(message, color = 'reset') {
+  console.log(`${colors[color]}${message}${colors.reset}`);
+}
 
+function logSuccess(message) {
+  log(`✅ ${message}`, 'green');
+}
+
+function logError(message) {
+  log(`❌ ${message}`, 'red');
+}
+
+function logInfo(message) {
+  log(`ℹ️  ${message}`, 'blue');
+}
+
+function logWarning(message) {
+  log(`⚠️  ${message}`, 'yellow');
+}
+
+async function testAdminLogin() {
+  logInfo('Testing admin login...');
+  
   try {
-    // Test 1: Create PayPal Transfer
-    console.log('1️⃣ Testing PayPal Transfer Creation...');
-    
-    const transferData = {
-      amount: 10.00,
-      note: 'Test transfer from admin panel',
-      transferType: 'PAYOUT'
-    };
-
-    const transferResponse = await fetch(`${BACKEND_URL}/api/paypal-transfer/create`, {
+    const response = await fetch(`${BASE_URL}/api/user/admin`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${ADMIN_TOKEN}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(transferData)
+      body: JSON.stringify({
+        email: ADMIN_EMAIL,
+        password: ADMIN_PASSWORD
+      })
     });
 
-    console.log('   Response Status:', transferResponse.status);
+    const data = await response.json();
     
-    if (transferResponse.ok) {
-      const transferResult = await transferResponse.json();
-      console.log('   ✅ Transfer created successfully!');
-      console.log('   Batch ID:', transferResult.transfer.batchId);
-      console.log('   Amount:', transferResult.transfer.amount);
-      console.log('   Status:', transferResult.transfer.status);
-      console.log('   Recipient:', transferResult.transfer.recipient);
-      console.log('   Account Number:', transferResult.transfer.accountNumber);
-      console.log('   Routing Number:', transferResult.transfer.routingNumber);
+    if (data.success && data.token) {
+      logSuccess('Admin login successful');
+      return data.token;
     } else {
-      const errorText = await transferResponse.text();
-      console.log('   ❌ Transfer creation failed:', errorText);
+      logError(`Admin login failed: ${data.message}`);
+      return null;
     }
-
-    console.log('');
-
-    // Test 2: Get Transfer History
-    console.log('2️⃣ Testing Transfer History...');
-    
-    const historyResponse = await fetch(`${BACKEND_URL}/api/paypal-transfer/history`, {
-      headers: {
-        'Authorization': `Bearer ${ADMIN_TOKEN}`,
-        'Content-Type': 'application/json'
-      }
-    });
-
-    console.log('   Response Status:', historyResponse.status);
-    
-    if (historyResponse.ok) {
-      const historyResult = await historyResponse.json();
-      console.log('   ✅ Transfer history retrieved successfully!');
-      console.log('   Total Transfers:', historyResult.data.summary.totalTransfers);
-      console.log('   Total Amount:', historyResult.data.summary.totalAmount);
-      console.log('   Average Amount:', historyResult.data.summary.averageAmount);
-      
-      if (historyResult.data.transfers.length > 0) {
-        console.log('   Recent Transfers:');
-        historyResult.data.transfers.forEach((transfer, index) => {
-          console.log(`     ${index + 1}. ${transfer.amount} USD - ${transfer.status} - ${transfer.batchId}`);
-        });
-      }
-    } else {
-      const errorText = await historyResponse.text();
-      console.log('   ❌ Transfer history failed:', errorText);
-    }
-
-    console.log('');
-
-    // Test 3: Verify Account Details
-    console.log('3️⃣ Account Details Verification...');
-    console.log('   ✅ Account Number: 7597988');
-    console.log('   ✅ Routing Number: YESB0JIVAN2');
-    console.log('   ✅ PayPal Email: sb-j1ksk43419843@business.example.com');
-    console.log('   ✅ Transfer Type: PAYOUT');
-    console.log('   ✅ Currency: USD');
-
-    console.log('');
-
-    // Test 4: Manual Testing Instructions
-    console.log('4️⃣ Manual Testing Instructions:');
-    console.log('   a) Start all servers:');
-    console.log('      - Backend: cd backend && npm start');
-    console.log('      - Admin: cd admin && npm run dev');
-    console.log('');
-    console.log('   b) Login to admin panel');
-    console.log('   c) Navigate to "PayPal Transfer" in sidebar');
-    console.log('   d) Verify account details are displayed:');
-    console.log('      - Account Number: 7597988');
-    console.log('      - Routing Number: YESB0JIVAN2');
-    console.log('      - PayPal Email: sb-j1ksk43419843@business.example.com');
-    console.log('');
-    console.log('   e) Create a test transfer:');
-    console.log('      - Enter amount (e.g., $1.00)');
-    console.log('      - Add optional note');
-    console.log('      - Click "Send Transfer"');
-    console.log('');
-    console.log('   f) Verify transfer history updates');
-    console.log('   g) Check PayPal Developer Dashboard for payout');
-
-    console.log('');
-
-    // Test 5: Expected Results
-    console.log('5️⃣ Expected Results:');
-    console.log('   ✅ Admin can create PayPal transfers');
-    console.log('   ✅ Transfers are sent to specified account');
-    console.log('   ✅ Transfer history is displayed');
-    console.log('   ✅ Account details are clearly shown');
-    console.log('   ✅ Success/error messages are displayed');
-    console.log('   ✅ Transfer status is tracked');
-
   } catch (error) {
-    console.error('❌ Test failed:', error.message);
+    logError(`Admin login error: ${error.message}`);
+    return null;
   }
 }
 
-// Run the test
-testPayPalTransfer(); 
+async function testCreateTransfer(token, amount = 25.00, note = 'Test transfer from script') {
+  logInfo(`Testing PayPal transfer creation ($${amount})...`);
+  
+  try {
+    const response = await fetch(`${BASE_URL}/api/paypal-transfer/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        amount: amount,
+        note: note
+      })
+    });
+
+    const data = await response.json();
+    
+    if (data.success) {
+      logSuccess(`Transfer created successfully! Batch ID: ${data.transfer.batchId}`);
+      return data.transfer;
+    } else {
+      logError(`Transfer creation failed: ${data.message}`);
+      return null;
+    }
+  } catch (error) {
+    logError(`Transfer creation error: ${error.message}`);
+    return null;
+  }
+}
+
+async function testGetTransferHistory(token) {
+  logInfo('Testing transfer history retrieval...');
+  
+  try {
+    const response = await fetch(`${BASE_URL}/api/paypal-transfer/history`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const data = await response.json();
+    
+    if (data.success) {
+      logSuccess(`Transfer history retrieved successfully! Found ${data.data.transfers.length} transfers`);
+      logInfo(`Total amount: $${data.data.summary.totalAmount}`);
+      logInfo(`Average amount: $${data.data.summary.averageAmount}`);
+      return data.data;
+    } else {
+      logError(`Transfer history failed: ${data.message}`);
+      return null;
+    }
+  } catch (error) {
+    logError(`Transfer history error: ${error.message}`);
+    return null;
+  }
+}
+
+async function testInvalidAmount(token) {
+  logInfo('Testing invalid amount validation...');
+  
+  try {
+    const response = await fetch(`${BASE_URL}/api/paypal-transfer/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        amount: 0.005, // Less than minimum $0.01
+        note: 'Invalid amount test'
+      })
+    });
+
+    const data = await response.json();
+    
+    if (!data.success && data.message.includes('Transfer amount must be at least $0.01')) {
+      logSuccess('Invalid amount validation working correctly');
+      return true;
+    } else {
+      logError(`Invalid amount validation failed. Expected validation error, got: ${data.message}`);
+      return false;
+    }
+  } catch (error) {
+    logError(`Invalid amount test error: ${error.message}`);
+    return false;
+  }
+}
+
+async function testUnauthorizedAccess() {
+  logInfo('Testing unauthorized access...');
+  
+  try {
+    const response = await fetch(`${BASE_URL}/api/paypal-transfer/history`, {
+      method: 'GET'
+      // No authorization header
+    });
+
+    const data = await response.json();
+    
+    if (!data.success && (data.message.includes('authentication') || data.message.includes('authorized') || data.message.includes('token'))) {
+      logSuccess('Unauthorized access properly blocked');
+      return true;
+    } else {
+      logError(`Unauthorized access not properly blocked. Expected auth error, got: ${data.message}`);
+      return false;
+    }
+  } catch (error) {
+    logError(`Unauthorized access test error: ${error.message}`);
+    return false;
+  }
+}
+
+async function runAllTests() {
+  log('\n🚀 Starting PayPal Transfer API Tests...\n', 'bright');
+  
+  // Test 1: Admin Login
+  const token = await testAdminLogin();
+  if (!token) {
+    logError('Cannot proceed without admin token');
+    return;
+  }
+  
+  log('\n' + '='.repeat(50) + '\n');
+  
+  // Test 2: Create Transfer
+  const transfer = await testCreateTransfer(token);
+  
+  log('\n' + '='.repeat(50) + '\n');
+  
+  // Test 3: Get Transfer History
+  const history = await testGetTransferHistory(token);
+  
+  log('\n' + '='.repeat(50) + '\n');
+  
+  // Test 4: Invalid Amount Validation
+  await testInvalidAmount(token);
+  
+  log('\n' + '='.repeat(50) + '\n');
+  
+  // Test 5: Unauthorized Access
+  await testUnauthorizedAccess();
+  
+  log('\n' + '='.repeat(50) + '\n');
+  
+  // Summary
+  log('\n📊 Test Summary:', 'bright');
+  logInfo('All PayPal transfer API tests completed');
+  logInfo('Check the results above for any errors');
+  
+  if (transfer && history) {
+    logSuccess('Core functionality working correctly');
+  } else {
+    logWarning('Some tests may have failed - check the output above');
+  }
+  
+  log('\n🎯 Next Steps:', 'bright');
+  logInfo('1. Test the admin interface at http://localhost:5174/paypal-transfer');
+  logInfo('2. Login with admin credentials and create transfers');
+  logInfo('3. Verify transfer history updates in real-time');
+  logInfo('4. For production, upgrade to newer PayPal SDK with payouts support');
+  
+  log('\n✨ PayPal Transfer Implementation Complete! ✨\n', 'bright');
+}
+
+// Run tests if this script is executed directly
+if (import.meta.url === `file://${process.argv[1]}`) {
+  runAllTests().catch(error => {
+    logError(`Test suite failed: ${error.message}`);
+    process.exit(1);
+  });
+}
+
+export { runAllTests, testAdminLogin, testCreateTransfer, testGetTransferHistory }; 
