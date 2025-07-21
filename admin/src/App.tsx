@@ -12,6 +12,7 @@ import ProductAnalytics from "./pages/productAnalytics";
 import UserAnalytics from "./pages/userAnalytics";
 import SearchAnalytics from "./pages/searchAnalytics";
 import PayPalAnalytics from "./pages/paypalAnalytics";
+import PayPalTransfer from "./pages/paypalTransfer";
 import Sidebar from "./components/Sidebar";
 import { ToastContainer } from "react-toastify";
 
@@ -67,6 +68,7 @@ const App = () => {
                   <Route path="/analytics/users" element={<UserAnalytics />} />
                   <Route path="/analytics/search" element={<SearchAnalytics />} />
                   <Route path="/analytics/paypal" element={<PayPalAnalytics />} />
+                  <Route path="/paypal-transfer" element={<PayPalTransfer />} />
                 </Routes>
               </div>
             </main>

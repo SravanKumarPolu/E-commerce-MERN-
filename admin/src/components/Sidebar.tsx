@@ -148,6 +148,18 @@ function Sidebar() {
                 <span className="font-semibold">PayPal Analytics</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-success-400/0 to-success-400/0 group-hover:from-success-400/5 group-hover:to-success-400/10 transition-all duration-300 rounded-2xl pointer-events-none"></div>
               </NavLink>
+              
+              <NavLink to="/paypal-transfer" className={linkClasses}>
+                <div className={`p-3.5 rounded-xl transition-all duration-300 ${
+                  'bg-white/20 shadow-lg shadow-white/20 border border-white/10 backdrop-blur-sm'
+                }`}>
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  </svg>
+                </div>
+                <span className="font-semibold">PayPal Transfer</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-warning-400/0 to-warning-400/0 group-hover:from-warning-400/5 group-hover:to-warning-400/10 transition-all duration-300 rounded-2xl pointer-events-none"></div>
+              </NavLink>
             </div>
           </div>
 

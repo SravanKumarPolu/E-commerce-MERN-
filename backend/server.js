@@ -10,6 +10,7 @@ import cartRouter from './routes/cartRoute.js';
 import orderRouter from './routes/orderRoute.js';
 import analyticsRouter from './routes/analyticsRoute.js';
 import categoryRouter from './routes/categoryRoute.js';
+import paypalTransferRouter from './routes/paypalTransferRoute.js';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
@@ -107,6 +108,7 @@ app.use('/api/address', addressRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/category', categoryRouter);
+app.use('/api/paypal-transfer', paypalTransferRouter);
 
 // WebSocket status endpoint
 app.get('/api/socket/status', (req, res) => {
