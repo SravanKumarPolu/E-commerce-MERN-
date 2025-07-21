@@ -10,25 +10,24 @@ import cartRouter from './routes/cartRoute.js';
 import orderRouter from './routes/orderRoute.js';
 import analyticsRouter from './routes/analyticsRoute.js';
 import categoryRouter from './routes/categoryRoute.js';
-import paypalTransferRouter from './routes/paypalTransferRoute.js';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 import compression from 'compression';
 import { handleMulterError } from './middleware/multer.js';
 import addressRouter from './routes/addressRoute.js';
-import { createServer } from 'http';  // RE-ENABLED: WebSocket functionality restored
-import socketService from './services/socketService.js';  // RE-ENABLED: WebSocket functionality restored
+import { createServer } from 'http';
+import socketService from './services/socketService.js';
 
 //App config
 const app = express();
-const server = createServer(app);  // RE-ENABLED: WebSocket functionality restored
+const server = createServer(app);
 const port = process.env.PORT || 3001
 connectDB()
 connectCloudinary();
 
 // Initialize WebSocket service
-socketService.initialize(server);  // RE-ENABLED: WebSocket functionality restored
+socketService.initialize(server);
 
 // Security middleware
 app.use(helmet({
@@ -108,7 +107,6 @@ app.use('/api/address', addressRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/category', categoryRouter);
-app.use('/api/paypal-transfer', paypalTransferRouter);
 
 // WebSocket status endpoint
 app.get('/api/socket/status', (req, res) => {

@@ -3,7 +3,17 @@ import userModel from '../models/userModel.js';
 
 const authUser = async (req, res, next) => {
   try {
-    const { token } = req.headers;
+    // Try to get token from multiple header formats
+    let token = req.headers.token;
+    
+    // If not found in 'token' header, try 'authorization' header
+    if (!token && req.headers.authorization) {
+      if (req.headers.authorization.startsWith('Bearer ')) {
+        token = req.headers.authorization.substring(7); // Remove 'Bearer ' prefix
+      } else {
+        token = req.headers.authorization;
+      }
+    }
 
     if (!token) {
       return res.status(401).json({
@@ -62,7 +72,17 @@ const authUser = async (req, res, next) => {
 // Admin-only middleware
 const authAdmin = async (req, res, next) => {
   try {
-    const { token } = req.headers;
+    // Try to get token from multiple header formats
+    let token = req.headers.token;
+    
+    // If not found in 'token' header, try 'authorization' header
+    if (!token && req.headers.authorization) {
+      if (req.headers.authorization.startsWith('Bearer ')) {
+        token = req.headers.authorization.substring(7); // Remove 'Bearer ' prefix
+      } else {
+        token = req.headers.authorization;
+      }
+    }
 
     if (!token) {
       return res.status(401).json({

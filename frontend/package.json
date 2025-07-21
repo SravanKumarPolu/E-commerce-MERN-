@@ -34,8 +34,7 @@
     "socket.io-client": "^4.8.1",
     "@stripe/stripe-js": "^2.4.0",
     "@stripe/react-stripe-js": "^2.4.0",
-    "react-google-login": "^5.2.2",
-    "react-facebook-login": "^4.1.1",
+    "@react-oauth/google": "^0.12.1",
     "react-helmet-async": "^2.0.4",
     "react-query": "^3.39.3",
     "react-hook-form": "^7.48.2",
@@ -44,7 +43,6 @@
     "react-virtualized": "^9.22.5",
     "react-window": "^1.8.8",
     "react-error-boundary": "^4.0.11",
-    "react-suspense": "^1.0.0",
     "react-lazy-load-image-component": "^1.6.0",
     "react-image-crop": "^10.1.8",
     "react-dropzone": "^14.2.3",
@@ -66,9 +64,7 @@
     "valtio": "^1.12.1",
     "immer": "^10.0.3",
     "react-use": "^17.4.0",
-    "usehooks-ts": "^2.9.1",
-    "react-spring": "^9.7.3",
-    "react-transition-group": "^4.4.5"
+    "usehooks-ts": "^2.9.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
@@ -104,8 +100,6 @@
     "lint-staged": "^15.2.0",
     "vite-bundle-analyzer": "^0.7.0",
     "vite-plugin-compression": "^0.5.1",
-    "vite-plugin-optimize-persist": "^1.0.0",
-    "vite-plugin-package-config": "^0.1.0",
     "cross-env": "^7.0.3",
     "faker": "^6.6.6",
     "msw": "^2.0.8",

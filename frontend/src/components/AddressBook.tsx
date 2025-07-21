@@ -36,10 +36,9 @@ const emptyAddress: Omit<Address, '_id'> = {
 interface AddressBookProps {
   onDefaultAddress?: (address: Address | null) => void;
   onAddresses?: (addresses: Address[]) => void;
-  refreshKey?: number;
 }
 
-const AddressBook: React.FC<AddressBookProps> = ({ onDefaultAddress, onAddresses, refreshKey }) => {
+const AddressBook: React.FC<AddressBookProps> = ({ onDefaultAddress, onAddresses }) => {
   const { token, isLoggedIn } = useShopContext();
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(false);
@@ -49,42 +48,20 @@ const AddressBook: React.FC<AddressBookProps> = ({ onDefaultAddress, onAddresses
 
   // Fetch addresses
   const fetchAddresses = async () => {
-    if (!isLoggedIn) {
-      console.log('User not logged in, skipping address fetch');
-      return;
-    }
-    console.log('Fetching addresses with token:', token ? 'Present' : 'Missing');
+    if (!isLoggedIn) return;
     setLoading(true);
     try {
-      const url = `${backendUrl}/api/user/addresses`;
-      console.log('Fetching from URL:', url);
-      
-      const res = await fetch(url, {
+      const res = await fetch(`${backendUrl}/api/user/addresses`, {
         headers: { token },
       });
-      
-      console.log('Response status:', res.status);
-      console.log('Response ok:', res.ok);
-      
       const data = await res.json();
-      console.log('Response data:', data);
-      
-      if (data.success) {
-        console.log('Setting addresses:', data.addresses);
-        setAddresses(data.addresses);
-      } else {
-        console.error('Failed to fetch addresses:', data.message);
-        toast.error(data.message || "Failed to fetch addresses.");
-      }
-    } catch (error) {
-      console.error('Error fetching addresses:', error);
-      toast.error("Error connecting to server.");
+      if (data.success) setAddresses(data.addresses);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => { fetchAddresses(); }, [isLoggedIn, refreshKey]);
+  useEffect(() => { fetchAddresses(); }, [isLoggedIn]);
 
   // Call onDefaultAddress and onAddresses whenever addresses change
   useEffect(() => {
@@ -93,7 +70,6 @@ const AddressBook: React.FC<AddressBookProps> = ({ onDefaultAddress, onAddresses
       onDefaultAddress(def || null);
     }
     if (onAddresses) {
-      console.log('AddressBook sending addresses:', addresses);
       onAddresses(addresses);
     }
   }, [addresses, onDefaultAddress, onAddresses]);
@@ -109,8 +85,8 @@ const AddressBook: React.FC<AddressBookProps> = ({ onDefaultAddress, onAddresses
     setLoading(true);
     try {
       const url = editingId
-        ? `${backendUrl}/api/user/addresses/${editingId}`
-        : `${backendUrl}/api/user/addresses`;
+        ? `${backendUrl}/api/user/address`
+        : `${backendUrl}/api/user/address`;
       const method = editingId ? "PUT" : "POST";
       const body = editingId ? { ...form, addressId: editingId } : form;
       const res = await fetch(url, {
@@ -144,7 +120,7 @@ const AddressBook: React.FC<AddressBookProps> = ({ onDefaultAddress, onAddresses
     if (!window.confirm("Delete this address?")) return;
     setLoading(true);
     try {
-      const res = await fetch(`${backendUrl}/api/user/addresses/${addressId}`, {
+      const res = await fetch(`${backendUrl}/api/user/address`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json", token },
         body: JSON.stringify({ addressId }),
@@ -161,7 +137,7 @@ const AddressBook: React.FC<AddressBookProps> = ({ onDefaultAddress, onAddresses
   const handleSetDefault = async (addressId: string) => {
     setLoading(true);
     try {
-      const res = await fetch(`${backendUrl}/api/user/addresses/default`, {
+      const res = await fetch(`${backendUrl}/api/user/address/default`, {
         method: "POST",
         headers: { "Content-Type": "application/json", token },
         body: JSON.stringify({ addressId }),

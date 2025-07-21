@@ -6,7 +6,7 @@ import {
   getUserBehavior,
   getSearchAnalytics,
   getDashboardSummary,
-  getPayPalAnalytics
+  cleanupAnalytics
 } from '../controllers/analyticsController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
@@ -21,9 +21,6 @@ router.get('/dashboard-summary', protect, admin, getDashboardSummary);
 // Sales analytics (admin only)
 router.get('/sales', protect, admin, getSalesAnalytics);
 
-// PayPal analytics (admin only)
-router.get('/paypal', protect, admin, getPayPalAnalytics);
-
 // Product performance analytics (admin only)
 router.get('/products', protect, admin, getProductPerformance);
 
@@ -32,5 +29,8 @@ router.get('/user-behavior', protect, admin, getUserBehavior);
 
 // Search analytics (admin only)
 router.get('/search', protect, admin, getSearchAnalytics);
+
+// Cleanup orphaned analytics records (admin only)
+router.post('/cleanup', protect, admin, cleanupAnalytics);
 
 export default router; 

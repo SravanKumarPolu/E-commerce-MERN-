@@ -2,7 +2,7 @@ import paypal from '@paypal/checkout-server-sdk';
 import dotenv from 'dotenv';
 import orderModel from '../models/orderModel.js';
 import userModel from '../models/userModel.js';
-import socketService from '../services/socketService.js';  // RE-ENABLED: WebSocket functionality restored
+import socketService from '../services/socketService.js';
 import { UserActivity, ProductPerformance } from '../models/analyticsModel.js';
 
 dotenv.config();
@@ -205,8 +205,8 @@ const placeOrderPayPal = async (req, res) => {
           address: paypalShippingAddress
         },
         payee: {
-          email_address: 'sb-j1ksk43419843@business.example.com' // PayPal sandbox business account
-        },
+          email_address: 'sb-business@business.example.com' // PayPal sandbox business account
+        }
       }],
       application_context: {
         return_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/success`,
@@ -382,38 +382,27 @@ const capturePayPalPayment = async (req, res) => {
       const captureId = capture.result.purchase_units[0].payments.captures[0].id;
       const transactionId = capture.result.purchase_units[0].payments.captures[0].id;
       const captureAmount = capture.result.purchase_units[0].payments.captures[0].amount.value;
-      const currency = capture.result.purchase_units[0].payments.captures[0].amount.currency_code;
-      
-      // Get payee information (business account)
-      const payeeEmail = capture.result.purchase_units[0].payee?.email_address || 'sb-j1ksk43419843@business.example.com';
       
       console.log('💰 Capture details:', {
         captureId,
         transactionId,
         amount: captureAmount,
-        currency: currency,
-        payeeEmail: payeeEmail
+        currency: capture.result.purchase_units[0].payments.captures[0].amount.currency_code
       });
       
-      // Update order in database with enhanced payment details
+      // Update order in database
       const order = await orderModel.findOneAndUpdate(
         { paypalOrderId: orderID, userId },
         {
           paymentStatus: 'completed',
           paypalCaptureId: captureId,
           paypalTransactionId: transactionId,
-          paypalPayeeEmail: payeeEmail,
-          paypalCaptureAmount: parseFloat(captureAmount),
-          paypalCaptureCurrency: currency,
-          orderStatus: 'Order Placed',
-          paymentCompletedAt: new Date()
+          orderStatus: 'Order Placed'
         },
         { new: true }
       );
       
       console.log('📦 Order updated in database:', order._id);
-      console.log('💰 Payment received by business account:', payeeEmail);
-      console.log('💰 Amount received:', `${currency} ${captureAmount}`);
       
       // Clear user's cart after successful payment
       await userModel.findByIdAndUpdate(userId, { cartData: {} });
@@ -425,18 +414,8 @@ const capturePayPalPayment = async (req, res) => {
       // Send payment status update to user
       socketService.sendPaymentStatusUpdate(orderWithUser.toJSON());
       
-      // Send order status update to admin with payment details
-      socketService.sendOrderUpdateToAdmin({
-        ...orderWithUser.toJSON(),
-        paymentDetails: {
-          captureId,
-          transactionId,
-          amount: captureAmount,
-          currency: currency,
-          payeeEmail: payeeEmail,
-          receivedAt: new Date()
-        }
-      });
+      // Send order status update to admin
+      socketService.sendOrderUpdateToAdmin(orderWithUser.toJSON());
       
       res.json({
         success: true,
@@ -445,9 +424,7 @@ const capturePayPalPayment = async (req, res) => {
         captureDetails: {
           captureId,
           transactionId,
-          amount: captureAmount,
-          currency: currency,
-          payeeEmail: payeeEmail
+          amount: captureAmount
         }
       });
     } else {

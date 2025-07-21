@@ -96,24 +96,6 @@ const orderSchema = new mongoose.Schema({
     type: String,
     sparse: true
   },
-  paypalPayeeEmail: {
-    type: String,
-    sparse: true,
-    default: 'sb-j1ksk43419843@business.example.com'
-  },
-  paypalCaptureAmount: {
-    type: Number,
-    sparse: true
-  },
-  paypalCaptureCurrency: {
-    type: String,
-    sparse: true,
-    default: 'USD'
-  },
-  paymentCompletedAt: {
-    type: Date,
-    sparse: true
-  },
   // Order tracking
   trackingNumber: {
     type: String,

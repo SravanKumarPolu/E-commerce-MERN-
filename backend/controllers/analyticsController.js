@@ -36,6 +36,10 @@ export const trackUserActivity = async (req, res) => {
 // Get sales analytics
 export const getSalesAnalytics = async (req, res) => {
   try {
+    console.log('📊 Sales analytics request started');
+    console.log('🔐 User from middleware:', req.user);
+    console.log('📝 Query params:', req.query);
+    
     const { startDate, endDate, period = 'daily' } = req.query;
     
     let start, end;
@@ -50,7 +54,10 @@ export const getSalesAnalytics = async (req, res) => {
       start.setDate(start.getDate() - 30);
     }
 
+    console.log('📅 Date range - Start:', start, 'End:', end);
+
     // Get sales data from orders
+    console.log('📈 Fetching sales data...');
     const salesData = await orderModel.aggregate([
       {
         $match: {
@@ -74,8 +81,10 @@ export const getSalesAnalytics = async (req, res) => {
         $sort: { _id: 1 }
       }
     ]);
+    console.log('📈 Sales data count:', salesData.length);
 
     // Get category breakdown
+    console.log('📊 Fetching category breakdown...');
     const categoryBreakdown = await orderModel.aggregate([
       {
         $match: {
@@ -115,8 +124,10 @@ export const getSalesAnalytics = async (req, res) => {
         }
       }
     ]);
+    console.log('📊 Category breakdown count:', categoryBreakdown.length);
 
     // Get payment method breakdown
+    console.log('💳 Fetching payment breakdown...');
     const paymentBreakdown = await orderModel.aggregate([
       {
         $match: {
@@ -133,8 +144,10 @@ export const getSalesAnalytics = async (req, res) => {
         }
       }
     ]);
+    console.log('💳 Payment breakdown count:', paymentBreakdown.length);
 
     // Get order status breakdown
+    console.log('📋 Fetching status breakdown...');
     const statusBreakdown = await orderModel.aggregate([
       {
         $match: {
@@ -149,8 +162,10 @@ export const getSalesAnalytics = async (req, res) => {
         }
       }
     ]);
+    console.log('📋 Status breakdown count:', statusBreakdown.length);
 
     // Calculate summary statistics
+    console.log('📊 Fetching summary statistics...');
     const summary = await orderModel.aggregate([
       {
         $match: {
@@ -169,35 +184,49 @@ export const getSalesAnalytics = async (req, res) => {
         }
       }
     ]);
+    console.log('📊 Summary statistics:', summary);
+
+    const responseData = {
+      salesData,
+      categoryBreakdown,
+      paymentBreakdown,
+      statusBreakdown,
+      summary: summary[0] || {
+        totalSales: 0,
+        totalOrders: 0,
+        averageOrderValue: 0,
+        totalProducts: 0
+      },
+      period: {
+        start: start.toISOString(),
+        end: end.toISOString()
+      }
+    };
+
+    console.log('✅ Sales analytics completed successfully');
 
     res.status(200).json({
       success: true,
-      data: {
-        salesData,
-        categoryBreakdown,
-        paymentBreakdown,
-        statusBreakdown,
-        summary: summary[0] || {
-          totalSales: 0,
-          totalOrders: 0,
-          averageOrderValue: 0,
-          totalProducts: 0
-        },
-        period: {
-          start: start.toISOString(),
-          end: end.toISOString()
-        }
-      }
+      data: responseData
     });
   } catch (error) {
-    console.error('Error getting sales analytics:', error);
-    res.status(500).json({ message: 'Error fetching sales analytics' });
+    console.error('❌ Error getting sales analytics:', error.message);
+    console.error('❌ Error stack:', error.stack);
+    res.status(500).json({ 
+      success: false,
+      message: 'Error fetching sales analytics',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+    });
   }
 };
 
 // Get product performance analytics
 export const getProductPerformance = async (req, res) => {
   try {
+    console.log('📊 Product performance request started');
+    console.log('🔐 User from middleware:', req.user);
+    console.log('📝 Query params:', req.query);
+    
     const { limit = 10, metric = 'revenue', category } = req.query;
 
     let query = {};
@@ -205,13 +234,37 @@ export const getProductPerformance = async (req, res) => {
       query['productId.category'] = category;
     }
 
+    console.log('📈 Fetching top products...');
     const topProducts = await ProductPerformance.find(query)
       .sort({ [metric]: -1 })
       .limit(parseInt(limit))
       .populate('productId', 'name price image category subCategory');
 
+    // Filter out products with null productId (deleted products)
+    const validTopProducts = topProducts.filter(product => 
+      product.productId && 
+      product.productId.name && 
+      product.productId._id
+    );
+    
+    console.log('📈 Valid top products count:', validTopProducts.length, 'of', topProducts.length);
+
     // Get overall product statistics
+    console.log('📊 Fetching product statistics...');
     const productStats = await ProductPerformance.aggregate([
+      {
+        $lookup: {
+          from: 'products',
+          localField: 'productId',
+          foreignField: '_id',
+          as: 'product'
+        }
+      },
+      {
+        $match: {
+          'product.0': { $exists: true } // Only include records with valid product references
+        }
+      },
       {
         $group: {
           _id: null,
@@ -225,6 +278,7 @@ export const getProductPerformance = async (req, res) => {
     ]);
 
     // Get category performance
+    console.log('📊 Fetching category performance...');
     const categoryPerformance = await ProductPerformance.aggregate([
       {
         $lookup: {
@@ -232,6 +286,11 @@ export const getProductPerformance = async (req, res) => {
           localField: 'productId',
           foreignField: '_id',
           as: 'product'
+        }
+      },
+      {
+        $match: {
+          'product.0': { $exists: true } // Only include records with valid product references
         }
       },
       {
@@ -251,11 +310,14 @@ export const getProductPerformance = async (req, res) => {
         $sort: { totalRevenue: -1 }
       }
     ]);
+    
+    console.log('📊 Category performance count:', categoryPerformance.length);
+    console.log('✅ Product performance completed successfully');
 
     res.status(200).json({
       success: true,
       data: {
-        topProducts,
+        topProducts: validTopProducts,
         productStats: productStats[0] || {
           totalViews: 0,
           totalAddToCart: 0,
@@ -267,8 +329,13 @@ export const getProductPerformance = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error getting product performance:', error);
-    res.status(500).json({ message: 'Error fetching product performance' });
+    console.error('❌ Error getting product performance:', error.message);
+    console.error('❌ Error stack:', error.stack);
+    res.status(500).json({ 
+      success: false,
+      message: 'Error fetching product performance',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+    });
   }
 };
 
@@ -575,11 +642,17 @@ export const trackSearch = async (query, resultsCount, category = null) => {
 // Get dashboard summary
 export const getDashboardSummary = async (req, res) => {
   try {
+    console.log('📊 Dashboard summary request started');
+    console.log('🔐 User from middleware:', req.user);
+    
     const today = new Date();
     const lastMonth = new Date();
     lastMonth.setMonth(lastMonth.getMonth() - 1);
 
+    console.log('📅 Date range - Today:', today, 'Last month:', lastMonth);
+
     // Get today's stats
+    console.log('📈 Fetching today\'s stats...');
     const todayStats = await orderModel.aggregate([
       {
         $match: {
@@ -599,8 +672,10 @@ export const getDashboardSummary = async (req, res) => {
         }
       }
     ]);
+    console.log('📈 Today\'s stats result:', todayStats);
 
     // Get this month's stats
+    console.log('📊 Fetching month\'s stats...');
     const monthStats = await orderModel.aggregate([
       {
         $match: {
@@ -618,154 +693,151 @@ export const getDashboardSummary = async (req, res) => {
         }
       }
     ]);
+    console.log('📊 Month\'s stats result:', monthStats);
 
     // Get total users
+    console.log('👥 Fetching total users...');
     const totalUsers = await userModel.countDocuments();
+    console.log('👥 Total users:', totalUsers);
 
     // Get total products
+    console.log('📦 Fetching total products...');
     const totalProducts = await productModel.countDocuments();
+    console.log('📦 Total products:', totalProducts);
 
     // Get recent orders
+    console.log('📋 Fetching recent orders...');
     const recentOrders = await orderModel.find({ isActive: true })
       .sort({ createdAt: -1 })
       .limit(5)
       .populate('userId', 'name email');
+    console.log('📋 Recent orders count:', recentOrders.length);
 
     // Get low stock products
+    console.log('⚠️ Fetching low stock products...');
     const lowStockProducts = await productModel.find({
       stockQuantity: { $lt: 10, $gt: 0 }
     })
     .limit(5)
     .select('name stockQuantity');
+    console.log('⚠️ Low stock products count:', lowStockProducts.length);
 
+    const responseData = {
+      today: todayStats[0] || { sales: 0, orders: 0 },
+      month: monthStats[0] || { sales: 0, orders: 0, averageOrderValue: 0 },
+      totalUsers,
+      totalProducts,
+      recentOrders,
+      lowStockProducts
+    };
+
+    console.log('✅ Dashboard summary completed successfully');
+    
     res.status(200).json({
       success: true,
-      data: {
-        today: todayStats[0] || { sales: 0, orders: 0 },
-        month: monthStats[0] || { sales: 0, orders: 0, averageOrderValue: 0 },
-        totalUsers,
-        totalProducts,
-        recentOrders,
-        lowStockProducts
-      }
+      data: responseData
     });
   } catch (error) {
-    console.error('Error getting dashboard summary:', error);
-    res.status(500).json({ message: 'Error fetching dashboard summary' });
+    console.error('❌ Error getting dashboard summary:', error.message);
+    console.error('❌ Error stack:', error.stack);
+    res.status(500).json({ 
+      success: false,
+      message: 'Error fetching dashboard summary',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+    });
   }
 }; 
 
-// Get PayPal payment analytics
-export const getPayPalAnalytics = async (req, res) => {
+// Clean up orphaned analytics records
+export const cleanupOrphanedAnalytics = async () => {
   try {
-    const { startDate, endDate } = req.query;
+    console.log('🧹 Starting analytics cleanup...');
     
-    let start, end;
-    
-    if (startDate && endDate) {
-      start = new Date(startDate);
-      end = new Date(endDate);
-    } else {
-      // Default to last 30 days
-      end = new Date();
-      start = new Date();
-      start.setDate(start.getDate() - 30);
+    // Clean up ProductPerformance records with null or invalid productId
+    const orphanedProductPerformance = await ProductPerformance.aggregate([
+      {
+        $lookup: {
+          from: 'products',
+          localField: 'productId',
+          foreignField: '_id',
+          as: 'product'
+        }
+      },
+      {
+        $match: {
+          'product.0': { $exists: false } // Records with no matching product
+        }
+      },
+      {
+        $project: { _id: 1 }
+      }
+    ]);
+
+    if (orphanedProductPerformance.length > 0) {
+      const orphanedIds = orphanedProductPerformance.map(record => record._id);
+      await ProductPerformance.deleteMany({ _id: { $in: orphanedIds } });
+      console.log(`🧹 Removed ${orphanedProductPerformance.length} orphaned ProductPerformance records`);
     }
 
-    // Get PayPal payment data
-    const paypalData = await orderModel.aggregate([
+    // Clean up UserActivity records with invalid productId references
+    const orphanedUserActivity = await UserActivity.aggregate([
       {
         $match: {
-          createdAt: { $gte: start, $lte: end },
-          paymentMethod: 'PayPal',
-          paymentStatus: 'completed',
-          isActive: true
+          productId: { $exists: true, $ne: null }
         }
       },
       {
-        $group: {
-          _id: {
-            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" }
-          },
-          totalPayments: { $sum: 1 },
-          totalAmount: { $sum: "$paypalCaptureAmount" },
-          averageAmount: { $avg: "$paypalCaptureAmount" }
+        $lookup: {
+          from: 'products',
+          localField: 'productId',
+          foreignField: '_id',
+          as: 'product'
         }
       },
       {
-        $sort: { _id: 1 }
+        $match: {
+          'product.0': { $exists: false }
+        }
+      },
+      {
+        $project: { _id: 1 }
       }
     ]);
 
-    // Get business account summary
-    const businessAccountSummary = await orderModel.aggregate([
-      {
-        $match: {
-          paymentMethod: 'PayPal',
-          paymentStatus: 'completed',
-          isActive: true
-        }
-      },
-      {
-        $group: {
-          _id: "$paypalPayeeEmail",
-          totalPayments: { $sum: 1 },
-          totalAmount: { $sum: "$paypalCaptureAmount" },
-          averageAmount: { $avg: "$paypalCaptureAmount" },
-          lastPayment: { $max: "$paymentCompletedAt" }
-        }
-      }
-    ]);
+    if (orphanedUserActivity.length > 0) {
+      const orphanedIds = orphanedUserActivity.map(record => record._id);
+      await UserActivity.deleteMany({ _id: { $in: orphanedIds } });
+      console.log(`🧹 Removed ${orphanedUserActivity.length} orphaned UserActivity records`);
+    }
 
-    // Get recent PayPal payments
-    const recentPayments = await orderModel.find({
-      paymentMethod: 'PayPal',
-      paymentStatus: 'completed',
-      isActive: true
-    })
-    .sort({ paymentCompletedAt: -1 })
-    .limit(10)
-    .populate('userId', 'name email')
-    .select('paypalCaptureAmount paypalCaptureCurrency paypalPayeeEmail paymentCompletedAt userId total');
+    console.log('✅ Analytics cleanup completed');
+    return {
+      productPerformanceRecordsRemoved: orphanedProductPerformance.length,
+      userActivityRecordsRemoved: orphanedUserActivity.length
+    };
+  } catch (error) {
+    console.error('❌ Error during analytics cleanup:', error);
+    throw error;
+  }
+};
 
-    // Calculate summary statistics
-    const summary = await orderModel.aggregate([
-      {
-        $match: {
-          paymentMethod: 'PayPal',
-          paymentStatus: 'completed',
-          isActive: true
-        }
-      },
-      {
-        $group: {
-          _id: null,
-          totalPayPalPayments: { $sum: 1 },
-          totalPayPalAmount: { $sum: "$paypalCaptureAmount" },
-          averagePayPalAmount: { $avg: "$paypalCaptureAmount" }
-        }
-      }
-    ]);
-
+// API endpoint for manual cleanup (admin only)
+export const cleanupAnalytics = async (req, res) => {
+  try {
+    console.log('🧹 Manual analytics cleanup requested by:', req.user?.email);
+    const result = await cleanupOrphanedAnalytics();
+    
     res.status(200).json({
       success: true,
-      data: {
-        paypalData,
-        businessAccountSummary,
-        recentPayments,
-        summary: summary[0] || {
-          totalPayPalPayments: 0,
-          totalPayPalAmount: 0,
-          averagePayPalAmount: 0
-        },
-        period: {
-          start: start.toISOString(),
-          end: end.toISOString()
-        }
-      }
+      message: 'Analytics cleanup completed successfully',
+      data: result
     });
   } catch (error) {
-    console.error('Error getting PayPal analytics:', error);
-    res.status(500).json({ message: 'Error fetching PayPal analytics' });
+    console.error('❌ Error in manual analytics cleanup:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error during analytics cleanup',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+    });
   }
 }; 

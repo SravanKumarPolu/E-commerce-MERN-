@@ -37,14 +37,6 @@ export const useWebSocket = ({
 
   // Connect to WebSocket
   const connect = useCallback(() => {
-    // Check if WebSockets are disabled via environment variable
-    const isWebSocketDisabled = import.meta.env.VITE_DISABLE_WEBSOCKET === 'true';
-    
-    if (isWebSocketDisabled) {
-      console.log('🔇 WebSocket is disabled via environment variable');
-      return;
-    }
-
     if (!token) {
       console.log('🔌 No token available, skipping WebSocket connection');
       return;
@@ -63,10 +55,9 @@ export const useWebSocket = ({
         transports: ['websocket', 'polling'],
         timeout: 20000,
         reconnection: true,
-        reconnectionAttempts: 3, // Reduced from 5 to prevent excessive reconnects
-        reconnectionDelay: 2000, // Increased from 1000 for more stability
-        reconnectionDelayMax: 10000, // Increased from 5000
-        forceNew: true // Force new connection to prevent conflicts
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000
       });
 
       // Connection events
@@ -80,15 +71,13 @@ export const useWebSocket = ({
         console.log('🔌 WebSocket disconnected:', reason);
         setIsConnected(false);
         
-        // Only try to reconnect for server-initiated disconnects, not client-initiated ones
         if (reason === 'io server disconnect') {
-          // Server disconnected, try to reconnect after a delay
+          // Server disconnected, try to reconnect
           setTimeout(() => {
-            if (socketRef.current && token) {
-              console.log('🔄 Attempting to reconnect after server disconnect...');
+            if (socketRef.current) {
               socketRef.current.connect();
             }
-          }, 3000); // Increased delay for stability
+          }, 1000);
         }
       });
 
@@ -236,7 +225,7 @@ export const useWebSocket = ({
     return () => {
       disconnect();
     };
-  }, [token]); // Fixed: Removed connect and disconnect from dependencies to prevent infinite loops
+  }, [token, connect, disconnect]);
 
   return {
     isConnected,

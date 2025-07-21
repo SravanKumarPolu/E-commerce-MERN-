@@ -22,11 +22,6 @@ const validatePhone = (phone: string) => /^\d{7,15}$/.test(phone);
 
 const PlaceOrder = () => {
   const { token, isLoggedIn, getCartAmount, delivery_fee } = useShopContext();
-  
-  // Debug logging
-  console.log('PlaceOrder - isLoggedIn:', isLoggedIn);
-  console.log('PlaceOrder - token:', token ? 'Present' : 'Missing');
-  
   const [method, setMethod] = useState("cod");
   const [showPayPalPayment, setShowPayPalPayment] = useState(false);
   const [formData, setFormData] = useState({
@@ -45,7 +40,6 @@ const PlaceOrder = () => {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [mode, setMode] = useState<'add' | 'edit' | 'view'>('add');
   const [loading, setLoading] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0);
 
   // Calculate total amount
   const subtotal = getCartAmount();
@@ -119,7 +113,7 @@ const PlaceOrder = () => {
     }
     setLoading(true);
     try {
-      const response = await fetch(`${backendUrl}/api/user/addresses`, {
+      const response = await fetch(`${backendUrl}/api/user/address`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -131,7 +125,6 @@ const PlaceOrder = () => {
       if (res.success) {
         toast.success("Address saved to your profile!");
         setMode("view");
-        setRefreshKey((k) => k + 1);
       } else {
         toast.error(res.message || "Failed to save address.");
       }
@@ -260,12 +253,62 @@ const PlaceOrder = () => {
         <div className="mb-6">
           <AddressBook
             onDefaultAddress={setDefaultAddress}
-            onAddresses={(addresses) => {
-              console.log('PlaceOrder received addresses:', addresses);
-              setAllAddresses(addresses);
-            }}
-            refreshKey={refreshKey}
+            onAddresses={setAllAddresses}
           />
+          {allAddresses.length > 0 && (
+            <div className="mb-4">
+              <h3 className="font-semibold mb-2">Choose a saved address:</h3>
+              <div className="flex flex-wrap gap-3">
+                <AnimatePresence>
+                  {allAddresses.map((addr) => (
+                    <motion.div
+                      key={addr._id}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className={`p-3 border rounded w-64 cursor-pointer transition-all duration-150 shadow-sm bg-white hover:shadow-md ${addr.default ? "border-blue-500 bg-blue-50" : "border-gray-200"} ${selectedAddressId === addr._id ? "ring-2 ring-green-500" : ""}`}
+                    >
+                      <div className="font-semibold">
+                        {addr.firstName} {addr.lastName} {addr.default && (
+                          <span className="text-xs text-blue-600">(Default)</span>
+                        )}
+                      </div>
+                      <div className="text-sm text-gray-700">
+                        {addr.street}, {addr.city}, {addr.state}, {addr.zipcode}, {addr.country}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        Email: {addr.email} | Phone: {addr.phone}
+                      </div>
+                      <button
+                        type="button"
+                        aria-label="Use this address"
+                        onClick={() => handleUseAddress(addr)}
+                        className="mt-2 text-xs bg-blue-600 text-white px-2 py-1 rounded"
+                      >
+                        Use this address
+                      </button>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="flex flex-col justify-center"
+                >
+                  <button
+                    type="button"
+                    aria-label="Add new address"
+                    onClick={handleNewAddress}
+                    className="text-xs bg-green-600 text-white px-2 py-1 rounded"
+                  >
+                    New Address
+                  </button>
+                </motion.div>
+              </div>
+            </div>
+          )}
         </div>
         {/* Delivery form as a card/modal */}
         <motion.form

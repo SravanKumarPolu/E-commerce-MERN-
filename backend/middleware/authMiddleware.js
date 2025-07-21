@@ -4,15 +4,16 @@ import userModel from '../models/userModel.js';
 // Protect middleware - requires authentication
 const protect = async (req, res, next) => {
   try {
-    let token;
-
-    // Check for token in Authorization header (Bearer token)
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-      token = req.headers.authorization.split(' ')[1];
-    }
-    // Fallback: check for token in headers (for backward compatibility)
-    else if (req.headers.token) {
-      token = req.headers.token;
+    // Try to get token from multiple header formats
+    let token = req.headers.token;
+    
+    // If not found in 'token' header, try 'authorization' header
+    if (!token && req.headers.authorization) {
+      if (req.headers.authorization.startsWith('Bearer ')) {
+        token = req.headers.authorization.substring(7); // Remove 'Bearer ' prefix
+      } else {
+        token = req.headers.authorization;
+      }
     }
 
     if (!token) {
@@ -72,15 +73,16 @@ const protect = async (req, res, next) => {
 // Admin middleware - requires admin privileges
 const admin = async (req, res, next) => {
   try {
-    let token;
-
-    // Check for token in Authorization header (Bearer token)
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-      token = req.headers.authorization.split(' ')[1];
-    }
-    // Fallback: check for token in headers (for backward compatibility)
-    else if (req.headers.token) {
-      token = req.headers.token;
+    // Try to get token from multiple header formats
+    let token = req.headers.token;
+    
+    // If not found in 'token' header, try 'authorization' header
+    if (!token && req.headers.authorization) {
+      if (req.headers.authorization.startsWith('Bearer ')) {
+        token = req.headers.authorization.substring(7); // Remove 'Bearer ' prefix
+      } else {
+        token = req.headers.authorization;
+      }
     }
 
     if (!token) {
