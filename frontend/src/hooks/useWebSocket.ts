@@ -63,9 +63,10 @@ export const useWebSocket = ({
         transports: ['websocket', 'polling'],
         timeout: 20000,
         reconnection: true,
-        reconnectionAttempts: 5,
-        reconnectionDelay: 1000,
-        reconnectionDelayMax: 5000
+        reconnectionAttempts: 3, // Reduced from 5 to prevent excessive reconnects
+        reconnectionDelay: 2000, // Increased from 1000 for more stability
+        reconnectionDelayMax: 10000, // Increased from 5000
+        forceNew: true // Force new connection to prevent conflicts
       });
 
       // Connection events
@@ -79,13 +80,15 @@ export const useWebSocket = ({
         console.log('🔌 WebSocket disconnected:', reason);
         setIsConnected(false);
         
+        // Only try to reconnect for server-initiated disconnects, not client-initiated ones
         if (reason === 'io server disconnect') {
-          // Server disconnected, try to reconnect
+          // Server disconnected, try to reconnect after a delay
           setTimeout(() => {
-            if (socketRef.current) {
+            if (socketRef.current && token) {
+              console.log('🔄 Attempting to reconnect after server disconnect...');
               socketRef.current.connect();
             }
-          }, 1000);
+          }, 3000); // Increased delay for stability
         }
       });
 
@@ -233,7 +236,7 @@ export const useWebSocket = ({
     return () => {
       disconnect();
     };
-  }, [token, connect, disconnect]);
+  }, [token]); // Fixed: Removed connect and disconnect from dependencies to prevent infinite loops
 
   return {
     isConnected,
