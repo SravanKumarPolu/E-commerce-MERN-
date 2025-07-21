@@ -1,5 +1,5 @@
 import paypal from '@paypal/checkout-server-sdk';
-import axios from 'axios';
+import Transfer from '../models/transferModel.js';
 import orderModel from '../models/orderModel.js';
 
 // PayPal client configuration
@@ -9,27 +9,29 @@ let environment = new paypal.core.SandboxEnvironment(
 );
 let client = new paypal.core.PayPalHttpClient(environment);
 
-// Mock transfer storage (in production, this would be a database)
-let mockTransfers = [];
-
 // Get PayPal access token for REST API
 async function getPayPalAccessToken() {
   try {
     const auth = Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`).toString('base64');
     
-    const response = await axios.post('https://api-m.sandbox.paypal.com/v1/oauth2/token', 
-      'grant_type=client_credentials',
-      {
-        headers: {
-          'Authorization': `Basic ${auth}`,
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      }
-    );
+    const response = await fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Basic ${auth}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'grant_type=client_credentials'
+    });
     
-    return response.data.access_token;
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(`PayPal API error: ${data.error_description || data.error}`);
+    }
+    
+    return data.access_token;
   } catch (error) {
-    console.error('❌ Error getting PayPal access token:', error.response?.data || error.message);
+    console.error('❌ Error getting PayPal access token:', error.message);
     throw new Error('Failed to get PayPal access token');
   }
 }
@@ -70,11 +72,9 @@ export const createPayPalTransfer = async (req, res) => {
     if (!process.env.PAYPAL_CLIENT_ID || !process.env.PAYPAL_CLIENT_SECRET) {
       console.warn('⚠️ PayPal credentials not configured, using mock implementation');
       
-      // Fallback to mock implementation
-      const batchId = `batch_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      const transferRecord = {
-        id: `transfer_${Date.now()}`,
-        batchId: batchId,
+      // Create transfer record in database
+      const transferRecord = new Transfer({
+        batchId: `batch_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         amount: parseFloat(amount),
         currency: 'USD',
         recipientEmail: 'sb-j1ksk43419843@business.example.com',
@@ -82,12 +82,12 @@ export const createPayPalTransfer = async (req, res) => {
         recipientRoutingNumber: 'YESB0JIVAN2',
         status: 'SUCCESS',
         note: note || 'Payment transfer from admin',
-        createdAt: new Date(),
         adminId: adminEmail,
-        adminEmail: adminEmail
-      };
+        adminEmail: adminEmail,
+        transferType: transferType
+      });
       
-      mockTransfers.push(transferRecord);
+      await transferRecord.save();
       
       return res.json({
         success: true,
@@ -129,41 +129,43 @@ export const createPayPalTransfer = async (req, res) => {
         ]
       };
 
-      const response = await axios.post(
+      const response = await fetch(
         'https://api-m.sandbox.paypal.com/v1/payments/payouts',
-        payoutData,
         {
+          method: 'POST',
           headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
-          }
+          },
+          body: JSON.stringify(payoutData)
         }
       );
 
-      console.log('✅ PayPal payout response:', JSON.stringify(response.data, null, 2));
+      const data = await response.json();
+      console.log('✅ PayPal payout response:', JSON.stringify(data, null, 2));
 
-      if (response.data.batch_header && response.data.batch_header.payout_batch_id) {
-        const batchId = response.data.batch_header.payout_batch_id;
-        const status = response.data.batch_header.batch_status;
+      if (response.ok && data.batch_header && data.batch_header.payout_batch_id) {
+        const batchId = data.batch_header.payout_batch_id;
+        const status = data.batch_header.batch_status;
         
-        // Store transfer record
-        const transferRecord = {
-          id: `transfer_${Date.now()}`,
+        // Create transfer record in database
+        const transferRecord = new Transfer({
           batchId: batchId,
           amount: parseFloat(amount),
           currency: 'USD',
           recipientEmail: 'sb-j1ksk43419843@business.example.com',
           recipientAccountNumber: '7597988',
           recipientRoutingNumber: 'YESB0JIVAN2',
-          status: status,
+          status: status === 'SUCCESS' ? 'SUCCESS' : 'PENDING',
           note: note || 'Payment transfer from admin',
-          createdAt: new Date(),
           adminId: adminEmail,
           adminEmail: adminEmail,
-          paypalResponse: response.data
-        };
+          transferType: transferType,
+          paypalResponse: data,
+          completedAt: status === 'SUCCESS' ? new Date() : null
+        });
         
-        mockTransfers.push(transferRecord);
+        await transferRecord.save();
 
         console.log('🎉 PayPal transfer created successfully (real)');
         console.log('💰 Transfer details:', {
@@ -186,33 +188,66 @@ export const createPayPalTransfer = async (req, res) => {
           }
         });
       } else {
-        throw new Error('No batch ID returned from PayPal');
+        // Handle PayPal API errors
+        if (data.name === 'PAYOUT_NOT_AVAILABLE') {
+          console.warn('⚠️ PayPal payouts not available for this account/region');
+          
+          // Create transfer record in database with pending status
+          const transferRecord = new Transfer({
+            batchId: `batch_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            amount: parseFloat(amount),
+            currency: 'USD',
+            recipientEmail: 'sb-j1ksk43419843@business.example.com',
+            recipientAccountNumber: '7597988',
+            recipientRoutingNumber: 'YESB0JIVAN2',
+            status: 'PENDING',
+            note: note || 'Payment transfer from admin (PayPal payouts not available in this region)',
+            adminId: adminEmail,
+            adminEmail: adminEmail,
+            transferType: transferType,
+            paypalError: data
+          });
+          
+          await transferRecord.save();
+          
+          res.json({
+            success: true,
+            message: 'Transfer created (PayPal payouts not available in this region - using simulated transfer)',
+            transfer: {
+              batchId: transferRecord.batchId,
+              amount: transferRecord.amount,
+              status: transferRecord.status,
+              recipient: transferRecord.recipientEmail,
+              accountNumber: transferRecord.recipientAccountNumber,
+              routingNumber: transferRecord.recipientRoutingNumber
+            },
+            note: 'This is a simulated transfer. In production with proper PayPal setup, this would be a real transfer.'
+          });
+        } else {
+          throw new Error(`PayPal API error: ${data.message || 'Unknown error'}`);
+        }
       }
 
     } catch (paypalError) {
-      console.error('❌ PayPal API error:', paypalError.response?.data || paypalError.message);
+      console.error('❌ PayPal API error:', paypalError.message);
       
-      // Fallback to mock implementation if PayPal API fails
-      console.warn('⚠️ Falling back to mock implementation due to PayPal API error');
-      
-      const batchId = `batch_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      const transferRecord = {
-        id: `transfer_${Date.now()}`,
-        batchId: batchId,
+      // Create transfer record in database with error status
+      const transferRecord = new Transfer({
+        batchId: `batch_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         amount: parseFloat(amount),
         currency: 'USD',
         recipientEmail: 'sb-j1ksk43419843@business.example.com',
         recipientAccountNumber: '7597988',
         recipientRoutingNumber: 'YESB0JIVAN2',
-        status: 'PENDING',
+        status: 'FAILED',
         note: note || 'Payment transfer from admin (PayPal API failed)',
-        createdAt: new Date(),
         adminId: adminEmail,
         adminEmail: adminEmail,
-        paypalError: paypalError.response?.data || paypalError.message
-      };
+        transferType: transferType,
+        paypalError: paypalError.message
+      });
       
-      mockTransfers.push(transferRecord);
+      await transferRecord.save();
       
       res.json({
         success: true,
@@ -254,32 +289,21 @@ export const getTransferHistory = async (req, res) => {
       });
     }
 
-    // If no mock transfers exist, create a sample one
-    if (mockTransfers.length === 0) {
-      mockTransfers.push({
-        id: 'transfer_sample',
-        batchId: 'batch_123456789',
-        amount: 100.00,
-        currency: 'USD',
-        recipientEmail: 'sb-j1ksk43419843@business.example.com',
-        recipientAccountNumber: '7597988',
-        recipientRoutingNumber: 'YESB0JIVAN2',
-        status: 'SUCCESS',
-        note: 'Sample transfer',
-        createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
-        adminId: adminEmail,
-        adminEmail: adminEmail
-      });
-    }
+    // Get transfers from database
+    const transfers = await Transfer.findByAdmin(adminEmail, { limit: 50 });
+    const statistics = await Transfer.getStatistics(adminEmail);
 
     res.json({
       success: true,
       data: {
-        transfers: mockTransfers,
-        summary: {
-          totalTransfers: mockTransfers.length,
-          totalAmount: mockTransfers.reduce((sum, t) => sum + t.amount, 0),
-          averageAmount: mockTransfers.length > 0 ? mockTransfers.reduce((sum, t) => sum + t.amount, 0) / mockTransfers.length : 0
+        transfers: transfers,
+        summary: statistics[0] || {
+          totalTransfers: 0,
+          totalAmount: 0,
+          averageAmount: 0,
+          successCount: 0,
+          pendingCount: 0,
+          failedCount: 0
         }
       }
     });
@@ -317,7 +341,7 @@ export const getTransferStatus = async (req, res) => {
     }
 
     // Find transfer by batch ID
-    const transfer = mockTransfers.find(t => t.batchId === batchId);
+    const transfer = await Transfer.findByBatchId(batchId);
 
     if (!transfer) {
       return res.status(404).json({
@@ -334,7 +358,8 @@ export const getTransferStatus = async (req, res) => {
         amount: transfer.amount,
         currency: transfer.currency,
         createdAt: transfer.createdAt,
-        completedAt: transfer.completedAt
+        completedAt: transfer.completedAt,
+        webhookEvents: transfer.webhookEvents
       }
     });
 
@@ -345,5 +370,46 @@ export const getTransferStatus = async (req, res) => {
       message: 'Failed to get transfer status',
       error: error.message
     });
+  }
+};
+
+// Handle PayPal transfer webhooks
+export const handleTransferWebhook = async (req, res) => {
+  try {
+    const event = req.body;
+    
+    console.log('🔄 PayPal transfer webhook received:', event.event_type);
+    
+    // Verify webhook signature (implement proper verification in production)
+    // For now, we'll just process the event
+    
+    if (event.event_type === 'PAYMENT.PAYOUTS-ITEM.SUCCEEDED') {
+      const payoutItemId = event.resource.payout_item_id;
+      const batchId = event.resource.payout_batch_id;
+      
+      // Update transfer status
+      const transfer = await Transfer.findByBatchId(batchId);
+      if (transfer) {
+        await transfer.updateStatus('SUCCESS');
+        await transfer.addWebhookEvent('PAYOUT.SUCCEEDED', event.id, event);
+        console.log('✅ Transfer status updated to SUCCESS:', batchId);
+      }
+    } else if (event.event_type === 'PAYMENT.PAYOUTS-ITEM.FAILED') {
+      const batchId = event.resource.payout_batch_id;
+      
+      // Update transfer status
+      const transfer = await Transfer.findByBatchId(batchId);
+      if (transfer) {
+        await transfer.updateStatus('FAILED');
+        await transfer.addWebhookEvent('PAYOUT.FAILED', event.id, event);
+        console.log('❌ Transfer status updated to FAILED:', batchId);
+      }
+    }
+    
+    res.json({ success: true });
+    
+  } catch (error) {
+    console.error('❌ PayPal transfer webhook error:', error);
+    res.status(500).json({ success: false });
   }
 }; 
