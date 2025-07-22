@@ -188,7 +188,7 @@ const SalesAnalytics: React.FC = () => {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="card-modern p-6">
+        <div className="card-elevated card-modern p-6">
           <div className="flex items-center">
             <div className="p-3 bg-success-100 rounded-xl">
               <svg className="w-6 h-6 text-success-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -202,7 +202,7 @@ const SalesAnalytics: React.FC = () => {
           </div>
         </div>
 
-        <div className="card-modern p-6">
+        <div className="card-elevated card-modern p-6">
           <div className="flex items-center">
             <div className="p-3 bg-primary-100 rounded-xl">
               <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -216,7 +216,7 @@ const SalesAnalytics: React.FC = () => {
           </div>
         </div>
 
-        <div className="card-modern p-6">
+        <div className="card-elevated card-modern p-6">
           <div className="flex items-center">
             <div className="p-3 bg-warning-100 rounded-xl">
               <svg className="w-6 h-6 text-warning-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -230,7 +230,7 @@ const SalesAnalytics: React.FC = () => {
           </div>
         </div>
 
-        <div className="card-modern p-6">
+        <div className="card-elevated card-modern p-6">
           <div className="flex items-center">
             <div className="p-3 bg-error-100 rounded-xl">
               <svg className="w-6 h-6 text-error-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -246,7 +246,7 @@ const SalesAnalytics: React.FC = () => {
       </div>
 
       {/* Period Info */}
-      <div className="card-modern p-6">
+      <div className="card-elevated card-modern p-6">
         <h2 className="text-heading-3 font-semibold text-neutral-900 mb-4">Analysis Period</h2>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
@@ -262,7 +262,7 @@ const SalesAnalytics: React.FC = () => {
       </div>
 
       {/* Category Breakdown */}
-      <div className="card-modern p-6">
+      <div className="card-elevated card-modern p-6">
         <h2 className="text-heading-3 font-semibold text-neutral-900 mb-6">Sales by Category</h2>
         <div className="space-y-4">
           {data.categoryBreakdown.map((category) => (
@@ -283,7 +283,7 @@ const SalesAnalytics: React.FC = () => {
       {/* Payment and Status Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Payment Breakdown */}
-        <div className="card-modern p-6">
+        <div className="card-elevated card-modern p-6">
           <h2 className="text-heading-3 font-semibold text-neutral-900 mb-6">Payment Methods</h2>
           <div className="space-y-4">
             {data.paymentBreakdown.map((payment) => (
@@ -301,7 +301,7 @@ const SalesAnalytics: React.FC = () => {
         </div>
 
         {/* Status Breakdown */}
-        <div className="card-modern p-6">
+        <div className="card-elevated card-modern p-6">
           <h2 className="text-heading-3 font-semibold text-neutral-900 mb-6">Order Status</h2>
           <div className="space-y-4">
             {data.statusBreakdown.map((status) => (

@@ -146,8 +146,8 @@ const ProductAnalytics: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="card-elevated card-modern bg-white p-6 rounded-lg shadow-md border border-gray-200">
+        <div className=" grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Sort by Metric</label>
             <select
@@ -195,7 +195,7 @@ const ProductAnalytics: React.FC = () => {
 
       {/* Product Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+        <div className="card-elevated card-modern bg-white p-6 rounded-lg shadow-md border border-gray-200">
           <div className="flex items-center">
             <div className="p-2 bg-blue-100 rounded-lg">
               <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -210,7 +210,7 @@ const ProductAnalytics: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+        <div className="card-elevated card-modern bg-white p-6 rounded-lg shadow-md border border-gray-200">
           <div className="flex items-center">
             <div className="p-2 bg-green-100 rounded-lg">
               <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -224,7 +224,7 @@ const ProductAnalytics: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+        <div className="card-elevated card-modern bg-white p-6 rounded-lg shadow-md border border-gray-200">
           <div className="flex items-center">
             <div className="p-2 bg-purple-100 rounded-lg">
               <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -238,7 +238,7 @@ const ProductAnalytics: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+        <div className="card-elevated card-modern bg-white p-6 rounded-lg shadow-md border border-gray-200">
           <div className="flex items-center">
             <div className="p-2 bg-yellow-100 rounded-lg">
               <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -252,7 +252,7 @@ const ProductAnalytics: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+        <div className="card-elevated card-modern bg-white p-6 rounded-lg shadow-md border border-gray-200">
           <div className="flex items-center">
             <div className="p-2 bg-indigo-100 rounded-lg">
               <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -268,7 +268,7 @@ const ProductAnalytics: React.FC = () => {
       </div>
 
       {/* Top Products */}
-      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+      <div className="card-elevated card-modern bg-white p-6 rounded-lg shadow-md border border-gray-200">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Top Products by {getMetricLabel(metric)}</h2>
         <div className="space-y-4">
           {data.topProducts
@@ -324,7 +324,7 @@ const ProductAnalytics: React.FC = () => {
       </div>
 
       {/* Category Performance */}
-      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+      <div className="card-elevated card-modern bg-white p-6 rounded-lg shadow-md border border-gray-200">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Category Performance</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {data.categoryPerformance.map((category) => (
