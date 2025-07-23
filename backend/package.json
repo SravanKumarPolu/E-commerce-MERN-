@@ -5,6 +5,8 @@
   "type": "module",
  "scripts": {
   "start": "node server.js",
+  "postinstall": "npm install buffer-from",
+
   "server": "nodemon server.js",
   "test": "node scripts/run-tests.js",
   "test:unit": "jest --testPathPattern=__tests__/unit",
