@@ -162,7 +162,13 @@ app.use('*', (req, res) => {
   res.status(404).json({ success: false, message: 'Route not found' });
 });
 
-// Start the server
-server.listen(PORT, () => {
+// // Start the server
+// server.listen(PORT, () => {
+//   console.log(`🚀 Server started on PORT: ${PORT}`);
+// });
+
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server started on PORT: ${PORT}`);
+  console.log(`🌍 ENV: ${process.env.NODE_ENV}`);
+  console.log(`🌐 Server listening on http://0.0.0.0:${PORT}`);
 });
