@@ -10,7 +10,6 @@
   "scope": "/",
   "lang": "en",
   "dir": "ltr",
-  "categories": ["shopping", "ecommerce", "lifestyle"],
   "icons": [
     {
       "src": "/pwa-192x192.png",
@@ -25,7 +24,7 @@
       "purpose": "any maskable"
     },
     {
-      "src": "/apple-touch-icon.svg",
+      "src": "/apple-touch-icon.png",
       "sizes": "180x180",
       "type": "image/png"
     },
@@ -39,64 +38,5 @@
       "sizes": "16x16",
       "type": "image/png"
     }
-  ],
-  "shortcuts": [
-    {
-      "name": "Shop Products",
-      "short_name": "Shop",
-      "description": "Browse our product collection",
-      "url": "/collection",
-      "icons": [
-        {
-          "src": "/pwa-192x192.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "Shopping Cart",
-      "short_name": "Cart",
-      "description": "View your shopping cart",
-      "url": "/cart",
-      "icons": [
-        {
-          "src": "/pwa-192x192.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "My Profile",
-      "short_name": "Profile",
-      "description": "Manage your account",
-      "url": "/profile",
-      "icons": [
-        {
-          "src": "/pwa-192x192.png",
-          "sizes": "192x192"
-        }
-      ]
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshot-wide.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "SKR E-Commerce Homepage"
-    },
-    {
-      "src": "/screenshot-narrow.png",
-      "sizes": "750x1334",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "SKR E-Commerce Mobile View"
-    }
-  ],
-  "prefer_related_applications": false,
-  "related_applications": [],
-  "edge_side_panel": {
-    "preferred_width": 400
-  }
-} 
+  ]
+}
