@@ -10,7 +10,7 @@ import {
   GoogleIcon,
   FacebookIcon,
   ValidationIcon,
-  IconProps
+  
 } from './index';
 
 const IconDemo: React.FC = () => {

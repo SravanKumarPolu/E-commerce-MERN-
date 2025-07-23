@@ -241,7 +241,7 @@ export const performanceHelpers = {
   },
   
   // Measure component render time
-  measureRenderTime: (component: React.ComponentType) => {
+  measureRenderTime: () => {
     const start = performance.now();
     // Render component logic here
     const end = performance.now();
@@ -262,7 +262,7 @@ export const accessibilityCompliance = {
   // WCAG 2.1 AA compliance checks
   wcag21AA: {
     // Color contrast ratio should be at least 4.5:1 for normal text
-    checkColorContrast: (foreground: string, background: string) => {
+    checkColorContrast: () => {
       // Implementation for color contrast calculation
       return true; // Placeholder
     },

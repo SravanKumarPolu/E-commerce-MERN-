@@ -26,14 +26,14 @@ const Login = () => {
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
   const [isPageLoaded, setIsPageLoaded] = useState<boolean>(false);
-  const [focusedField, setFocusedField] = useState<string>("");
-  const [isFormSubmitting, setIsFormSubmitting] = useState<boolean>(false);
+  const [, setFocusedField] = useState<string>("");
+  const [isFormSubmitting, ] = useState<boolean>(false);
   const [showPasswordRecovery, setShowPasswordRecovery] = useState<boolean>(false);
-  const [isSocialLoading, setIsSocialLoading] = useState<boolean>(false);
+  const [isSocialLoading, ] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   
   // Performance optimizations
-  const { isLowPerformance, reducedAnimations, particleCount } = usePerformanceMode();
+  const { reducedAnimations, particleCount } = usePerformanceMode();
   
   // Accessibility refs
   const formRef = useRef<HTMLFormElement>(null);
