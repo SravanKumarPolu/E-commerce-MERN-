@@ -78,6 +78,7 @@
   "devDependencies": {
     "cross-env": "^7.0.3",
     "eslint": "^8.55.0",
+    "buffer-from": "^1.1.2",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-node": "^11.1.0",
     "faker": "^6.6.6",
