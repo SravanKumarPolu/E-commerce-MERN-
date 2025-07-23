@@ -13,6 +13,7 @@ import connectDB from './config/mongodb.js';
 import { handleMulterError } from './middleware/multer.js';
 import socketService from './services/socketService.js';
 
+// Routers
 import productRouter from './routes/productRoute.js';
 import userRouter from './routes/userRoute.js';
 import cartRouter from './routes/cartRoute.js';
@@ -21,19 +22,17 @@ import analyticsRouter from './routes/analyticsRoute.js';
 import categoryRouter from './routes/categoryRoute.js';
 import addressRouter from './routes/addressRoute.js';
 
-// App config
+// Initialize app
 const app = express();
 const server = createServer(app);
-const port = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3001;
 
-// DB + Cloudinary
+// Connect services
 connectDB();
 connectCloudinary();
-
-// Initialize WebSocket
 socketService.initialize(server);
 
-// Helmet security
+// Security middleware
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: 'cross-origin' },
@@ -53,10 +52,7 @@ app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 1000,
-    message: {
-      success: false,
-      message: 'Too many requests from this IP, please try again later.',
-    },
+    message: { success: false, message: 'Too many requests from this IP, try again later.' },
     standardHeaders: true,
     legacyHeaders: false,
   })
@@ -65,10 +61,7 @@ app.use(
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
-  message: {
-    success: false,
-    message: 'Too many login attempts, please try again later.',
-  },
+  message: { success: false, message: 'Too many login attempts, try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -76,40 +69,36 @@ const authLimiter = rateLimit({
 // Compression
 app.use(compression());
 
-// ✅ CORS Setup
+// ✅ CORS Configuration
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
-  'http://localhost:5174',
-  'http://localhost:5175',
-  'http://localhost:5176',
-  'http://localhost:5177',
   'https://skr-e-commerce.netlify.app',
   process.env.FRONTEND_URL,
   process.env.ADMIN_URL,
 ].filter(Boolean);
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.error('❌ CORS blocked request from:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  optionsSuccessStatus: 200,
-};
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.error('❌ CORS blocked request from:', origin);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+    optionsSuccessStatus: 200,
+  })
+);
 
-app.use(cors(corsOptions));
-
-// Request parsing & sanitization
+// Body parsing + sanitization
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(mongoSanitize());
 
-// Routes
+// API Routes
 app.use('/api/user', authLimiter, userRouter);
 app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
@@ -118,12 +107,12 @@ app.use('/api/orders', orderRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/category', categoryRouter);
 
-// Health check endpoint
+// Health check
 app.get('/health', (req, res) => {
-  res.json({ success: true, status: 'Backend is healthy' });
+  res.json({ success: true, message: 'Server is healthy ✅' });
 });
 
-// WebSocket status endpoint
+// WebSocket info
 app.get('/api/socket/status', (req, res) => {
   res.json({
     success: true,
@@ -132,17 +121,17 @@ app.get('/api/socket/status', (req, res) => {
   });
 });
 
-// Multer errors
-app.use(handleMulterError);
-
-// Root test route
+// Root route
 app.get('/', (req, res) => {
-  res.json({ success: true, message: 'API Working' });
+  res.json({ success: true, message: 'API Working 🚀' });
 });
+
+// Handle Multer errors
+app.use(handleMulterError);
 
 // Global error handler
 app.use((err, req, res, next) => {
-  console.error('🔥 Error Handler:', err.stack);
+  console.error('🔥 Global Error:', err.stack);
 
   if (err.name === 'ValidationError') {
     return res.status(400).json({
@@ -162,20 +151,16 @@ app.use((err, req, res, next) => {
 
   res.status(500).json({
     success: false,
-    message: process.env.NODE_ENV === 'production' ? 'Something went wrong!' : err.message,
+    message: process.env.NODE_ENV === 'production' ? 'Internal Server Error' : err.message,
   });
 });
 
-// 404 handler
+// 404 Fallback
 app.use('*', (req, res) => {
   res.status(404).json({ success: false, message: 'Route not found' });
 });
 
-// Start server
-server.listen(port, () => {
-  console.log(`🚀 Server started on PORT: ${port}`);
-});
-
-app.get('/health', (req, res) => {
-  res.json({ success: true, message: 'Server is healthy ✅' });
+// Start the server
+server.listen(PORT, () => {
+  console.log(`🚀 Server started on PORT: ${PORT}`);
 });
