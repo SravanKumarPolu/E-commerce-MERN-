@@ -4,6 +4,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
+    "postinstall": "npm install buffer-from",
     "start": "node server.js",
     "server": "nodemon server.js",
     "test": "node scripts/run-tests.js",
@@ -92,8 +93,8 @@
   },
   "engines": {
     "node": "18.x",
-    "npm": ">=8.0.0",
-    "postinstall": "npm install --production=false"
+    "npm": ">=8.0.0"
+    
   },
   "keywords": [
     "ecommerce",
