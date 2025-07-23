@@ -92,7 +92,8 @@
   },
   "engines": {
     "node": "18.x",
-    "npm": ">=8.0.0"
+    "npm": ">=8.0.0",
+    "postinstall": "npm install --production=false"
   },
   "keywords": [
     "ecommerce",
