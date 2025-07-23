@@ -32,6 +32,7 @@
     "aws-sdk": "^2.1531.0",
     "axios": "^1.6.2",
     "bcrypt": "^5.1.1",
+    "buffer-from": "^1.1.2",
     "cloudinary": "^2.6.0",
     "compression": "^1.8.0",
     "connect-mongo": "^5.1.0",
@@ -75,7 +76,6 @@
     "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
-    "buffer-from": "^1.1.2",
     "cross-env": "^7.0.3",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.1.0",
