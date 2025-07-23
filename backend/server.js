@@ -175,3 +175,7 @@ app.use('*', (req, res) => {
 server.listen(port, () => {
   console.log(`🚀 Server started on PORT: ${port}`);
 });
+
+app.get('/health', (req, res) => {
+  res.json({ success: true, message: 'Server is healthy ✅' });
+});
