@@ -78,6 +78,7 @@ const corsOptions = {
       'http://localhost:5175',
       'http://localhost:5176',
       'http://localhost:5177',
+      'https://skr-e-commerce.netlify.app',
       process.env.FRONTEND_URL,
       process.env.ADMIN_URL
     ].filter(Boolean);
