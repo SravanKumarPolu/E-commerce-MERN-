@@ -162,18 +162,23 @@ const SearchAnalytics: React.FC = () => {
               <option value={50}>Top 50</option>
             </select>
           </div>
+        
           <button
-            onClick={fetchSearchData}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Refresh
-          </button>
+        onClick={fetchSearchData}
+          className="btn-modern btn-secondary hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700 group px-8 py-4 hover:scale-105 transition-all duration-300"
+        >
+          <svg className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <span className="font-semibold">Refresh</span>
+        </button>
+
         </div>
       </div>
 
       {/* Search Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+      <div className=" grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="card-elevated card-modern bg-white p-6 rounded-lg shadow-md border border-gray-200">
           <div className="flex items-center">
             <div className="p-2 bg-blue-100 rounded-lg">
               <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -187,7 +192,7 @@ const SearchAnalytics: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+        <div className="card-elevated card-modern bg-white p-6 rounded-lg shadow-md border border-gray-200">
           <div className="flex items-center">
             <div className="p-2 bg-green-100 rounded-lg">
               <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -201,7 +206,7 @@ const SearchAnalytics: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+        <div className=" card-elevated card-modern bg-white p-6 rounded-lg shadow-md border border-gray-200">
           <div className="flex items-center">
             <div className="p-2 bg-purple-100 rounded-lg">
               <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -218,7 +223,7 @@ const SearchAnalytics: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Popular Searches */}
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+        <div className="card-elevated card-modernbg-white p-6 rounded-lg shadow-md border border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Popular Searches</h2>
           <div className="space-y-3">
             {data.popularSearches.map((search, index) => (
@@ -251,7 +256,7 @@ const SearchAnalytics: React.FC = () => {
         </div>
 
         {/* Search Trends */}
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+        <div className="card-elevated card-modernbg-white p-6 rounded-lg shadow-md border border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Search Trends</h2>
           <div className="space-y-3 max-h-96 overflow-y-auto">
             {data.searchTrends.map((trend) => (
@@ -271,7 +276,7 @@ const SearchAnalytics: React.FC = () => {
       </div>
 
       {/* Category Search Breakdown */}
-      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+      <div className="card-elevated card-modern bg-white p-6 rounded-lg shadow-md border border-gray-200">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Search by Category</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {data.categorySearches.map((category) => (
@@ -304,7 +309,7 @@ const SearchAnalytics: React.FC = () => {
       </div>
 
       {/* Search Performance Metrics */}
-      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+      <div className="card-elevated card-modernbg-white p-6 rounded-lg shadow-md border border-gray-200">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Search Performance Metrics</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="text-center">
@@ -335,7 +340,7 @@ const SearchAnalytics: React.FC = () => {
       </div>
 
       {/* Search Insights */}
-      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+      <div className="card-elevated card-modernbg-white p-6 rounded-lg shadow-md border border-gray-200">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Search Insights</h2>
         <div className="space-y-4">
           <div className="flex items-center space-x-3">

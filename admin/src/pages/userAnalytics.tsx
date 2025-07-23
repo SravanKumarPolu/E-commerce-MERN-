@@ -198,16 +198,20 @@ const UserAnalytics: React.FC = () => {
             />
           </div>
           <button
-            onClick={fetchUserData}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Refresh
-          </button>
+         onClick={fetchUserData}
+          className="btn-modern btn-secondary hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700 group px-8 py-4 hover:scale-105 transition-all duration-300"
+        >
+          <svg className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+       
+        </button>
+        
         </div>
       </div>
 
       {/* Activity Breakdown */}
-      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+      <div className="card-elevated card-modern bg-white p-6 rounded-lg shadow-md border border-gray-200">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Activity Breakdown</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {data.activityBreakdown.map((activity) => (
@@ -228,7 +232,7 @@ const UserAnalytics: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Daily Activity Trend */}
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+        <div className="card-elevated card-modern bg-white p-6 rounded-lg shadow-md border border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Daily Activity Trend</h2>
           <div className="space-y-3 max-h-96 overflow-y-auto">
             {data.dailyActivity.map((day) => (
@@ -246,7 +250,7 @@ const UserAnalytics: React.FC = () => {
         </div>
 
         {/* Most Active Users */}
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+        <div className=" card-elevated card-modern bg-white p-6 rounded-lg shadow-md border border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Most Active Users</h2>
           <div className="space-y-3">
             {data.activeUsers.map((user, index) => (
@@ -273,7 +277,7 @@ const UserAnalytics: React.FC = () => {
       </div>
 
       {/* Product Interactions */}
-      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+      <div className="card-elevated card-modern bg-white p-6 rounded-lg shadow-md border border-gray-200">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Product Interaction Analytics</h2>
         <div className="space-y-4">
           {data.productInteractions.map((interaction, index) => (
@@ -321,7 +325,7 @@ const UserAnalytics: React.FC = () => {
       </div>
 
       {/* Summary Statistics */}
-      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+      <div className="card-elevated card-modern bg-white p-6 rounded-lg shadow-md border border-gray-200">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Summary Statistics</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
