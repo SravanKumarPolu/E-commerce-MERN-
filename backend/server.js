@@ -1,91 +1,100 @@
-import 'dotenv/config'
+import 'dotenv/config';
+
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
+import rateLimit from 'express-rate-limit';
+import mongoSanitize from 'express-mongo-sanitize';
+import { createServer } from 'http';
 
 import connectCloudinary from './config/cloudinary.js';
 import connectDB from './config/mongodb.js';
-import cors from 'cors'
-import express from 'express'
+import { handleMulterError } from './middleware/multer.js';
+import socketService from './services/socketService.js';
+
 import productRouter from './routes/productRoute.js';
 import userRouter from './routes/userRoute.js';
 import cartRouter from './routes/cartRoute.js';
 import orderRouter from './routes/orderRoute.js';
 import analyticsRouter from './routes/analyticsRoute.js';
 import categoryRouter from './routes/categoryRoute.js';
-import rateLimit from 'express-rate-limit';
-import helmet from 'helmet';
-import mongoSanitize from 'express-mongo-sanitize';
-import compression from 'compression';
-import { handleMulterError } from './middleware/multer.js';
 import addressRouter from './routes/addressRoute.js';
-import { createServer } from 'http';
-import socketService from './services/socketService.js';
 
-//App config
+// App config
 const app = express();
 const server = createServer(app);
-const port = process.env.PORT || 3001
-connectDB()
+const port = process.env.PORT || 3001;
+
+// DB + Cloudinary
+connectDB();
 connectCloudinary();
 
-// Initialize WebSocket service
+// Initialize WebSocket
 socketService.initialize(server);
 
-// Security middleware
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" },
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
+// Helmet security
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'"],
+        imgSrc: ["'self'", 'data:', 'https:'],
+      },
     },
-  },
-}));
+  })
+);
 
 // Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // limit each IP to 1000 requests per windowMs (increased for development)
-  message: {
-    success: false,
-    message: "Too many requests from this IP, please try again later."
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 1000,
+    message: {
+      success: false,
+      message: 'Too many requests from this IP, please try again later.',
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+  })
+);
 
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20, // limit each IP to 20 login attempts per windowMs (increased for development)
+  windowMs: 15 * 60 * 1000,
+  max: 20,
   message: {
     success: false,
-    message: "Too many login attempts, please try again later."
+    message: 'Too many login attempts, please try again later.',
   },
   standardHeaders: true,
   legacyHeaders: false,
 });
 
-app.use(limiter);
+// Compression
 app.use(compression());
 
-// CORS configuration
+// ✅ CORS Setup
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:5175',
+  'http://localhost:5176',
+  'http://localhost:5177',
+  'https://skr-e-commerce.netlify.app',
+  process.env.FRONTEND_URL,
+  process.env.ADMIN_URL,
+].filter(Boolean);
+
 const corsOptions = {
   origin: function (origin, callback) {
-    const allowedOrigins = [
-      'http://localhost:3000',
-      'http://localhost:5173',
-      'http://localhost:5174',
-      'http://localhost:5175',
-      'http://localhost:5176',
-      'http://localhost:5177',
-      'https://skr-e-commerce.netlify.app',
-      process.env.FRONTEND_URL,
-      process.env.ADMIN_URL
-    ].filter(Boolean);
-    
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.error('❌ CORS blocked request from:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -95,12 +104,12 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-//middleware
+// Request parsing & sanitization
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(mongoSanitize());
 
-//api endpoints
+// Routes
 app.use('/api/user', authLimiter, userRouter);
 app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
@@ -109,61 +118,60 @@ app.use('/api/orders', orderRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/category', categoryRouter);
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ success: true, status: 'Backend is healthy' });
+});
+
 // WebSocket status endpoint
 app.get('/api/socket/status', (req, res) => {
   res.json({
     success: true,
     connectedUsers: socketService.getConnectedUsersCount(),
-    status: 'WebSocket server is running'
+    status: 'WebSocket server is running',
   });
 });
 
-// Multer error handling middleware
+// Multer errors
 app.use(handleMulterError);
 
+// Root test route
 app.get('/', (req, res) => {
-  res.json({ success: true, message: "API Working" });
+  res.json({ success: true, message: 'API Working' });
 });
 
 // Global error handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  
-  // Handle specific error types
+  console.error('🔥 Error Handler:', err.stack);
+
   if (err.name === 'ValidationError') {
     return res.status(400).json({
       success: false,
       message: 'Validation Error',
-      errors: Object.values(err.errors).map(e => e.message)
+      errors: Object.values(err.errors).map((e) => e.message),
     });
   }
-  
+
   if (err.name === 'CastError') {
-    return res.status(400).json({
-      success: false,
-      message: 'Invalid ID format'
-    });
+    return res.status(400).json({ success: false, message: 'Invalid ID format' });
   }
-  
+
   if (err.code === 11000) {
-    return res.status(400).json({
-      success: false,
-      message: 'Duplicate field value'
-    });
+    return res.status(400).json({ success: false, message: 'Duplicate field value' });
   }
-  
+
   res.status(500).json({
     success: false,
-    message: process.env.NODE_ENV === 'production' ? 'Something went wrong!' : err.message
+    message: process.env.NODE_ENV === 'production' ? 'Something went wrong!' : err.message,
   });
 });
 
-// Handle 404 routes
+// 404 handler
 app.use('*', (req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Route not found'
-  });
+  res.status(404).json({ success: false, message: 'Route not found' });
 });
 
-server.listen(port, () => console.log('Server started on PORT: ' + port))
+// Start server
+server.listen(port, () => {
+  console.log(`🚀 Server started on PORT: ${port}`);
+});
