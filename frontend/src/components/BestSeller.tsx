@@ -121,7 +121,7 @@ const BestSeller: React.FC = () => {
   });
 
   return (
-    <section className="px-4 sm:px-6 md:px-8 lg:px-12">
+    <section className="px-4 sm:px-6 md:px-8 lg:px-12 ">
       {/* Enhanced Section Title */}
       <header className="text-center mb-16">
         <Title text1="Best" text2="Seller" />
@@ -134,7 +134,7 @@ const BestSeller: React.FC = () => {
       {bestSeller.length > 0 ? (
         <div className="relative">
           {/* Enhanced Carousel Container */}
-          <div className="carousel-container">
+          <div className=" p-2">
             <AnimatePresence mode="wait" custom={slideDirection}>
               <motion.div
                 key={currentSlide}

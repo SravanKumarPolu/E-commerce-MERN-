@@ -6,7 +6,7 @@ export default {
   ],
   theme: {
     extend: {
-      
+     
       fontFamily: {
         // Primary Font Stack
         sans: ['Inter', 'system-ui', 'sans-serif'],
