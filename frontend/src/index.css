@@ -760,6 +760,7 @@ a:hover {
   }
 }
 
+
 /* Modern Responsive Design */
 @media (max-width: 640px) {
   .nav-link.active {
@@ -775,16 +776,15 @@ a:hover {
   html {
     font-size: 16px;
   }
-
   /* Enhanced mobile form elements */
   input, textarea, select {
     @apply text-base;
   }
 
   /* Safe area support for mobile */
-  .h-safe-area-inset-bottom {
+  /* .h-safe-area-inset-bottom {
     height: calc(100vh - env(safe-area-inset-bottom));
-  }
+  } */
 
   .pt-safe-area-inset-top {
     padding-top: env(safe-area-inset-top);
@@ -793,6 +793,7 @@ a:hover {
   .pb-safe-area-inset-bottom {
     padding-bottom: env(safe-area-inset-bottom);
   }
+
 }
 
 /* PWA Standalone Mode Enhancements */

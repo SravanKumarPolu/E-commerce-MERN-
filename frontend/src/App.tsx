@@ -32,6 +32,7 @@ function App() {
       <OfflinePage />
       <Suspense fallback={<LoadingSpinner size="lg" message="Loading page..." className="py-20" />}>
         <Routes>
+          
           <Route
             path="/"
             element={
