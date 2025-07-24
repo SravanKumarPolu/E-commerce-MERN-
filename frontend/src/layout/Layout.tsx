@@ -19,7 +19,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const isCollectionPage = location.pathname === '/collection';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+<div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-white to-gray-50">
+
+
       {/* Enhanced Navigation */}
       <NavBar />
       

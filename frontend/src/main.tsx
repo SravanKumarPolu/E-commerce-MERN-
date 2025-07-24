@@ -7,6 +7,16 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+// ✅ REGISTER THE PWA SERVICE WORKER
+import { registerSW } from 'virtual:pwa-register';
+
+registerSW({
+  immediate: true,
+  onOfflineReady() {
+    console.log('App is ready to work offline');
+  }
+});
+
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
