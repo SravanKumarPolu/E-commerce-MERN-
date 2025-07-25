@@ -1,102 +1,165 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useShopContext } from '../context/ShopContext';
+import { Home, ShoppingBag, Info, Mail } from 'lucide-react';
+import { useMemo, useRef, useState } from 'react';
+import { useSwipeable } from 'react-swipeable';
+
+const navItems = [
+  { path: '/', label: 'Home', icon: Home },
+  { path: '/collection', label: 'Shop', icon: ShoppingBag },
+  { path: '/about', label: 'About', icon: Info },
+  { path: '/contact', label: 'Contact', icon: Mail },
+];
 
 const MobileBottomNav = () => {
   const location = useLocation();
-  const { getCartCount, isLoggedIn } = useShopContext();
+  const navigate = useNavigate();
 
-  const navItems = [
-    {
-      path: '/',
-      label: 'Home',
-      icon: '🏠',
-      activeIcon: '🏠'
-    },
-    {
-      path: '/collection',
-      label: 'Shop',
-      icon: '🛍️',
-      activeIcon: '🛍️'
-    },
-    {
-      path: '/cart',
-      label: 'Cart',
-      icon: '🛒',
-      activeIcon: '🛒',
-      badge: getCartCount()
-    },
-    {
-      path: isLoggedIn ? '/profile' : '/login',
-      label: isLoggedIn ? 'Profile' : 'Login',
-      icon: isLoggedIn ? '👤' : '🔑',
-      activeIcon: isLoggedIn ? '👤' : '🔑'
+  const isReducedMotion = useMemo(() => {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }, []);
+
+  const triggerHaptic = () => {
+    if ('vibrate' in navigator) {
+      navigator.vibrate(50);
     }
-  ];
+  };
+
+  const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const [tooltipIndex, setTooltipIndex] = useState<number | null>(null);
+
+  // Long press to show tooltip
+  const handleLongPress = (index: number) => {
+    setTooltipIndex(index);
+    setTimeout(() => setTooltipIndex(null), 2000); // Auto hide tooltip
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
+    const total = navItems.length;
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      itemRefs.current[(index + 1) % total]?.focus();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      itemRefs.current[(index - 1 + total) % total]?.focus();
+    }
+  };
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      const currentIndex = navItems.findIndex(item => item.path === location.pathname);
+      const nextPath = navItems[(currentIndex + 1) % navItems.length].path;
+      navigate(nextPath);
+    },
+    onSwipedRight: () => {
+      const currentIndex = navItems.findIndex(item => item.path === location.pathname);
+      const prevPath = navItems[(currentIndex - 1 + navItems.length) % navItems.length].path;
+      navigate(prevPath);
+    },
+    delta: 30, // minimum distance(px) to be considered swipe
+    trackTouch: true,
+    preventScrollOnSwipe: true,
+  });
 
   return (
-    <motion.div
-      className="fixed bottom-0 left-0 right-0 z-50 sm:hidden"
-      initial={{ y: 100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.3, delay: 0.5 }}
+    <motion.nav
+      {...swipeHandlers}
+      role="navigation"
+      aria-label="Mobile Bottom Navigation"
+      className="fixed bottom-0 left-0 w-full max-w-[480px] sm:hidden z-50"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      initial={{ y: 100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={
+        isReducedMotion
+          ? { duration: 0 }
+          : { type: 'spring', damping: 20, stiffness: 300 }
+      }
     >
-      {/* Background with blur effect */}
-      <div className="absolute inset-0 bg-white/80 backdrop-blur-xl border-t border-gray-200" />
-      
-      {/* Navigation items */}
-      <div className="relative flex items-center justify-around px-4 py-3">
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
-          
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              className="relative flex flex-col items-center justify-center min-w-0 flex-1"
-            >
-              <motion.div
-                className={`relative p-3 rounded-2xl transition-all duration-300 ${
-                  isActive 
-                    ? 'bg-blue-100 text-blue-600 shadow-lg' 
-                    : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
-                }`}
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.95 }}
+      <div className="relative mx-4 mb-4">
+        <motion.div
+          className="absolute inset-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-100/50 dark:border-gray-700/50"
+          layoutId="nav-background"
+        />
+        <div className="relative flex items-center justify-evenly p-2">
+          {navItems.map(({ path, label, icon: Icon }, index) => {
+            const isActive = location.pathname === path;
+
+            return (
+              <Link
+                key={path}
+                ref={(el) => (itemRefs.current[index] = el)}
+                to={path}
+                tabIndex={0}
+                onClick={triggerHaptic}
+                onKeyDown={(e) => handleKeyDown(e, index)}
+                onPointerDown={() => {
+                  setTimeout(() => handleLongPress(index), 500);
+                }}
+                className="flex-1 flex items-center justify-center min-w-0 relative z-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                aria-label={label}
+                aria-current={isActive ? 'page' : undefined}
+                title={label}
               >
-                {/* Icon */}
-                <div className="text-2xl mb-1">
-                  {isActive ? item.activeIcon : item.icon}
-                </div>
-                
-                {/* Badge for cart */}
-                {item.badge && item.badge > 0 && (
-                  <motion.div
-                    className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                  >
-                    {item.badge > 99 ? '99+' : item.badge}
-                  </motion.div>
-                )}
-              </motion.div>
-              
-              {/* Label */}
-              <span className={`text-xs font-medium mt-1 ${
-                isActive ? 'text-blue-600' : 'text-gray-500'
-              }`}>
-                {item.label}
-              </span>
-            </Link>
-          );
-        })}
+                <motion.div
+                  className={`flex flex-col items-center justify-center gap-1 p-3 w-full rounded-xl relative transition-colors duration-200 ease-in-out ${
+                    isActive
+                      ? 'text-white'
+                      : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+                  }`}
+                  whileHover={isReducedMotion ? {} : { scale: 1.05 }}
+                  whileTap={isReducedMotion ? {} : { scale: 0.95 }}
+                  transition={
+                    isReducedMotion
+                      ? {}
+                      : { type: 'spring', stiffness: 300, damping: 30 }
+                  }
+                >
+                  {isActive ? (
+                    <>
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_rgba(255,255,255,0.1)]"
+                        layoutId="active-item"
+                        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                      />
+                      <motion.div
+                        className="absolute -inset-1 rounded-2xl bg-blue-500/30 blur-xl opacity-60"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.6 }}
+                      />
+                    </>
+                  ) : (
+                    <motion.div
+                      className="absolute inset-0 rounded-xl border border-transparent group-hover:border-blue-400 group-hover:shadow-[0_0_12px_2px_rgba(59,130,246,0.4)] pointer-events-none"
+                      initial={{ opacity: 0 }}
+                      whileHover={{ opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  )}
+
+                  <Icon
+                    className="w-6 h-6 relative z-10 transition-colors duration-200"
+                    aria-hidden="true"
+                  />
+                  <span className="text-sm font-medium relative z-10 transition-colors duration-200">
+                    {label}
+                  </span>
+
+                  {/* Tooltip */}
+                  {tooltipIndex === index && (
+                    <div className="absolute bottom-full mb-2 px-2 py-1 rounded bg-black text-white text-xs z-50">
+                      {label}
+                    </div>
+                  )}
+                </motion.div>
+              </Link>
+            );
+          })}
+        </div>
       </div>
-      
-      {/* Safe area for devices with home indicator */}
-      <div className="h-safe-area-inset-bottom bg-white/80 backdrop-blur-xl" />
-    </motion.div>
+    </motion.nav>
   );
 };
 
-export default MobileBottomNav; 
+export default MobileBottomNav;

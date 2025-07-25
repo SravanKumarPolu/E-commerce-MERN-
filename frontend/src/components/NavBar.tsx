@@ -228,7 +228,7 @@ const NavBar = () => {
 
             {/* Enhanced Mobile Menu Button */}
             <motion.button
-              className="sm:hidden p-3 rounded-xl hover:bg-gray-100 transition-all duration-300"
+              className="hidden p-3 rounded-xl hover:bg-gray-100 transition-all duration-300"
               onClick={() => setVisible(!visible)}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
