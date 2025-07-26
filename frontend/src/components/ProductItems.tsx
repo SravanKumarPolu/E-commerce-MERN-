@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ShopContext } from '../context/ShopContext';
 import { motion } from 'framer-motion';
 
@@ -13,7 +13,7 @@ interface ProductItemsProps {
 
 const ProductItems: React.FC<ProductItemsProps> = ({ id, image, name, price, bestseller = false }) => {
   const context = useContext(ShopContext);
-
+  const navigate = useNavigate();
   if (!context) return null;
 
   const { currency } = context;
@@ -147,10 +147,13 @@ const ProductItems: React.FC<ProductItemsProps> = ({ id, image, name, price, bes
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-md hover:shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 text-sm"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
+           
             onClick={(e) => {
               e.preventDefault();
+              navigate(`/product/${id}`);
               // Add to cart functionality would go here
             }}
+           
           >
             Add to Cart
           </motion.button>
