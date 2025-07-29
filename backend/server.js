@@ -1,6 +1,6 @@
 import 'dotenv/config';
 // 👇 force preload to ensure Render doesn't skip it
-
+import 'buffer-from';
 
 import express from 'express';
 import cors from 'cors';
