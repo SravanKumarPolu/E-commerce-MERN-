@@ -9,7 +9,7 @@ import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import mongoSanitize from 'express-mongo-sanitize';
 import { createServer } from 'http';
-
+import 'buffer-from';
 import connectCloudinary from './config/cloudinary.js';
 import connectDB from './config/mongodb.js';
 import { handleMulterError } from './middleware/multer.js';
