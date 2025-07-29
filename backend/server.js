@@ -75,6 +75,8 @@ app.use(compression());
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
+  'https://admin-skr-commerce.netlify.app/',
+  'http://localhost:5174',
   'https://skr-e-commerce.netlify.app',
   process.env.FRONTEND_URL,
   process.env.ADMIN_URL,
