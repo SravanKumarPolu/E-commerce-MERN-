@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-  
     "server": "nodemon server.js",
     "test": "node scripts/run-tests.js",
     "test:unit": "jest --testPathPattern=__tests__/unit",
@@ -33,7 +32,6 @@
     "aws-sdk": "^2.1531.0",
     "axios": "^1.6.2",
     "bcrypt": "^5.1.1",
-    "buffer-from": "^1.1.2",
     "cloudinary": "^2.6.0",
     "compression": "^1.8.0",
     "connect-mongo": "^5.1.0",
