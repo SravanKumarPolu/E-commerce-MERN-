@@ -3,9 +3,8 @@ import 'dotenv/config';
 
 
 // 👇 force preload to ensure Render doesn't skip it
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-require('buffer-from');
+import bufferFrom from 'buffer-from'; // (if used directly)
+
 
 import express from 'express';
 import cors from 'cors';
