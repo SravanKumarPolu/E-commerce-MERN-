@@ -1,4 +1,8 @@
+
 import 'dotenv/config';
+// 👇 force preload to ensure Render doesn't skip it
+
+
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -7,7 +11,6 @@ import rateLimit from 'express-rate-limit';
 import mongoSanitize from 'express-mongo-sanitize';
 import { createServer } from 'http';
 
-// Service connections
 import connectCloudinary from './config/cloudinary.js';
 import connectDB from './config/mongodb.js';
 import { handleMulterError } from './middleware/multer.js';
@@ -22,17 +25,17 @@ import analyticsRouter from './routes/analyticsRoute.js';
 import categoryRouter from './routes/categoryRoute.js';
 import addressRouter from './routes/addressRoute.js';
 
-// Initialize Express app
+// Initialize app
 const app = express();
 const server = createServer(app);
 const PORT = process.env.PORT || 3001;
 
-// Connect DB & Cloud services
+// Connect services
 connectDB();
 connectCloudinary();
 socketService.initialize(server);
 
-// Helmet (Security Headers)
+// Security middleware
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: 'cross-origin' },
@@ -47,7 +50,7 @@ app.use(
   })
 );
 
-// Rate Limiting
+// Rate limiting
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -69,7 +72,7 @@ const authLimiter = rateLimit({
 // Compression
 app.use(compression());
 
-// ✅ Cleaned-up CORS Configuration
+// ✅ CORS Configuration
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
@@ -83,14 +86,10 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      const cleanedOrigin = origin?.replace(/\/$/, '');
-      const isAllowed = !origin || allowedOrigins.includes(cleanedOrigin);
-
-      if (isAllowed) {
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         console.error('❌ CORS blocked request from:', origin);
-        console.log('🌐 Allowed Origins:', allowedOrigins);
         callback(new Error('Not allowed by CORS'));
       }
     },
@@ -99,12 +98,12 @@ app.use(
   })
 );
 
-// Body Parsing & Sanitization
+// Body parsing + sanitization
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(mongoSanitize());
 
-// Register API Routes
+// API Routes
 app.use('/api/user', authLimiter, userRouter);
 app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
@@ -113,12 +112,12 @@ app.use('/api/orders', orderRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/category', categoryRouter);
 
-// Health Check
+// Health check
 app.get('/health', (req, res) => {
   res.json({ success: true, message: 'Server is healthy ✅' });
 });
 
-// WebSocket Info
+// WebSocket info
 app.get('/api/socket/status', (req, res) => {
   res.json({
     success: true,
@@ -127,15 +126,15 @@ app.get('/api/socket/status', (req, res) => {
   });
 });
 
-// Root Route
+// Root route
 app.get('/', (req, res) => {
   res.json({ success: true, message: 'API Working 🚀' });
 });
 
-// Multer Error Middleware
+// Handle Multer errors
 app.use(handleMulterError);
 
-// Global Error Handler
+// Global error handler
 app.use((err, req, res, next) => {
   console.error('🔥 Global Error:', err.stack);
 
@@ -161,12 +160,16 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 Route
+// 404 Fallback
 app.use('*', (req, res) => {
   res.status(404).json({ success: false, message: 'Route not found' });
 });
 
-// Start Server (Render requires 0.0.0.0 binding)
+// // Start the server
+// server.listen(PORT, () => {
+//   console.log(`🚀 Server started on PORT: ${PORT}`);
+// });
+
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server started on PORT: ${PORT}`);
   console.log(`🌍 ENV: ${process.env.NODE_ENV}`);
