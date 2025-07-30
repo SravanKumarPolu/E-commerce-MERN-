@@ -14,7 +14,7 @@ import SearchAnalytics from "./pages/searchAnalytics";
 import Sidebar from "./components/Sidebar";
 import { ToastContainer } from "react-toastify";
 
-export const backendUrl: string = import.meta.env.VITE_BACKEND_URL || 'https://e-commerce-mern-backend-152u.onrender.com';
+export const backendUrl: string = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 export const currency = '$'
 
 const App = () => {

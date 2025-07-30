@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const connectDB = async () => {
   try {
-    const fullUri = process.env.MONGODB_URI;
+    const fullUri = `${process.env.MONGODB_URI}/e-commerce`;
     console.log('🔌 Connecting to MongoDB:', fullUri);
 
     await mongoose.connect(fullUri, {
@@ -13,7 +13,7 @@ const connectDB = async () => {
     console.log('✅ MongoDB Connected:', mongoose.connection.name);
   } catch (err) {
     console.error('❌ MongoDB connection failed:', err.message);
-    process.exit(1); // force crash so Render retries
+    process.exit(1);
   }
 };
 
