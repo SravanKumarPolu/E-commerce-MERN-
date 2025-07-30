@@ -3,7 +3,9 @@ import 'dotenv/config';
 
 
 // 👇 force preload to ensure Render doesn't skip it
-import 'buffer-from'; // (if used directly)
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+require('buffer-from'); // ✅ now it's valid in ESM
 
 
 import express from 'express';
