@@ -1,5 +1,5 @@
-// Load environment variables
 import 'dotenv/config';
+// 👇 force preload to ensure Render doesn't skip it
 
 
 import express from 'express';
@@ -10,7 +10,6 @@ import rateLimit from 'express-rate-limit';
 import mongoSanitize from 'express-mongo-sanitize';
 import { createServer } from 'http';
 
-// Service connections
 import connectCloudinary from './config/cloudinary.js';
 import connectDB from './config/mongodb.js';
 import { handleMulterError } from './middleware/multer.js';
@@ -25,16 +24,17 @@ import analyticsRouter from './routes/analyticsRoute.js';
 import categoryRouter from './routes/categoryRoute.js';
 import addressRouter from './routes/addressRoute.js';
 
+// Initialize app
 const app = express();
 const server = createServer(app);
 const PORT = process.env.PORT || 3001;
 
-// Connect DB & Services
+// Connect services
 connectDB();
 connectCloudinary();
 socketService.initialize(server);
 
-// Helmet (Security)
+// Security middleware
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: 'cross-origin' },
@@ -49,15 +49,16 @@ app.use(
   })
 );
 
-// Rate Limiting
-const generalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 1000,
-  message: { success: false, message: 'Too many requests from this IP, try again later.' },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-app.use(generalLimiter);
+// Rate limiting
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 1000,
+    message: { success: false, message: 'Too many requests from this IP, try again later.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+  })
+);
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -67,9 +68,10 @@ const authLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-// Compression & CORS
+// Compression
 app.use(compression());
 
+// ✅ CORS Configuration
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
@@ -86,7 +88,7 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        console.error('❌ CORS blocked:', origin);
+        console.error('❌ CORS blocked request from:', origin);
         callback(new Error('Not allowed by CORS'));
       }
     },
@@ -95,12 +97,12 @@ app.use(
   })
 );
 
-// Body Parsing & Sanitization
+// Body parsing + sanitization
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(mongoSanitize());
 
-// Routes
+// API Routes
 app.use('/api/user', authLimiter, userRouter);
 app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
@@ -109,12 +111,12 @@ app.use('/api/orders', orderRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/category', categoryRouter);
 
-// Health Check
+// Health check
 app.get('/health', (req, res) => {
   res.json({ success: true, message: 'Server is healthy ✅' });
 });
 
-// WebSocket Info
+// WebSocket info
 app.get('/api/socket/status', (req, res) => {
   res.json({
     success: true,
@@ -123,14 +125,15 @@ app.get('/api/socket/status', (req, res) => {
   });
 });
 
-// Root Route
+// Root route
 app.get('/', (req, res) => {
   res.json({ success: true, message: 'API Working 🚀' });
 });
 
-// Error Handlers
+// Handle Multer errors
 app.use(handleMulterError);
 
+// Global error handler
 app.use((err, req, res, next) => {
   console.error('🔥 Global Error:', err.stack);
 
@@ -156,14 +159,18 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Fallback 404
+// 404 Fallback
 app.use('*', (req, res) => {
   res.status(404).json({ success: false, message: 'Route not found' });
 });
 
-// Start Server (Render requires 0.0.0.0 binding)
+// // Start the server
+// server.listen(PORT, () => {
+//   console.log(`🚀 Server started on PORT: ${PORT}`);
+// });
+
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server started on PORT: ${PORT}`);
   console.log(`🌍 ENV: ${process.env.NODE_ENV}`);
-  console.log(`🌐 Server running at http://0.0.0.0:${PORT}`);
+  console.log(`🌐 Server listening on http://0.0.0.0:${PORT}`);
 });
