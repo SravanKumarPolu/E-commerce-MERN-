@@ -1,6 +1,7 @@
 // Load environment variables
 import 'dotenv/config';
-import  'buffer-from';
+import 'buffer-from';
+
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
