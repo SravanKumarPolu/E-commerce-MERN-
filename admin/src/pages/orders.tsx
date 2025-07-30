@@ -286,14 +286,20 @@ const Orders: React.FC<OrdersProps> = ({ token }) => {
                 </div>
                 <div className="ml-6 flex-1 min-w-0">
                   <p className="text-caption text-neutral-500 mb-3 font-semibold">Total Revenue</p>
-                  <div 
-                    className="tooltip" 
-                    data-tip={formatCurrency(stats.totalRevenue)}
-                  >
-                    <p className="text-heading-2 font-bold text-neutral-900 break-words leading-tight min-w-0">
-                      {formatCurrency(stats.totalRevenue)}
-                    </p>
-                  </div>
+  
+                  <div className="relative">
+  <div
+    className="tooltip tooltip-top z-50   "
+    data-tip={formatCurrency(stats.totalRevenue)}
+  >
+    <p className="text-heading-2 font-bold text-neutral-900 cursor-pointer hover:opacity-80">
+      {formatCurrency(stats.totalRevenue)}
+    </p>
+  </div>
+</div>
+
+
+
                 </div>
               </div>
             </div>
